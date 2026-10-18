@@ -35,6 +35,9 @@ function probOf(item) {
 
 const percent = (value) => (typeof value === 'number' && Number.isFinite(value) ? `${Math.round(value * 100)}%` : '—');
 
+/** Counts over a year are unreadable without separators. */
+const num = (value) => (Number.isFinite(Number(value)) ? Number(value).toLocaleString('en-US') : '—');
+
 const OPTIONS = ['ignore', 'remember', 'ask', 'draft', 'execute'];
 
 const OPTION_LABEL = {
@@ -650,11 +653,10 @@ function renderTwin() {
 
   $('#twin-pill').textContent = `Open · ${open.length}`;
   const capacity = today.capacity || {};
-  $('#twin-sub').textContent = capacity.norm
-    ? `${open.length} open now. Your four-week norm is ${capacity.norm}${
-        capacity.provisional ? `, provisional (${capacity.days} of ${capacity.minimumDays} days recorded)` : ''
-      }.`
-    : `${open.length} open now. No four-week norm yet.`;
+  $('#twin-sub').textContent =
+    capacity.norm && !capacity.provisional
+      ? `${open.length} open now. Your four-week norm is ${capacity.norm}.`
+      : `${open.length} open now. No four-week baseline has been recorded.`;
   $('#twin-cap').textContent = 'Tap a solid bead to open its receipt.';
 
   $('#kinds-note').textContent = today.kinds?.length ? `${today.kinds.length} sources` : '';
@@ -682,9 +684,9 @@ function renderTwin() {
     ['Two arcs', 'Jev solid, d1 dashed. Overlapping arcs mean the two models chose the same tier.'],
     [
       'Dashed circle',
-      norms.norm
-        ? `Your four-week norm for open load: ${norms.norm} open${norms.provisional ? ` — provisional, ${norms.days} of ${norms.minimumDays} days recorded` : ''}.`
-        : 'Your four-week norm for open load, once there is one.',
+      norms.norm && !norms.provisional
+        ? `Your four-week norm for open load: ${norms.norm} open.`
+        : 'No four-week baseline has been recorded yet.',
     ],
   ];
   $('#field-legend').innerHTML = rows
@@ -812,7 +814,7 @@ function renderStories(record) {
       bigNumber(
         Number.isFinite(kept) ? kept : null,
         Number.isFinite(kept)
-          ? `of every 100 settled promises are closed. ${record.kept.done} of ${record.kept.settled}, out of ${record.kept.total} in the ledger.`
+          ? `of everything recorded has been closed. ${record.kept.done} of ${record.kept.total} rows.`
           : 'Nothing has been settled yet, so there is no rate to show.',
       ),
     ),
@@ -950,23 +952,27 @@ function renderTrust() {
   const ledger = state.ledger;
   const trust = ledger.trust || {};
   const privacy = ledger.privacy || {};
-  const totals = ledger.totals || {};
 
-  $('#trust-pill').textContent = `${trust.conversationCount ?? privacy.conversations ?? 0} conversations`;
+  $('#trust-pill').textContent = `${num(trust.conversationCount ?? privacy.conversations ?? 0)} conversations`;
   $('#trust-sub').textContent =
-    `${privacy.utterancesKept || 0} of your own utterances were kept, verbatim. ` +
-    `${privacy.utterancesDroppedOther || 0} from other speakers were dropped before storage.`;
+    `${num(privacy.utterancesKept || 0)} of your own utterances were kept, verbatim. ` +
+    `${num(privacy.utterancesDroppedOther || 0)} from other speakers were dropped before storage.`;
 
   $('#privacy-card').innerHTML = `
-    <div class="proof"><span>Your utterances kept</span><b>${privacy.utterancesKept || 0}</b></div>
-    <div class="proof"><span>Bystander utterances dropped</span><b>${privacy.utterancesDroppedOther || 0}</b></div>
-    <div class="proof"><span>Empty utterances dropped</span><b>${privacy.utterancesDroppedEmpty || 0}</b></div>
+    <div class="proof"><span>Your utterances kept</span><b>${num(privacy.utterancesKept)}</b></div>
+    <div class="proof"><span>Bystander utterances dropped</span><b>${num(privacy.utterancesDroppedOther)}</b></div>
+    <div class="proof"><span>Empty utterances dropped</span><b>${num(privacy.utterancesDroppedEmpty)}</b></div>
     <div class="proof"><span>Other people\u2019s words in the database</span><b>${trust.othersRetained ?? 0}</b></div>
-    <div class="proof"><span>Conversations read</span><b>${trust.conversationCount ?? privacy.conversations ?? 0}</b></div>
-    <div class="proof"><span>Commitments in the ledger</span><b>${totals.commitments ?? ledger.items.length}</b></div>
+    <div class="proof"><span>Conversations read</span><b>${num(trust.conversationCount ?? privacy.conversations ?? 0)}</b></div>
+    <div class="proof"><span>Commitments in the ledger</span><b>${num(ledger.items.length)}</b></div>
+    ${
+      privacy.candidates
+        ? `<div class="proof"><span>Conversation-derived rows, not counted</span><b>${num(privacy.candidates)}</b></div>`
+        : ''
+    }
     <div class="proof"><span>Redaction</span><span class="lbl">${escapeHTML(
       privacy.assumedSingleSpeaker
-        ? `${privacy.assumedSingleSpeaker} of ${trust.conversationCount ?? privacy.conversations} assumed one speaker`
+        ? `${num(privacy.assumedSingleSpeaker)} of ${num(trust.conversationCount ?? privacy.conversations)} assumed one speaker`
         : 'Every conversation matched your name',
     )}</span></div>`;
 

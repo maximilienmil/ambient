@@ -264,7 +264,7 @@ main {
    buttons that choose which week the field is showing */
 .wks {
   display: flex;
-  gap: var(--s-3);
+  gap: var(--s-2);
   margin-top: var(--s-5);
   overflow-x: auto;
   scrollbar-width: none;
@@ -283,7 +283,7 @@ main {
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
-  padding: 0 var(--s-6);
+  padding: 0 var(--s-4);
   border-radius: var(--r-chip);
   color: var(--field-ink);
   font-size: var(--text-lbl);

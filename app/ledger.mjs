@@ -271,6 +271,11 @@ export function privacyOf(db) {
     utterancesDroppedEmpty: one('SELECT COALESCE(SUM(utterances_dropped_empty),0) AS n FROM conversations'),
     assumedSingleSpeaker: one("SELECT COUNT(*) AS n FROM conversations WHERE redaction='assumed-single-speaker'"),
     nameMatched: one("SELECT COUNT(*) AS n FROM conversations WHERE redaction='profile-name-match'"),
+    // Bee todos are the ledger the app shows. Conversation-derived rows are
+    // candidates: they stay in the file for the evaluation and are never
+    // counted as commitments.
+    commitments: one('SELECT COUNT(*) AS n FROM commitments WHERE source_conversation_id IS NULL'),
+    candidates: one('SELECT COUNT(*) AS n FROM commitments WHERE source_conversation_id IS NOT NULL'),
   };
 }
 
@@ -910,7 +915,7 @@ export function todayOf(db, items) {
     };
     weeks.push({
       week,
-      label: week === 0 ? 'This week' : week === 1 ? 'Last week' : week === 3 ? '3+ weeks ago' : `${week} weeks ago`,
+      label: week === 0 ? 'This week' : week === 1 ? 'Last week' : week === 3 ? '3+ weeks' : '2 weeks',
       open: open.filter((item) => inBucket(item.createdAt)).length,
       kept: items.filter((item) => item.state === 'done' && item.closedBy?.at && inBucket(item.closedBy.at)).length,
       slipped: items.filter(
@@ -1032,9 +1037,15 @@ export function recordOf(db, items) {
     .map((entry) => ({ ...entry, rate: entry.total ? entry.done / entry.total : 0, enough: entry.total >= MIN_N }))
     .sort((a, b) => b.total - a.total);
 
-  const stamps = items.map((item) => new Date(item.createdAt).getTime()).filter(Number.isFinite);
-  const first = stamps.length ? new Date(Math.min(...stamps)) : null;
-  const last = stamps.length ? new Date(Math.max(...stamps)) : null;
+  // The span of the record is the span of what was recorded, not the span of
+  // the to-do rows: Bee's todos were all written in a few weeks, while the
+  // conversations cover a year. Reading the span from items made the Record
+  // screen say "11 days read" over a year of data.
+  const spanRow = db
+    .prepare('SELECT MIN(start_time) AS first, MAX(start_time) AS last FROM conversations')
+    .get();
+  const first = spanRow?.first ? new Date(Number(spanRow.first)) : null;
+  const last = spanRow?.last ? new Date(Number(spanRow.last)) : null;
   const days = first && last ? Math.max(1, Math.round((last - first) / 86_400_000)) : 0;
 
   const aimed = phrases.find((entry) => entry.rule === 'first-person-promise');

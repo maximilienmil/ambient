@@ -25,7 +25,7 @@ const MAX_EDGES = 1500;
 const ENTRY_MS = 400;
 const FADE_MS = 600;
 /** Unscored rows are drawn at this opacity and the legend says so. */
-const UNSCORED_OPACITY = 0.4;
+const UNSCORED_OPACITY = 0.52;
 /** Radius used when stakes are unknown. Also stated in the legend. */
 const DEFAULT_STAKES = 1;
 const RING_HIT = 24;
@@ -513,6 +513,18 @@ function TwinCanvas({ items, norms, week, onOpen, onCounts }) {
 
 function TwinChrome({ items, norms, weeks, loading, error, onOpen }) {
   const [week, setWeek] = useState(0);
+  /* Open the field on the week that actually holds rows. With a year of Bee
+     data every open to-do is older than three weeks, so defaulting to "this
+     week" drew a field of ghosts and read as an empty screen. */
+  useEffect(() => {
+    if (!Array.isArray(weeks) || !weeks.length) return;
+    if ((weeks[week]?.open || 0) > 0) return;
+    let best = 0;
+    for (let index = 1; index < weeks.length; index += 1) {
+      if ((weeks[index]?.open || 0) > (weeks[best]?.open || 0)) best = index;
+    }
+    if (best !== week) setWeek(best);
+  }, [weeks, week]);
   const [counts, setCounts] = useState({ shown: 0, total: 0 });
   /* The canvas reports counts from inside its draw loop, which runs once a
      frame. Keeping the previous object when the numbers have not moved stops a
@@ -524,7 +536,6 @@ function TwinChrome({ items, norms, weeks, loading, error, onOpen }) {
   }, []);
   const empty = !loading && !error && items.length === 0;
   const labels = weekLabels(weeks);
-  const bucket = Array.isArray(weeks) && weeks[week] ? weeks[week] : null;
 
   return (
     <>
@@ -554,8 +565,14 @@ function TwinChrome({ items, norms, weeks, loading, error, onOpen }) {
             ))}
           </div>
           <p className="twin-note">
-            {counts.shown} of {counts.total} promises were made{' '}
-            {bucket ? String(bucket.label).toLowerCase() : String(labels[week]).toLowerCase()}.
+            {counts.shown === 0
+              ? 'No to-do was written in that week.'
+              : `${
+                  counts.shown === counts.total ? 'All' : `${counts.shown} of ${counts.total}`
+                } to-dos were written ${
+                  ['this week', 'last week', 'two to three weeks ago', 'more than three weeks ago'][week] ||
+                  'in that week'
+                }.`}
           </p>
         </>
       )}
