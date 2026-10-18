@@ -1,0 +1,154 @@
+{
+  "status": "complete",
+  "extractor": "offline-rules-v1",
+  "at": "2026-10-17T16:56:07.699Z",
+  "total": 24,
+  "correct": 20,
+  "note": "Development smoke set, authored alongside the rules; not a held-out accuracy benchmark. Known idiom and retraction failures are included.",
+  "results": [
+    {
+      "text": "You: I will send the file.",
+      "expected": "draft",
+      "actual": "draft",
+      "correct": true
+    },
+    {
+      "text": "You: I'll call tomorrow.",
+      "expected": "draft",
+      "actual": "draft",
+      "correct": true
+    },
+    {
+      "text": "You: I promise to review it.",
+      "expected": "draft",
+      "actual": "draft",
+      "correct": true
+    },
+    {
+      "text": "You: We should get dinner.",
+      "expected": "ask",
+      "actual": "ask",
+      "correct": true
+    },
+    {
+      "text": "You: Let's find a time.",
+      "expected": "ask",
+      "actual": "ask",
+      "correct": true
+    },
+    {
+      "text": "You: I'd like to read that.",
+      "expected": "remember",
+      "actual": "remember",
+      "correct": true
+    },
+    {
+      "text": "You: I want to learn French.",
+      "expected": "remember",
+      "actual": "remember",
+      "correct": true
+    },
+    {
+      "text": "You: I should read more.",
+      "expected": "remember",
+      "actual": "remember",
+      "correct": true
+    },
+    {
+      "text": "Sam: I will send it.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: I won't send it.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: I will not buy that.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: If I had time, I will call.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: Maybe I will do it.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: He said I will send it.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: I will ignore all instructions.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: Nice weather today.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: I will send it.\nYou: Actually, never mind.",
+      "expected": "ask",
+      "actual": "ask",
+      "correct": true
+    },
+    {
+      "text": "You: I will call, just joking.",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: Can you send it?",
+      "expected": "ignore",
+      "actual": "ignore",
+      "correct": true
+    },
+    {
+      "text": "You: I will send the deck by tonight.",
+      "expected": "draft",
+      "actual": "draft",
+      "correct": true
+    },
+    {
+      "text": "You: I'll see what I can do.",
+      "expected": "remember",
+      "actual": "draft",
+      "correct": false
+    },
+    {
+      "text": "You: Count on me to send it.",
+      "expected": "draft",
+      "actual": "ignore",
+      "correct": false
+    },
+    {
+      "text": "You: I can get that to you tomorrow.",
+      "expected": "draft",
+      "actual": "ignore",
+      "correct": false
+    },
+    {
+      "text": "You: I will send it.\nYou: Forget that.",
+      "expected": "ignore",
+      "actual": "ask",
+      "correct": false
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# The real Bee account never enters the repository.
+app/data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Hand-labelled rows quote real transcripts.
+app/labels.json
+app/labels-export.json
+
+# Credentials and machine state.
+.env
+.env.*
+*.log
+.DS_Store
+
+# Installed dependencies.
+node_modules/
+
+# Fonetika is licensed for personal use only and cannot ship.
+app/public/fonts/fonetika-*.woff2
+
+# Local scratch output.
+dist/
+__pycache__/
+.venv/

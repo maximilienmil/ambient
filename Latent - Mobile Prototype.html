@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffda00">
+<title>Latent — Ambient intelligence, in action</title>
+<style>
+:root {
+  --yellow: #ffda00;
+  --lavender: #dacafa;
+  --olive: #20210c;
+  --ink: #171719;
+  --muted: #77777d;
+  --bg: #f7f7f5;
+  --white: #fff;
+  --line: #eae9e7;
+  --green: #23825b;
+  --blue: #416cc8;
+  --orange: #bc7626;
+  --purple: #7960b6;
+  --gray: #89898e;
+  --radius: 22px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-tap-highlight-color: transparent; }
+body {
+  margin: 0;
+  background: #e9e9e8;
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; cursor: pointer; }
+button:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+button:disabled { opacity: .45; cursor: not-allowed; }
+svg { display: block; }
+#phone {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: auto;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+.statusbar {
+  height: 49px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 27px 0;
+  font-size: 15px;
+  font-weight: 750;
+  background: var(--yellow);
+}
+.status-icons {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.status-icons svg { width: 17px; height: 17px; }
+#main {
+  height: calc(100dvh - 49px - 82px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+#main::-webkit-scrollbar { display: none; }
+.screen { display: none; padding-bottom: 26px; }
+.screen.active { display: block; }
+.page-pad { padding: 0 20px; }
+.hero {
+  padding: 15px 20px 27px;
+  background:
+    radial-gradient(ellipse at 94% 5%, #d9c4fb 0, transparent 51%),
+    radial-gradient(ellipse at 0 95%, #ffef83 0, transparent 48%),
+    var(--yellow);
+  border-radius: 0 0 32px 32px;
+}
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 820;
+  letter-spacing: -.9px;
+}
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--olive);
+  display: grid;
+  place-items: center;
+  color: var(--yellow);
+  font-size: 19px;
+}
+.bee-label {
+  font-size: 11px;
+  font-weight: 650;
+  padding: 7px 10px;
+  border-radius: 100px;
+  background: #ffffffa9;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: 37px;
+  letter-spacing: -1.9px;
+  line-height: 1.04;
+  margin: 11px 0;
+  max-width: 330px;
+  font-weight: 780;
+}
+.hero p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 330px;
+}
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-top: 25px;
+}
+.hero-stat {
+  background: #ffffffb9;
+  border: 1px solid #ffffffa0;
+  border-radius: 17px;
+  padding: 13px 12px 12px;
+}
+.hero-stat strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1.05;
+  letter-spacing: -1px;
+}
+.hero-stat span {
+  display: block;
+  font-size: 11px;
+  margin-top: 6px;
+  color: #4b4a42;
+  font-weight: 600;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 27px 0 13px;
+}
+.section-head h2 {
+  font-size: 20px;
+  margin: 0;
+  letter-spacing: -.6px;
+}
+.text-btn {
+  background: none;
+  border: none;
+  padding: 6px 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+.subhead {
+  font-size: 12px;
+  color: var(--muted);
+  margin: -6px 0 14px;
+}
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 17px;
+  margin-bottom: 11px;
+  border: 1px solid #eeeeed;
+  box-shadow: 0 2px 8px #16161605;
+}
+.card-click { cursor: pointer; }
+.card-click:active { transform: scale(.992); }
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 760;
+  line-height: 1.25;
+  letter-spacing: -.35px;
+  margin: 0;
+}
+.card-sub {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 6px 0 0;
+}
+.tag {
+  font-size: 10px;
+  font-weight: 750;
+  border-radius: 100px;
+  padding: 6px 9px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.tag.draft { background: #e7efff; color: var(--blue); }
+.tag.ask { background: #fff0d9; color: var(--orange); }
+.tag.execute { background: #e4f5ec; color: var(--green); }
+.tag.remember { background: #efe9ff; color: var(--purple); }
+.tag.ignore { background: #f0f0f0; color: var(--gray); }
+.quote {
+  background: #f7f7f6;
+  border-radius: 13px;
+  padding: 12px 13px;
+  margin: 14px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #454549;
+}
+.quote::before { content: "“"; }
+.quote::after { content: "”"; }
+.decision-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+  gap: 10px;
+}
+.decision-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #77777c;
+  font-size: 11px;
+}
+.confidence {
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--ink);
+}
+.arrow {
+  font-size: 20px;
+  line-height: 1;
+  color: #999;
+}
+.feature-card {
+  background: var(--lavender);
+  border: 0;
+  padding: 19px;
+}
+.feature-card .quote { background: #ffffff8f; }
+.feature-card .decision-row { border-color: #c7b5ec; }
+.feature-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.feature-card .card-title { font-size: 20px; }
+.demo-banner {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px;
+  border-radius: 14px;
+  background: #f0efe9;
+  color: #66655e;
+  font-size: 11px;
+  line-height: 1.45;
+  margin: 18px 0 0;
+}
+.demo-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #a09c7d;
+}
+.primary-btn {
+  border: 0;
+  background: var(--olive);
+  color: white;
+  font-weight: 750;
+  border-radius: 14px;
+  min-height: 47px;
+  padding: 0 17px;
+}
+.secondary-btn {
+  border: 1px solid #ddd;
+  background: white;
+  color: var(--ink);
+  font-weight: 700;
+  border-radius: 14px;
+  min-height: 47px;
+  padding: 0 16px;
+}
+.yellow-btn {
+  border: 0;
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 800;
+  border-radius: 14px;
+  min-height: 47px;
+  padding: 0 17px;
+}
+.full-btn { width: 100%; }
+.action-row { display: flex; gap: 9px; }
+.action-row > button { flex: 1; }
+.demo-trigger {
+  background: var(--olive);
+  color: white;
+  border-radius: 22px;
+  padding: 19px;
+  margin-top: 22px;
+}
+.demo-trigger h3 {
+  margin: 0 0 7px;
+  font-size: 18px;
+  letter-spacing: -.4px;
+}
+.demo-trigger p {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: #cececa;
+  line-height: 1.5;
+}
+.demo-trigger .yellow-btn { width: 100%; }
+.page-header {
+  padding: 24px 20px 18px;
+}
+.page-header h1 {
+  margin: 4px 0 8px;
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: -1.4px;
+}
+.page-header p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 20px 15px;
+}
+.filters::-webkit-scrollbar { display: none; }
+.filter {
+  border: 1px solid #e5e5e4;
+  background: white;
+  color: #555;
+  border-radius: 100px;
+  padding: 9px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.filter.active {
+  background: var(--olive);
+  border-color: var(--olive);
+  color: white;
+}
+.model-card {
+  background: var(--olive);
+  color: white;
+  border-radius: 24px;
+  padding: 21px;
+  margin-bottom: 14px;
+}
+.model-card .eyebrow { color: var(--yellow); }
+.model-card h3 {
+  margin: 11px 0 9px;
+  font-size: 23px;
+  letter-spacing: -.7px;
+  line-height: 1.15;
+}
+.model-card p {
+  color: #c5c5bc;
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+}
+.model-flow {
+  display: flex;
+  gap: 6px;
+  margin-top: 20px;
+}
+.model-flow span {
+  background: #ffffff16;
+  border: 1px solid #ffffff20;
+  border-radius: 9px;
+  padding: 8px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  flex: 1;
+  text-align: center;
+}
+.model-flow span:last-child {
+  background: var(--yellow);
+  color: var(--ink);
+}
+.graph-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.graph-card h3 { margin: 0; font-size: 16px; }
+.graph-card p {
+  margin: 5px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+#graph {
+  display: block;
+  width: 100%;
+  height: 190px;
+  margin: 7px auto 0;
+  overflow: visible;
+}
+.graph-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 13px;
+  margin-top: 3px;
+  font-size: 10px;
+  color: #666;
+}
+.graph-key span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.graph-key i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.agent-feature {
+  background: linear-gradient(135deg, #f3eaff, #dfd0ff);
+  border: 0;
+}
+.agent-feature .eyebrow { color: #5f4694; }
+.agent-feature h3 {
+  margin: 9px 0 7px;
+  font-size: 23px;
+  letter-spacing: -.8px;
+}
+.agent-feature p {
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+}
+.agent-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 13px 0;
+  border-top: 1px solid #eee;
+}
+.step-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: #f3f1ff;
+  color: #7254aa;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  flex: none;
+  font-size: 14px;
+}
+.agent-step h4 {
+  font-size: 13px;
+  margin: 1px 0 4px;
+}
+.agent-step p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.45;
+}
+.receipt {
+  display: flex;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.receipt-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: #f0f0ed;
+  font-weight: 800;
+  font-size: 16px;
+}
+.receipt-icon.draft { background: #e8efff; color: var(--blue); }
+.receipt-icon.ask { background: #fff0da; color: var(--orange); }
+.receipt-icon.execute { background: #e1f4e9; color: var(--green); }
+.receipt-icon.ignore { background: #eee; color: var(--gray); }
+.receipt-body { flex: 1; min-width: 0; }
+.receipt-body h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.receipt-body p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.receipt time {
+  font-size: 10px;
+  color: #999;
+  white-space: nowrap;
+}
+.receipts-list {
+  background: white;
+  border-radius: 22px;
+  padding: 2px 17px;
+  border: 1px solid var(--line);
+}
+.receipt:last-child { border: 0; }
+.empty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+.tabbar {
+  height: 82px;
+  background: #ffffffed;
+  border-top: 1px solid #e8e8e6;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding-top: 11px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  position: relative;
+  z-index: 5;
+}
+.tab {
+  flex: 1;
+  border: 0;
+  background: none;
+  color: #a0a0a0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 650;
+  padding: 0;
+}
+.tab svg {
+  width: 23px;
+  height: 23px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tab.active { color: #20210c; }
+.tab.active svg { stroke-width: 2.5; }
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #0007;
+  z-index: 20;
+  align-items: flex-end;
+  justify-content: center;
+}
+#overlay.open { display: flex; }
+.sheet {
+  background: white;
+  width: 100%;
+  max-width: 430px;
+  border-radius: 28px 28px 0 0;
+  max-height: 88dvh;
+  overflow-y: auto;
+  padding: 11px 21px calc(25px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -12px 60px #0002;
+  animation: slide .2s ease-out;
+}
+@keyframes slide {
+  from { transform: translateY(25px); opacity: .5; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.sheet-handle {
+  width: 37px;
+  height: 5px;
+  background: #dedede;
+  border-radius: 100px;
+  margin: 0 auto 23px;
+}
+.sheet-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sheet h2 {
+  margin: 11px 0 7px;
+  font-size: 26px;
+  letter-spacing: -.8px;
+  line-height: 1.13;
+}
+.sheet .desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.sheet-label {
+  margin: 20px 0 9px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: #85858b;
+}
+.sheet-quote {
+  background: #f5f4f2;
+  border-left: 3px solid var(--yellow);
+  border-radius: 0 12px 12px 0;
+  padding: 13px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.model-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 94px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  margin: 13px 0;
+}
+.model-row strong { font-size: 11px; }
+.track {
+  height: 8px;
+  background: #eeedf0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.track > div {
+  height: 100%;
+  background: var(--olive);
+  border-radius: inherit;
+}
+.model-row .score {
+  text-align: right;
+  color: #626269;
+  font-size: 11px;
+}
+.policy {
+  background: #f0ebfa;
+  padding: 15px;
+  border-radius: 15px;
+}
+.policy strong { font-size: 12px; }
+.policy p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #5d536e;
+}
+.sheet-actions { margin-top: 20px; }
+.sheet-actions button { margin-top: 8px; }
+.close-btn {
+  border: 0;
+  background: #f1f1f1;
+  border-radius: 50%;
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+.toast {
+  position: fixed;
+  z-index: 30;
+  bottom: 102px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #20210c;
+  color: white;
+  padding: 12px 17px;
+  border-radius: 13px;
+  font-size: 12px;
+  width: max-content;
+  max-width: calc(100% - 40px);
+  opacity: 0;
+  pointer-events: none;
+  transition: .2s;
+  box-shadow: 0 6px 30px #0003;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+@media (min-width: 520px) {
+  body { padding: 24px 0; }
+  #phone {
+    min-height: 860px;
+    height: min(900px, calc(100dvh - 48px));
+    border: 8px solid #252525;
+    border-radius: 49px;
+    box-shadow: 0 30px 90px #0003;
+  }
+  #main { height: calc(100% - 131px); }
+  .statusbar { border-radius: 40px 40px 0 0; }
+  .tabbar { border-radius: 0 0 40px 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="phone">
+
+  <div class="statusbar" aria-label="Simulated iPhone status bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg viewBox="0 0 20 20" fill="currentColor">
+        <rect x="1" y="12" width="3" height="6" rx="1"/>
+        <rect x="6" y="9" width="3" height="9" rx="1"/>
+        <rect x="11" y="5" width="3" height="13" rx="1"/>
+        <rect x="16" y="2" width="3" height="16" rx="1"/>
+      </svg>
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 7Q10 0 18 7M5 11Q10 6 15 11M8 15Q10 13 12 15"/>
+      </svg>
+      <svg viewBox="0 0 25 15">
+        <rect x="1" y="2" width="20" height="11" rx="3"
+          fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="3" y="4" width="15" height="7" rx="1.5" fill="currentColor"/>
+        <rect x="22" y="5" width="2" height="5" rx="1" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- TODAY -->
+    <section id="today" class="screen active">
+      <div class="hero">
+        <div class="hero-top">
+          <div class="brand">
+            <span class="brand-mark">✳</span>
+            Latent
+          </div>
+          <span class="bee-label">Built for Bee</span>
+        </div>
+
+        <div class="eyebrow">Saturday, October 17</div>
+        <h1>Your words.<br>Your follow-through.</h1>
+        <p>
+          Latent notices what you've committed to and knows
+          when to act, draft, or leave things alone.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong id="stat-open">0</strong>
+            <span>Open loops</span>
+          </div>
+          <div class="hero-stat">
+            <strong id="stat-draft">0</strong>
+            <span>Drafts ready</span>
+          </div>
+          <div class="hero-stat">
+            <strong id="stat-closed">0</strong>
+            <span>Closed loops</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-pad">
+        <div class="section-head">
+          <h2>What Latent noticed</h2>
+          <button class="text-btn" onclick="go('commitments')">
+            See all →
+          </button>
+        </div>
+        <p class="subhead">
+          Not just tasks. Decisions about what should happen next.
+        </p>
+
+        <div id="featured"></div>
+
+        <div class="section-head">
+          <h2>Waiting on you</h2>
+          <span class="tag ask" id="waiting-count">0 decisions</span>
+        </div>
+        <div id="waiting-list"></div>
+
+        <div class="section-head">
+          <h2>Already handled</h2>
+          <button class="text-btn" onclick="go('receipts')">
+            View receipts →
+          </button>
+        </div>
+        <div id="handled-list"></div>
+
+        <div class="demo-trigger">
+          <h3>What happens when Bee hears something new?</h3>
+          <p>
+            Add a simulated conversation and watch Latent
+            infer a commitment and choose how far to act.
+          </p>
+          <button class="yellow-btn" onclick="hearConversation()">
+            ✳ &nbsp; Hear a conversation
+          </button>
+        </div>
+
+        <div class="demo-banner">
+          <span class="demo-dot"></span>
+          <span>
+            Interactive prototype · Synthetic conversations ·
+            No live Bee connection or external actions
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMITMENTS -->
+    <section id="commitments" class="screen">
+      <div class="page-header">
+        <div class="eyebrow">YOUR COMMITMENT LEDGER</div>
+        <h1>Things said.<br>Things done.</h1>
+        <p>
+          A living record of promises, plans, and decisions.
+          Including the things Latent deliberately didn't do.
+        </p>
+      </div>
+
+      <div class="page-pad">
+        <div class="model-card">
+          <div class="eyebrow">THE LATENT DECISION MODEL</div>
+          <h3>Knowing when not to act is the point.</h3>
+          <p>
+            Two model judgments, contextual evidence, and
+            an action policy determine whether Latent executes,
+            drafts, asks, remembers, or ignores.
+          </p>
+          <div class="model-flow">
+            <span>Conversation</span>
+            <span>Jev + d1</span>
+            <span>Policy gate</span>
+            <span>Action</span>
+          </div>
+        </div>
+
+        <div class="graph-card">
+          <h3>Your commitment map</h3>
+          <p>
+            Each dot is a commitment. Color shows the decision;
+            distance from the center reflects age.
+          </p>
+          <svg id="graph" viewBox="0 0 350 190"
+            role="img" aria-label="Interactive commitment map"></svg>
+          <div class="graph-key">
+            <span><i style="background:#416cc8"></i> Draft</span>
+            <span><i style="background:#bc7626"></i> Ask</span>
+            <span><i style="background:#23825b"></i> Execute</span>
+            <span><i style="background:#7960b6"></i> Remember</span>
+            <span><i style="background:#89898e"></i> Ignore</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters" id="filters">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="draft">Draft</button>
+        <button class="filter" data-filter="ask">Ask</button>
+        <button class="filter" data-filter="execute">Execute</button>
+        <button class="filter" data-filter="remember">Remember</button>
+        <button class="filter" data-filter="ignore">Ignore</button>
+      </div>
+
+      <div class="page-pad">
+        <div id="commitment-list"></div>
+        <div class="action-row">
+          <button class="secondary-btn" onclick="retireObsolete()">
+            Retire obsolete
+          </button>
+          <button class="yellow-btn" onclick="hearConversation()">
+            + New conversation
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGENTS -->
+    <section id="agents" class="screen">
+      <div class="page-header">
+        <div class="eyebrow">AMBIENT EXECUTION</div>
+        <h1>Less prompting.<br>More progress.</h1>
+        <p>
+          Agents get the context behind a commitment.
+          Latent controls what they're allowed to do.
+        </p>
+      </div>
+
+      <div class="page-pad">
+        <div class="card agent-feature">
+          <div class="eyebrow">AGENT COORDINATION</div>
+          <h3>Plans without the group chat.</h3>
+          <p>
+            Coordinate with another person's agent using
+            shared availability and approved constraints,
+            without exposing entire conversations.
+          </p>
+        </div>
+
+        <div class="section-head">
+          <h2>Agent activity</h2>
+          <span class="tag remember">Simulation</span>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">Research competitors</h3>
+              <p class="card-sub">
+                Inferred from a product planning conversation
+              </p>
+            </div>
+            <span class="tag draft">Draft</span>
+          </div>
+
+          <div class="quote">
+            We should look at three competing products
+            before deciding what to build.
+          </div>
+
+          <div class="agent-step">
+            <div class="step-icon">1</div>
+            <div>
+              <h4>Intent identified</h4>
+              <p>
+                Research request, three competitors,
+                relevant product context.
+              </p>
+            </div>
+          </div>
+
+          <div class="agent-step">
+            <div class="step-icon">2</div>
+            <div>
+              <h4>Agent plan prepared</h4>
+              <p>
+                Compare positioning, features, and pricing.
+                Produce a cited brief.
+              </p>
+            </div>
+          </div>
+
+          <div class="agent-step">
+            <div class="step-icon">3</div>
+            <div>
+              <h4>Awaiting authorization</h4>
+              <p>
+                This prototype won't perform real research.
+                Approval simulates dispatch.
+              </p>
+            </div>
+          </div>
+
+          <button class="yellow-btn full-btn"
+            onclick="simulateResearch()">
+            Approve simulated dispatch →
+          </button>
+        </div>
+
+        <div class="section-head">
+          <h2>Agent-to-agent handoff</h2>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">Dinner with Sam</h3>
+              <p class="card-sub">
+                Proposed coordination · Not sent
+              </p>
+            </div>
+            <span class="tag ask">Needs consent</span>
+          </div>
+
+          <div class="quote">
+            We should get dinner sometime.
+          </div>
+
+          <div class="agent-step">
+            <div class="step-icon">↗</div>
+            <div>
+              <h4>Your agent</h4>
+              <p>
+                Can propose availability after you confirm
+                you actually want to make plans.
+              </p>
+            </div>
+          </div>
+
+          <div class="agent-step">
+            <div class="step-icon">↙</div>
+            <div>
+              <h4>Sam's agent</h4>
+              <p>
+                Potential counterpart. No connection exists
+                in this prototype.
+              </p>
+            </div>
+          </div>
+
+          <div class="policy">
+            <strong>Why Latent paused</strong>
+            <p>
+              “We should” is not a firm commitment.
+              Latent won't contact Sam or share availability
+              without your approval.
+            </p>
+          </div>
+
+          <button class="secondary-btn full-btn"
+            style="margin-top:14px"
+            onclick="openItem('sam-dinner')">
+            Review decision →
+          </button>
+        </div>
+
+        <div class="demo-banner">
+          <span class="demo-dot"></span>
+          <span>
+            Agent execution and cross-agent communication
+            are represented as interactive simulations.
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECEIPTS -->
+    <section id="receipts" class="screen">
+      <div class="page-header">
+        <div class="eyebrow">TRUST, BY DESIGN</div>
+        <h1>Every action.<br>Every reason.</h1>
+        <p>
+          What Latent noticed, what it decided, and
+          exactly how far it went.
+        </p>
+      </div>
+
+      <div class="page-pad">
+        <div class="model-card">
+          <div class="eyebrow">ACTION TRANSPARENCY</div>
+          <h3>Nothing happens invisibly.</h3>
+          <p>
+            Each decision has a source conversation,
+            model judgments, a policy check, and a receipt.
+            Even choosing not to act is recorded.
+          </p>
+        </div>
+
+        <div class="section-head">
+          <h2>Activity log</h2>
+          <button class="text-btn" onclick="resetDemo()">
+            Reset demo
+          </button>
+        </div>
+
+        <div id="receipt-list" class="receipts-list"></div>
+
+        <div class="demo-banner">
+          <span class="demo-dot"></span>
+          <span>
+            These receipts describe simulated decisions
+            and actions, not verified external events.
+          </span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="tabbar" aria-label="Main navigation">
+    <button class="tab active" data-tab="today"
+      onclick="go('today')">
+      <svg viewBox="0 0 24 24">
+        <path d="M3 10.5 12 3l9 7.5V21h-7v-7h-4v7H3z"/>
+      </svg>
+      Today
+    </button>
+
+    <button class="tab" data-tab="commitments"
+      onclick="go('commitments')">
+      <svg viewBox="0 0 24 24">
+        <circle cx="6" cy="6" r="2"/>
+        <circle cx="18" cy="7" r="2"/>
+        <circle cx="11" cy="18" r="2"/>
+        <path d="M8 6.5l8 0M7 8l3 8M17 9l-5 7"/>
+      </svg>
+      Commitments
+    </button>
+
+    <button class="tab" data-tab="agents"
+      onclick="go('agents')">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="6" width="18" height="14" rx="4"/>
+        <path d="M12 6V3M9 3h6M8 12h.01M16 12h.01M9 16h6"/>
+      </svg>
+      Agents
+    </button>
+
+    <button class="tab" data-tab="receipts"
+      onclick="go('receipts')">
+      <svg viewBox="0 0 24 24">
+        <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/>
+        <path d="M9 8h6M9 12h6M9 16h3"/>
+      </svg>
+      Receipts
+    </button>
+  </nav>
+</div>
+
+<div id="overlay" role="presentation" onclick="closeOutside(event)">
+  <div class="sheet" role="dialog" aria-modal="true"
+    aria-labelledby="sheet-title" id="sheet"></div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const KEY = "latent-bee-prototype-v1";
+
+  const seed = [
+    {
+      id: "priya-deck",
+      title: "Send Priya the project deck",
+      person: "Priya",
+      quote: "I'll send Priya the project deck by tonight.",
+      decision: "draft",
+      confidence: 91,
+      jev: { decision: "draft", score: 91 },
+      d1: { decision: "draft", score: 88 },
+      why: "A first-person promise with a clear deadline. No matching sent message was found in the simulated context.",
+      policy: "External communication requires approval. Latent can prepare the email but cannot send it.",
+      result: "Draft prepared. Nothing sent.",
+      status: "open",
+      age: 0,
+      source: "Project conversation · 9:41 AM",
+      time: "9:41 AM"
+    },
+    {
+      id: "sam-dinner",
+      title: "Make dinner plans with Sam",
+      person: "Sam",
+      quote: "We should get dinner sometime.",
+      decision: "ask",
+      confidence: 58,
+      jev: { decision: "draft", score: 62 },
+      d1: { decision: "ask", score: 71 },
+      why: "The statement is vague and shared. It may be a social suggestion rather than a commitment.",
+      policy: "Model disagreement and third-party involvement trigger an approval requirement. No outreach.",
+      result: "Held back. Waiting for clarification.",
+      status: "open",
+      age: 1,
+      source: "Casual conversation · 9:38 AM",
+      time: "9:38 AM"
+    },
+    {
+      id: "office-hours",
+      title: "Stop by office hours",
+      person: "Professor",
+      quote: "I'll stop by office hours Thursday.",
+      decision: "execute",
+      confidence: 88,
+      jev: { decision: "execute", score: 86 },
+      d1: { decision: "execute", score: 90 },
+      why: "A specific commitment with a clear time. Creating a private calendar hold is reversible.",
+      policy: "Low-risk internal calendar holds can be created automatically.",
+      result: "Simulated calendar hold created.",
+      status: "closed",
+      age: 3,
+      source: "Campus conversation · 9:20 AM",
+      time: "9:20 AM"
+    },
+    {
+      id: "sam-priya",
+      title: "Introduce Sam to Priya",
+      person: "Sam / Priya",
+      quote: "I'll intro you two next week.",
+      decision: "draft",
+      confidence: 78,
+      jev: { decision: "draft", score: 80 },
+      d1: { decision: "draft", score: 77 },
+      why: "Clear personal commitment. The introduction affects two other people.",
+      policy: "Draft an introduction for review. Never send without approval.",
+      result: "Introduction email drafted.",
+      status: "open",
+      age: 2,
+      source: "Networking conversation · Yesterday",
+      time: "Yesterday"
+    },
+    {
+      id: "section-three",
+      title: "Write section three",
+      person: "Project group",
+      quote: "I'll take section three by Friday.",
+      decision: "ask",
+      confidence: 63,
+      jev: { decision: "ask", score: 60 },
+      d1: { decision: "ask", score: 66 },
+      why: "The commitment is clear, but the expected deliverable and source material are unspecified.",
+      policy: "Clarify scope before dispatching an agent.",
+      result: "Waiting for scope.",
+      status: "open",
+      age: 5,
+      source: "Group meeting · Wednesday",
+      time: "Wednesday"
+    },
+    {
+      id: "charger",
+      title: "Return Jake's charger",
+      person: "Jake",
+      quote: "I'll bring your charger back.",
+      decision: "remember",
+      confidence: 72,
+      jev: { decision: "remember", score: 74 },
+      d1: { decision: "remember", score: 70 },
+      why: "A real commitment, but no date or immediate digital action is available.",
+      policy: "Remember without interrupting. Surface it when relevant.",
+      result: "Remembered. No interruption.",
+      status: "open",
+      age: 9,
+      source: "Hallway conversation · Last week",
+      time: "Last week"
+    },
+    {
+      id: "lease",
+      title: "Follow up about the lease",
+      person: "Landlord",
+      quote: "I'll ask about the lease next week.",
+      decision: "ask",
+      confidence: 52,
+      jev: { decision: "draft", score: 70 },
+      d1: { decision: "ask", score: 55 },
+      why: "The commitment is aging, but the models disagree about whether the follow-up is due.",
+      policy: "Model disagreement blocks external communication.",
+      result: "Held back. Confirmation needed.",
+      status: "open",
+      age: 10,
+      source: "Housing conversation · Last week",
+      time: "Last week"
+    },
+    {
+      id: "figma",
+      title: "Try the Figma plugin",
+      person: "Personal",
+      quote: "Maybe I should try that Figma plugin.",
+      decision: "ignore",
+      confidence: 78,
+      jev: { decision: "ignore", score: 80 },
+      d1: { decision: "ignore", score: 77 },
+      why: "A speculative idea, superseded by a later decision not to use plugins this month.",
+      policy: "Superseded ideas should not generate work.",
+      result: "Ignored. No task created.",
+      status: "obsolete",
+      age: 12,
+      source: "Brainstorm · Last week",
+      time: "Last week"
+    },
+    {
+      id: "notes",
+      title: "Share the group notes",
+      person: "Project group",
+      quote: "I'll share my notes after.",
+      decision: "execute",
+      confidence: 89,
+      jev: { decision: "execute", score: 90 },
+      d1: { decision: "execute", score: 88 },
+      why: "The commitment was already fulfilled according to simulated sent-item evidence.",
+      policy: "Mark complete rather than duplicating an action.",
+      result: "Closed. Notes already shared.",
+      status: "closed",
+      age: 4,
+      source: "Group meeting · Wednesday",
+      time: "Wednesday"
+    },
+    {
+      id: "maya",
+      title: "Pay Maya back",
+      person: "Maya",
+      quote: "I'll Venmo you tonight.",
+      decision: "execute",
+      confidence: 85,
+      jev: { decision: "execute", score: 84 },
+      d1: { decision: "execute", score: 86 },
+      why: "A simulated payment record indicates the commitment was fulfilled.",
+      policy: "Never initiate payments automatically. Only reconcile existing evidence.",
+      result: "Closed. Simulated payment verified.",
+      status: "closed",
+      age: 6,
+      source: "Personal conversation · Last week",
+      time: "Last week"
+    }
+  ];
+
+  const initialReceipts = [
+    {
+      title: "Draft prepared for Priya",
+      detail: "91% confidence · External send blocked pending approval.",
+      decision: "draft",
+      time: "9:41"
+    },
+    {
+      title: "Latent chose not to contact Sam",
+      detail: "58% confidence · Vague intent and model disagreement.",
+      decision: "ask",
+      time: "9:38"
+    },
+    {
+      title: "Calendar hold simulated",
+      detail: "88% confidence · Internal, reversible action.",
+      decision: "execute",
+      time: "9:20"
+    },
+    {
+      title: "Figma plugin idea ignored",
+      detail: "Superseded by a later decision. No task created.",
+      decision: "ignore",
+      time: "Yesterday"
+    }
+  ];
+
+  const samples = [
+    {
+      title: "Research three competitors",
+      person: "Product team",
+      quote: "I need to research three competitors before Friday.",
+      decision: "draft",
+      confidence: 89,
+      jev: { decision: "draft", score: 91 },
+      d1: { decision: "draft", score: 87 },
+      why: "A clear research objective with a deadline. The agent can prepare a plan, but the task scope should be reviewed.",
+      policy: "Prepare an agent plan. Require approval before dispatch.",
+      result: "Research plan prepared. Awaiting approval."
+    },
+    {
+      title: "Follow up on the proposal",
+      person: "Client",
+      quote: "I should follow up on that proposal tomorrow.",
+      decision: "draft",
+      confidence: 86,
+      jev: { decision: "draft", score: 88 },
+      d1: { decision: "draft", score: 84 },
+      why: "A specific follow-up with an approximate deadline. Relevant proposal context can inform a draft.",
+      policy: "External messages require review. Draft only.",
+      result: "Follow-up email drafted. Nothing sent."
+    },
+    {
+      title: "Book dinner for Thursday",
+      person: "Sam",
+      quote: "Let's do Thursday. I'll book somewhere.",
+      decision: "ask",
+      confidence: 74,
+      jev: { decision: "draft", score: 78 },
+      d1: { decision: "ask", score: 70 },
+      why: "The plan is more specific, but the restaurant, party size, and preferences are unknown.",
+      policy: "Ask before making an external reservation.",
+      result: "Waiting for restaurant preferences."
+    },
+    {
+      title: "Send the launch plan",
+      person: "Project team",
+      quote: "I'll put together the launch plan and send it over.",
+      decision: "draft",
+      confidence: 92,
+      jev: { decision: "draft", score: 93 },
+      d1: { decision: "draft", score: 91 },
+      why: "A strong first-person commitment. An agent can prepare a draft from prior planning context.",
+      policy: "Drafting is permitted. Sharing externally requires approval.",
+      result: "Launch plan outline prepared."
+    }
+  ];
+
+  const $ = s => document.querySelector(s);
+
+  function clone(x) {
+    return JSON.parse(JSON.stringify(x));
+  }
+
+  function load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY));
+      if (
+        saved &&
+        Array.isArray(saved.items) &&
+        Array.isArray(saved.receipts)
+      ) return saved;
+    } catch (_) {}
+    return {
+      items: clone(seed),
+      receipts: clone(initialReceipts),
+      nextSample: 0
+    };
+  }
+
+  let state = load();
+  let filter = "all";
+  let activeItem = null;
+  let toastTimer;
+
+  const colors = {
+    draft: "#416cc8",
+    ask: "#bc7626",
+    execute: "#23825b",
+    remember: "#7960b6",
+    ignore: "#89898e"
+  };
+
+  const labels = {
+    draft: "Draft",
+    ask: "Ask first",
+    execute: "Executed",
+    remember: "Remember",
+    ignore: "Ignore"
+  };
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch (_) {}
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[c]);
+  }
+
+  function tag(decision) {
+    return `<span class="tag ${decision}">
+      ${labels[decision] || decision}
+    </span>`;
+  }
+
+  function card(item, featured = false) {
+    const special = featured ? "feature-card" : "";
+    const title = escapeHTML(item.title);
+    const quote = escapeHTML(item.quote);
+    const id = escapeHTML(item.id);
+
+    return `
+      <article class="card card-click ${special}"
+        tabindex="0" role="button"
+        aria-label="Review ${title}"
+        onclick="openItem('${id}')"
+        onkeydown="if(event.key==='Enter')openItem('${id}')">
+
+        ${featured
+          ? `<div class="feature-label">✳ Recommended next step</div>`
+          : ""}
+
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">${title}</h3>
+            <p class="card-sub">
+              ${escapeHTML(item.person)} ·
+              ${escapeHTML(item.source)}
+            </p>
+          </div>
+          ${tag(item.decision)}
+        </div>
+
+        <div class="quote">${quote}</div>
+
+        <div class="decision-row">
+          <div class="decision-meta">
+            <span class="confidence">${item.confidence}%</span>
+            <span>decision confidence</span>
+          </div>
+          <span class="arrow">↗</span>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderToday() {
+    const open = state.items.filter(i => i.status === "open");
+    const closed = state.items.filter(i => i.status === "closed");
+    const drafts = open.filter(i => i.decision === "draft");
+    const asking = open.filter(i => i.decision === "ask");
+
+    $("#stat-open").textContent = open.length;
+    $("#stat-draft").textContent = drafts.length;
+    $("#stat-closed").textContent = closed.length;
+
+    const featured = open.find(i => i.id === "priya-deck")
+      || drafts[0]
+      || open[0];
+
+    $("#featured").innerHTML = featured
+      ? card(featured, true)
+      : `<div class="empty">No open commitments.</div>`;
+
+    $("#waiting-count").textContent =
+      `${asking.length} decision${asking.length === 1 ? "" : "s"}`;
+
+    $("#waiting-list").innerHTML = asking.length
+      ? asking.slice(0, 2).map(i => card(i)).join("")
+      : `<div class="empty">Nothing needs your attention.</div>`;
+
+    $("#handled-list").innerHTML = closed.length
+      ? closed.slice(0, 2).map(i => card(i)).join("")
+      : `<div class="empty">No completed commitments yet.</div>`;
+  }
+
+  function renderCommitments() {
+    const items = state.items.filter(i =>
+      filter === "all" || i.decision === filter
+    );
+
+    $("#commitment-list").innerHTML = items.length
+      ? items.map(i => card(i)).join("")
+      : `<div class="empty">No commitments in this category.</div>`;
+
+    document.querySelectorAll(".filter").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.filter === filter);
+    });
+
+    renderGraph();
+  }
+
+  function renderGraph() {
+    const svg = $("#graph");
+    const items = state.items;
+    const cx = 175, cy = 95;
+
+    let html = `
+      <circle cx="${cx}" cy="${cy}" r="75"
+        fill="none" stroke="#eee" stroke-width="1"/>
+      <circle cx="${cx}" cy="${cy}" r="42"
+        fill="none" stroke="#ddd" stroke-dasharray="3 5"/>
+      <circle cx="${cx}" cy="${cy}" r="5" fill="#ffda00"
+        stroke="#20210c" stroke-width="2"/>
+    `;
+
+    items.forEach((item, index) => {
+      const angle = index * 2.39996 - 1.57;
+      const distance = 27 + Math.min(item.age || 0, 12) * 4.1;
+      const x = cx + Math.cos(angle) * distance;
+      const y = cy + Math.sin(angle) * distance;
+      const radius = 5 + Math.min(item.confidence / 30, 4);
+      const color = colors[item.decision];
+      const opacity = item.status === "obsolete" ? .4 : 1;
+
+      html += `
+        <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"
+          stroke="#e6e6e6" stroke-width="1"/>
+        <circle cx="${x}" cy="${y}" r="${radius + 4}"
+          fill="white" stroke="${color}" stroke-width="2"
+          opacity="${opacity}" />
+        <circle cx="${x}" cy="${y}" r="${radius - 1}"
+          fill="${color}" opacity="${opacity}"
+          style="cursor:pointer"
+          data-node="${escapeHTML(item.id)}">
+          <title>${escapeHTML(item.title)}</title>
+        </circle>
+      `;
+    });
+
+    svg.innerHTML = html;
+
+    svg.querySelectorAll("[data-node]").forEach(node => {
+      node.addEventListener("click", () =>
+        openItem(node.getAttribute("data-node"))
+      );
+    });
+  }
+
+  function renderReceipts() {
+    $("#receipt-list").innerHTML = state.receipts.length
+      ? state.receipts.map(r => `
+          <div class="receipt">
+            <div class="receipt-icon ${r.decision}">
+              ${r.decision === "execute" ? "✓"
+                : r.decision === "ask" ? "?"
+                : r.decision === "ignore" ? "−"
+                : r.decision === "draft" ? "↗" : "•"}
+            </div>
+            <div class="receipt-body">
+              <h4>${escapeHTML(r.title)}</h4>
+              <p>${escapeHTML(r.detail)}</p>
+            </div>
+            <time>${escapeHTML(r.time)}</time>
+          </div>
+        `).join("")
+      : `<div class="empty">No activity recorded.</div>`;
+  }
+
+  function render() {
+    renderToday();
+    renderCommitments();
+    renderReceipts();
+    save();
+  }
+
+  function go(tab) {
+    document.querySelectorAll(".screen").forEach(el => {
+      el.classList.toggle("active", el.id === tab);
+    });
+
+    document.querySelectorAll(".tab").forEach(el => {
+      el.classList.toggle("active", el.dataset.tab === tab);
+      el.setAttribute(
+        "aria-current",
+        el.dataset.tab === tab ? "page" : "false"
+      );
+    });
+
+    $("#main").scrollTop = 0;
+  }
+
+  function modelRow(name, model) {
+    const score = Math.round(model.score);
+
+    return `
+      <div class="model-row">
+        <strong>${name}</strong>
+        <div class="track">
+          <div style="width:${score}%"></div>
+        </div>
+        <div class="score">
+          ${escapeHTML(model.decision)} ${score}%
+        </div>
+      </div>
+    `;
+  }
+
+  function openItem(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+
+    activeItem = id;
+
+    const canAct = item.status === "open";
+    const actions = canAct
+      ? `
+        <button class="yellow-btn full-btn"
+          onclick="approveItem()">
+          ${item.decision === "ask"
+            ? "Approve draft preparation"
+            : item.decision === "remember"
+              ? "Mark as handled"
+              : item.decision === "ignore"
+                ? "Retire this"
+                : "Approve simulated action"}
+        </button>
+        <button class="secondary-btn full-btn"
+          onclick="dismissItem()">
+          Dismiss commitment
+        </button>
+      `
+      : `
+        <button class="secondary-btn full-btn"
+          onclick="closeSheet()">
+          Done
+        </button>
+      `;
+
+    $("#sheet").innerHTML = `
+      <div class="sheet-handle"></div>
+
+      <div class="sheet-top">
+        ${tag(item.decision)}
+        <button class="close-btn"
+          aria-label="Close" onclick="closeSheet()">×</button>
+      </div>
+
+      <h2 id="sheet-title">${escapeHTML(item.title)}</h2>
+
+      <p class="desc">
+        ${item.confidence}% decision confidence ·
+        ${escapeHTML(item.person)}
+      </p>
+
+      <div class="sheet-label">Original conversation</div>
+      <div class="sheet-quote">
+        “${escapeHTML(item.quote)}”
+      </div>
+      <p class="desc">${escapeHTML(item.source)}</p>
+
+      <div class="sheet-label">Decision model</div>
+
+      ${modelRow("Jev", item.jev)}
+      ${modelRow("d1", item.d1)}
+
+      <div class="sheet-label">Why Latent chose this</div>
+      <p class="desc" style="color:#333;font-size:13px">
+        ${escapeHTML(item.why)}
+      </p>
+
+      <div class="sheet-label">Safety and permission gate</div>
+      <div class="policy">
+        <strong>
+          ${item.decision === "ask"
+            ? "⏸ Action paused"
+            : item.decision === "draft"
+              ? "✎ Draft only"
+              : item.decision === "execute"
+                ? "✓ Reversible / reconciled"
+                : "◉ No external action"}
+        </strong>
+        <p>${escapeHTML(item.policy)}</p>
+      </div>
+
+      <div class="sheet-label">Receipt</div>
+      <p class="desc">${escapeHTML(item.result)}</p>
+
+      <div class="sheet-actions">${actions}</div>
+
+      <p class="desc" style="text-align:center;margin-top:15px">
+        Demo only · No real emails, payments, or calendar changes
+      </p>
+    `;
+
+    $("#overlay").classList.add("open");
+    document.body.style.overflow = "hidden";
+    $("#sheet").querySelector(".close-btn").focus();
+  }
+
+  function closeSheet() {
+    $("#overlay").classList.remove("open");
+    document.body.style.overflow = "";
+    activeItem = null;
+  }
+
+  function closeOutside(e) {
+    if (e.target.id === "overlay") closeSheet();
+  }
+
+  function receipt(title, detail, decision) {
+    state.receipts.unshift({
+      title,
+      detail,
+      decision,
+      time: "Now"
+    });
+  }
+
+  function approveItem() {
+    const item = state.items.find(i => i.id === activeItem);
+    if (!item || item.status !== "open") return;
+
+    if (item.decision === "ask") {
+      item.decision = "draft";
+      item.result = "Draft preparation approved. Nothing sent.";
+      item.policy = "User authorized drafting only. External action remains blocked.";
+
+      receipt(
+        `Draft preparation approved: ${item.title}`,
+        "User authorized drafting. No external action performed.",
+        "draft"
+      );
+
+      notify("Draft preparation approved");
+    } else {
+      item.status = "closed";
+      item.result = "Action approved and simulated. No external action performed.";
+
+      receipt(
+        `Approved: ${item.title}`,
+        "Simulated action completed. No external system was modified.",
+        item.decision
+      );
+
+      notify("Simulated action recorded");
+    }
+
+    closeSheet();
+    render();
+  }
+
+  function dismissItem() {
+    const item = state.items.find(i => i.id === activeItem);
+    if (!item) return;
+
+    item.status = "obsolete";
+    item.decision = "ignore";
+    item.result = "Dismissed by user. No action performed.";
+
+    receipt(
+      `Dismissed: ${item.title}`,
+      "User rejected the inferred commitment.",
+      "ignore"
+    );
+
+    closeSheet();
+    render();
+    notify("Commitment dismissed");
+  }
+
+  function hearConversation() {
+    const sample = clone(
+      samples[state.nextSample % samples.length]
+    );
+
+    state.nextSample += 1;
+
+    const item = {
+      ...sample,
+      id: "new-" + Date.now(),
+      status: "open",
+      age: 0,
+      source: "New Bee conversation · Just now",
+      time: "Now"
+    };
+
+    state.items.unshift(item);
+
+    receipt(
+      `New intent detected: ${item.title}`,
+      `${item.confidence}% confidence · Chose to ${item.decision}. ${item.result}`,
+      item.decision
+    );
+
+    render();
+    go("today");
+    openItem(item.id);
+    notify("New conversation analyzed");
+  }
+
+  function retireObsolete() {
+    const obsolete = state.items.filter(i =>
+      i.status === "obsolete"
+    );
+
+    if (!obsolete.length) {
+      notify("No obsolete commitments to retire");
+      return;
+    }
+
+    state.items = state.items.filter(i =>
+      i.status !== "obsolete"
+    );
+
+    receipt(
+      `${obsolete.length} obsolete commitment(s) retired`,
+      "Superseded or dismissed items removed from the active map.",
+      "ignore"
+    );
+
+    render();
+    notify("Obsolete commitments retired");
+  }
+
+  function simulateResearch() {
+    receipt(
+      "Research agent dispatch simulated",
+      "User approved the sample plan. No real browsing, research, or external tool calls occurred.",
+      "draft"
+    );
+
+    render();
+    notify("Simulated dispatch recorded");
+    go("receipts");
+  }
+
+  function resetDemo() {
+    state = {
+      items: clone(seed),
+      receipts: clone(initialReceipts),
+      nextSample: 0
+    };
+
+    filter = "all";
+    render();
+    go("today");
+    notify("Demo reset");
+  }
+
+  function notify(message) {
+    const el = $("#toast");
+    el.textContent = message;
+    el.classList.add("show");
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      el.classList.remove("show");
+    }, 2500);
+  }
+
+  document.querySelectorAll(".filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      filter = btn.dataset.filter;
+      renderCommitments();
+    });
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeSheet();
+  });
+
+  Object.assign(window, {
+    go,
+    openItem,
+    closeSheet,
+    closeOutside,
+    approveItem,
+    dismissItem,
+    hearConversation,
+    retireObsolete,
+    simulateResearch,
+    resetDemo
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

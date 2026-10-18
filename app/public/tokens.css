@@ -1,0 +1,352 @@
+/* tokens.css — every colour, size, radius, space and duration in the app.
+   Nothing in style.css writes a raw value; it references these names.
+
+   The palette and the type scale follow the Bee reference directly.
+
+   The material rule, which is the important one:
+
+     Glass is chrome, not content. A surface is made of glass only where there
+     is something behind it to bend — the hero's gradient, and the page
+     scrolling under the dock. A card that holds text stays opaque. That is why
+     the hero's chips, the hero card, the dock and the dock's active tab are
+     glass, and every other card is flat with a soft shadow and a hairline.
+
+   A glass surface is four values read together: a translucent veil, a frost
+   that blurs what is behind it, a rim light along its top edge, and a hairline
+   that keeps the edge crisp.
+
+   Yellow is the agent's field and the hero, never a button colour. A primary
+   button is ink, and in dark mode it inverts to yellow.
+
+   Light and dark are the same names with different values where the surface
+   actually changes. The hero keeps its saturated field in both themes, so the
+   glass that sits on it keeps its light values in both themes too. */
+
+/* ---- the typeface ---------------------------------------------------------
+   Fonetika carries the display type: the greeting, every section heading, the
+   dock labels and the big numerals. It is a display cut with only 133 glyphs —
+   the letters, the digits, and " !&,-.?@" — so any string set in it must avoid
+   a percent sign, a colon, a parenthesis and a curly quote. Where one of those
+   is needed, the string stays in the text face. `verify.mjs` checks the
+   rendered page for a Fonetika string containing a character the font lacks,
+   because the browser would substitute that one glyph from the fallback face
+   and the line would read as two typefaces.
+
+   The text face is the system face, which is what Bee's own app renders in and
+   what keeps the app legible offline. Fonetika Mono is used only for machine
+   output, where a column has to line up.
+
+   Both files are the trial cut and are Personal Use Only. See
+   public/fonts/LICENSE.txt before distributing this app. */
+
+@font-face {
+  font-family: "Fonetika";
+  src: url("fonts/fonetika-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fonetika";
+  src: url("fonts/fonetika-500.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fonetika";
+  src: url("fonts/fonetika-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fonetika";
+  src: url("fonts/fonetika-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fonetika";
+  src: url("fonts/fonetika-800.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fonetika Mono";
+  src: url("fonts/fonetika-mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fonetika Mono";
+  src: url("fonts/fonetika-mono-500.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+
+  /* ---- surfaces ---------------------------------------------------------- */
+  --bg: #fbfaf6;          /* the page */
+  --card: #ffffff;        /* a card, and the sheet */
+  --fg: #15140d;          /* primary text */
+  --mute: #67675f;        /* secondary text */
+  --line: #ebe9e0;        /* a hairline */
+  --line-2: #dcd9cd;      /* a hairline that has to be seen */
+  --chip: #efeee8;        /* a quiet chip, or a bar track */
+  --chip-2: #e4e2d8;
+  --scrim: rgba(0, 0, 0, 0.4);
+  --pri: #15140d;         /* the primary button */
+  --pri-fg: #ffffff;
+
+  /* ---- the hero and the agent's field ------------------------------------ */
+  --yel: #f9dc4a;
+  --yel2: #fcec7c;
+  --lav: #d6cbf8;
+  --lav2: #e4dcfb;
+  --lav-strong: #b7a4f4;  /* the "needs you" tier, and the calibration curve */
+
+  /* ---- ink for a field that never inverts --------------------------------
+     The hero, the story cards on yellow or lilac, the quote cards and the
+     Twin's canvas all keep the same saturated field in light and in dark. Ink
+     on any of them therefore has to be declared once and left out of the dark
+     block below — otherwise dark mode puts the light-mode ink on a light field
+     and the text disappears. These three tokens are the whole of that rule. */
+  --field-ink: #15140d;
+  --field-mute: #4a4939;
+  --field-line: rgba(21, 20, 13, 0.16);
+  --yel-ink: var(--field-ink);
+  --lav-ink: var(--field-ink);
+  --hero-mute: var(--field-mute);
+
+  /* the hero: a yellow field with two lilac lights in the top-right corner */
+  --hero:
+    radial-gradient(120% 90% at 100% 0%, #d6cbf8 0%, rgba(214, 203, 248, 0) 62%),
+    radial-gradient(100% 70% at 100% 100%, rgba(214, 203, 248, 0.7) 0%, rgba(214, 203, 248, 0) 60%),
+    #f9dc4a;
+  /* the one dark field, used by a story card and by the Twin */
+  --dark: #1a190c;
+  --dark-fg: #f6f4e8;
+  --dark-line: rgba(255, 255, 255, 0.14);
+
+  /* ---- signals (one meaning each, never decoration) ---------------------- */
+  --ok: #1d6b3a;          /* something completed, or a live connection */
+  --ok-bg: #dff3e4;
+  --live: #2fb457;        /* the dot that means Bee is connected */
+  --warn: #8a5410;        /* something needs a decision */
+  --warn-bg: #fdeecd;
+  --miss: #8c3b2f;        /* something slipped */
+  --miss-bg: #fbe4df;
+
+  /* ---- tier colours ------------------------------------------------------ */
+  /* The Twin's node fills and nothing else. */
+  --tier-execute: #15140d;
+  --tier-draft: #f9dc4a;
+  --tier-ask: #b7a4f4;
+  --tier-remember: #ffffff;
+  --tier-ignore: #ffffff;
+  --tier-unscored: #cfcbbd;
+
+  /* ---- avatars ----------------------------------------------------------- */
+  /* A name hashes to one of these, so a person keeps one colour everywhere. */
+  --av-1: #f9dc4a;
+  --av-2: #d6cbf8;
+  --av-3: #dff3e4;
+  --av-4: #fbe4df;
+  --av-5: #e4dcfb;
+  --av-6: #efeee8;
+
+  /* ---- type --------------------------------------------------------------
+     One text face, one display face out of the same family, one mono for
+     machine output. See the note above the @font-face block. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font: var(--font-sans);
+  --font-display: "Fonetika", var(--font-sans);
+  --font-mono: "Fonetika Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --numerals: tabular-nums;
+
+  --text-display: 84px;   /* one number, on a story card */
+  --text-hero: 32px;      /* the greeting */
+  --text-sheet: 24px;     /* a sheet title */
+  --text-title: 20px;     /* a section heading, and a story heading */
+  --text-card: 17px;      /* a card's sentence */
+  --text-body: 16px;      /* running text */
+  --text-row: 15px;       /* a row in a table */
+  --text-ui: 14px;        /* a button, a bar label */
+  --text-lbl: 13px;       /* metadata, and the floor */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-heavy: 800;
+
+  --leading-flat: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.4;
+  --leading-loose: 1.55;
+
+  --track-display: -0.03em;
+  --track-hero: -0.03em;
+  --track-head: -0.02em;
+  --track-card: -0.01em;
+
+  /* ---- spacing ------------------------------------------------------------ */
+  --s-1: 4px;
+  --s-2: 6px;
+  --s-3: 8px;
+  --s-4: 10px;
+  --s-5: 12px;
+  --s-6: 14px;
+  --s-7: 16px;
+  --s-8: 18px;
+  --s-9: 20px;
+  --s-10: 22px;
+  --s-11: 24px;
+  --s-12: 28px;
+  --s-13: 32px;
+
+  /* ---- radii ------------------------------------------------------------- */
+  --r-chip: 999px;
+  --r-small: 10px;
+  --r-quote: 18px;
+  --r-card: 24px;
+  --r-story: 24px;
+  --r-hero: 32px;
+  --r-sheet: 28px;
+
+  /* ---- layout ------------------------------------------------------------ */
+  --col: 480px;           /* the reading column */
+  --gutter: 20px;
+  --dock-h: 48px;
+  --dock-gap: 14px;
+  --target: 44px;         /* every control is at least this big */
+  --hair: 1px;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+
+  /* ---- motion ------------------------------------------------------------ */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-slow: 400ms;
+  --ease-out: cubic-bezier(0.16, 0.84, 0.44, 1);
+  --press: 0.97;          /* how far a control shrinks under a finger */
+
+  /* ---- elevation --------------------------------------------------------- */
+  /* A content card is flat, with a soft shadow and a hairline that keeps its
+     edge crisp. There is no glow anywhere in this app. */
+  --card-shadow:
+    0 1px 2px rgba(21, 20, 13, 0.04),
+    0 6px 20px rgba(21, 20, 13, 0.05),
+    0 0 0 var(--hair) var(--line);
+  --lift-shadow: 0 2px 10px rgba(21, 20, 13, 0.08);
+  --ring: 0 0 0 var(--hair) var(--line);
+
+  /* ---- the material ------------------------------------------------------ */
+  /* Values that sit on the hero never flip: the hero keeps its saturated field
+     in dark mode, so the glass on it must stay light-on-warm in dark mode too. */
+  --glass-veil: rgba(255, 255, 255, 0.5);
+  --glass-veil-deep: rgba(255, 255, 255, 0.58);
+  --glass-rim: rgba(255, 255, 255, 0.75);
+  --glass-rim-deep: rgba(255, 255, 255, 0.85);
+  --glass-edge: rgba(255, 255, 255, 0.6);
+  --glass-blur: 16px;
+  --glass-blur-deep: 22px;
+  --glass-sat: 180%;
+  --glass-shadow: 0 8px 28px rgba(21, 20, 13, 0.1);
+
+  /* The dock sits on the page, not on the hero, so it does flip. */
+  --dock: rgba(255, 255, 255, 0.55);
+  --dock-ink: var(--fg);
+  --dock-blur: 28px;
+  --dock-sat: 190%;
+  --dock-rim: rgba(255, 255, 255, 0.8);
+  --dock-edge: rgba(255, 255, 255, 0.65);
+  --dock-shadow: 0 10px 32px rgba(21, 20, 13, 0.16);
+  --tab-active-bg: rgba(255, 255, 255, 0.92);
+  --tab-active-ink: #15140d;
+  --tab-active-shadow: 0 2px 10px rgba(21, 20, 13, 0.14), inset 0 var(--hair) 0 #ffffff;
+
+  /* ---- the Twin's canvas --------------------------------------------------
+     The canvas sits on the hero, so it draws on the saturated field and these
+     values never flip: ink for the structure, the six tier colours for the
+     fills, and a white specular that makes a bead read as a bead. */
+  --canvas-ink: #15140d;
+  --canvas-hairline: rgba(21, 20, 13, 0.3);
+  --canvas-edge: rgba(21, 20, 13, 0.18);
+  --canvas-norm: rgba(21, 20, 13, 0.45);
+  --canvas-arc: rgba(21, 20, 13, 0.7);
+  --canvas-spec: rgba(255, 255, 255, 0.62);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #12110a;
+    --card: #1d1c12;
+    --fg: #f6f4e8;
+    --mute: #a09f93;
+    --line: #2c2b1f;
+    --line-2: #3a382a;
+    --chip: #2a291d;
+    --chip-2: #33321f;
+    --scrim: rgba(0, 0, 0, 0.6);
+    --pri: #f9dc4a;
+    --pri-fg: #15140d;
+
+    --ok: #7fd3a0;
+    --ok-bg: #16291d;
+    --warn: #f0c579;
+    --warn-bg: #2c2413;
+    --miss: #f0a196;
+    --miss-bg: #2e1a16;
+
+    --tier-execute: #f6f4e8;
+    --tier-draft: #f9dc4a;
+    --tier-ask: #b7a4f4;
+    --tier-remember: #1d1c12;
+    --tier-ignore: #1d1c12;
+    --tier-unscored: #4a4839;
+
+    --av-1: #4a4113;
+    --av-2: #3b3457;
+    --av-3: #1c3527;
+    --av-4: #3a201c;
+    --av-5: #322c4a;
+    --av-6: #2a291d;
+
+    --card-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.3),
+      0 6px 20px rgba(0, 0, 0, 0.34),
+      0 0 0 var(--hair) var(--line);
+    --lift-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+
+    /* Deliberately absent from this block: --field-ink, --field-mute,
+       --field-line, the glass values, the canvas values and the hero gradient
+       itself. Those all sit on a field that keeps its colour in both themes, so
+       re-declaring them here is what would break them. */
+
+    --dock: rgba(29, 28, 18, 0.88);
+    --dock-rim: rgba(255, 255, 255, 0.12);
+    --dock-edge: rgba(255, 255, 255, 0.1);
+    --dock-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+    --tab-active-bg: rgba(246, 244, 232, 0.92);
+    --tab-active-ink: #15140d;
+    --tab-active-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), inset 0 var(--hair) 0 rgba(255, 255, 255, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+    --motion-slow: 0ms;
+  }
+}
+
+::selection {
+  background: var(--lav2);
+  color: var(--fg);
+}

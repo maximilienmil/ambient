@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Latent</title>
+    <meta
+      name="description"
+      content="What you said you would do, read off your Bee conversations and kept on this machine."
+    />
+    <meta name="theme-color" content="#fbfaf6" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/tokens.css" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- ================================================== TODAY ========= -->
+      <section class="view" id="today-screen">
+        <header class="hero">
+          <div class="hero-top">
+            <button class="ib" type="button" id="history-btn" data-history aria-label="What Bee sent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3.6 12a8.4 8.4 0 1 0 2.5-6" /><path d="M3.6 4.6v3.9h3.9" /><path d="M12 8.2v4.2l2.9 1.7" />
+              </svg>
+            </button>
+            <span class="pill" id="acct-pill">
+              <span id="acct-text">Reading Bee</span>
+            </span>
+            <span class="av" id="me-avatar" aria-hidden="true">M</span>
+          </div>
+          <p class="badge preview-badge" hidden>Preview · synthetic data</p>
+
+          <p class="hero-hi">Hi <span id="owner-name">there</span>,</p>
+          <h1 class="hero-h1" id="greeting">Reading the ledger</h1>
+          <p class="hero-sub" id="today-sub">Bee has not been read yet on this machine.</p>
+          <p class="hero-live" id="hero-live" hidden></p>
+
+          <div class="hero-card" id="nudge">
+            <div class="hero-card-top">
+              <span id="nudge-label">Latent</span>
+              <span id="nudge-when"></span>
+            </div>
+            <p id="nudge-text">Nothing is waiting on you.</p>
+            <div class="btn-row" id="nudge-actions"></div>
+          </div>
+
+          <div class="wks" id="week-strip" role="group" aria-label="This week and the three before it"></div>
+        </header>
+
+        <main>
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Likely to slip</h2>
+              <span class="lbl" id="slip-note"></span>
+            </div>
+            <p class="sec-note" id="slip-basis"></p>
+            <div class="stack" id="slip-list"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>The two agents</h2>
+              <span class="lbl" id="negotiation-fact"></span>
+            </div>
+            <details class="card disc" id="agents-disc">
+              <summary>
+                <span>Propose a plan and watch the two sides argue</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </summary>
+              <form id="plan-form">
+                <div class="field">
+                  <label for="plan-commitment">Commitment</label>
+                  <select id="plan-commitment"></select>
+                </div>
+                <div class="field">
+                  <label for="plan-date">Proposed date</label>
+                  <input type="date" id="plan-date" />
+                </div>
+                <div class="field">
+                  <label for="plan-people">Who is in the room</label>
+                  <input
+                    type="text"
+                    id="plan-people"
+                    placeholder="You, Sam"
+                    autocomplete="off"
+                  />
+                  <p class="field-hint">Two names or more, separated by commas. Each one approves separately.</p>
+                </div>
+                <label class="check">
+                  <input type="checkbox" id="plan-consent" />
+                  <span>I have asked these people before proposing anything on their behalf.</span>
+                </label>
+                <div class="btn-row">
+                  <button class="btn btn-pri" type="submit">Propose the plan</button>
+                </div>
+              </form>
+            </details>
+            <div id="negotiation-list"></div>
+            <div id="plan-list"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>What Latent did</h2>
+              <span class="lbl" id="receipts-fact"></span>
+            </div>
+            <div id="receipt-list"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Closed this week</h2>
+              <span class="lbl" id="closed-note"></span>
+            </div>
+            <div class="card" id="closed-list"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Bee</h2>
+              <span class="lbl" id="sync-when"></span>
+            </div>
+            <div class="card">
+              <p class="note" id="privacy-note"></p>
+              <div class="btn-row">
+                <button class="btn btn-pri" type="button" id="sync-btn">Update from Bee</button>
+              </div>
+              <pre class="log" id="sync-log" hidden></pre>
+            </div>
+          </section>
+        </main>
+      </section>
+
+      <!-- ================================================== TWIN ========== -->
+      <section class="view" id="twin-screen" hidden>
+        <header class="hero">
+          <div class="hero-top">
+            <button class="ib" type="button" data-history aria-label="What Bee sent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3.6 12a8.4 8.4 0 1 0 2.5-6" /><path d="M3.6 4.6v3.9h3.9" /><path d="M12 8.2v4.2l2.9 1.7" />
+              </svg>
+            </button>
+            <span class="pill" id="twin-pill">Open · —</span>
+            <span class="av" id="twin-avatar" aria-hidden="true">M</span>
+          </div>
+          <p class="badge preview-badge" hidden>Preview · synthetic data</p>
+          <h1>Your twin</h1>
+          <p class="hero-sub" id="twin-sub"></p>
+
+          <div id="twin"></div>
+
+          <div class="legend" id="twin-legend"></div>
+          <p class="hero-cap" id="twin-cap"></p>
+        </header>
+
+        <main>
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Next action</h2>
+            </div>
+            <div id="now-card"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Open, by where it came from</h2>
+              <span class="lbl" id="kinds-note"></span>
+            </div>
+            <div class="card" id="kinds-list"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>How to read the field</h2>
+            </div>
+            <div class="card" id="field-legend"></div>
+          </section>
+        </main>
+      </section>
+
+      <!-- ================================================== RECORD ======== -->
+      <section class="view" id="record-screen" hidden>
+        <header class="hero">
+          <div class="hero-top">
+            <button class="ib" type="button" data-history aria-label="What Bee sent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3.6 12a8.4 8.4 0 1 0 2.5-6" /><path d="M3.6 4.6v3.9h3.9" /><path d="M12 8.2v4.2l2.9 1.7" />
+              </svg>
+            </button>
+            <span class="pill" id="record-pill">—</span>
+            <span class="av" id="record-avatar" aria-hidden="true">M</span>
+          </div>
+          <p class="badge preview-badge" hidden>Preview · synthetic data</p>
+          <h1>Your word versus your record</h1>
+          <p class="hero-sub" id="record-sub"></p>
+        </header>
+
+        <div class="stories" id="stories" tabindex="0" role="group" aria-label="Four findings from your record"></div>
+
+        <main>
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Phrases you use</h2>
+              <span class="lbl" id="phrases-note"></span>
+            </div>
+            <div class="card" id="phrase-list"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Who you promise to</h2>
+              <span class="lbl" id="audience-note"></span>
+            </div>
+            <div class="card" id="audience-list"></div>
+          </section>
+        </main>
+      </section>
+
+      <!-- ================================================== TRUST ========= -->
+      <section class="view" id="trust-screen" hidden>
+        <header class="hero">
+          <div class="hero-top">
+            <button class="ib" type="button" data-history aria-label="What Bee sent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3.6 12a8.4 8.4 0 1 0 2.5-6" /><path d="M3.6 4.6v3.9h3.9" /><path d="M12 8.2v4.2l2.9 1.7" />
+              </svg>
+            </button>
+            <span class="pill" id="trust-pill">—</span>
+            <span class="av" id="trust-avatar" aria-hidden="true">M</span>
+          </div>
+          <p class="badge preview-badge" hidden>Preview · synthetic data</p>
+          <h1>What Latent kept</h1>
+          <p class="hero-sub" id="trust-sub"></p>
+        </header>
+
+        <main>
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Counts</h2>
+            </div>
+            <div class="card" id="privacy-card"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Conversation, as stored</h2>
+              <span class="lbl" id="transcript-note"></span>
+            </div>
+            <div class="card" id="transcript-card"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Receipts for others</h2>
+            </div>
+            <div class="card" id="receipts-people"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Every conversation</h2>
+              <span class="lbl" id="conversation-note"></span>
+            </div>
+            <div class="stack" id="conversation-list"></div>
+          </section>
+
+          <section class="sec">
+            <div class="sec-head">
+              <h2>Every commitment kept</h2>
+              <span class="lbl" id="ledger-fact"></span>
+            </div>
+            <div class="filters" id="filters" role="group" aria-label="Filter the ledger by decision">
+              <button class="filt" type="button" data-filter="all">All</button>
+              <button class="filt" type="button" data-filter="draft">Draft</button>
+              <button class="filt" type="button" data-filter="ask">Held back</button>
+              <button class="filt" type="button" data-filter="unscored">Unscored</button>
+            </div>
+            <div class="stack" id="commitment-list"></div>
+            <div class="btn-row">
+              <button class="btn" type="button" id="load-more" hidden>Show more</button>
+            </div>
+            <div class="btn-row">
+              <button class="btn" type="button" id="bankruptcy-btn">Retire nothing</button>
+            </div>
+            <p class="note" id="bankruptcy-sub"></p>
+          </section>
+        </main>
+      </section>
+    </div>
+
+    <!-- ============================================== the dock ========== -->
+    <nav id="dock" aria-label="Sections">
+      <button class="dock-tab" type="button" data-tab="today-screen" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 10.4 12 3l9 7.4" /><path d="M5.8 9.4V21h12.4V9.4" /><path d="M10 21v-6h4v6" />
+        </svg>
+        Today
+      </button>
+      <button class="dock-tab" type="button" data-tab="twin-screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9.5" cy="10" r="5.5" /><circle cx="15.5" cy="15" r="4" /><circle cx="18.5" cy="7" r="2" />
+        </svg>
+        Twin
+      </button>
+      <button class="dock-tab" type="button" data-tab="record-screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 20.5h18" /><path d="M6.5 20.5V13" /><path d="M12 20.5V4.5" /><path d="M17.5 20.5v-5" />
+        </svg>
+        Record
+      </button>
+      <button class="dock-tab" type="button" data-tab="trust-screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3.2 19 5.8v5.9c0 4.2-2.9 7.2-7 8.6-4.1-1.4-7-4.4-7-8.6V5.8z" /><path d="m8.9 11.9 2.2 2.2 4-4.2" />
+        </svg>
+        Trust
+      </button>
+    </nav>
+
+    <div id="scrim" role="dialog" aria-modal="true">
+      <div class="sheet" id="sheet"></div>
+    </div>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <div class="undo" id="undo" hidden>
+      <span id="undo-text"></span>
+      <button class="btn" type="button" id="undo-btn">Undo</button>
+    </div>
+
+    <noscript>
+      <p class="note noscript">
+        Latent reads your Bee account through a local server and needs JavaScript to
+        draw the ledger. It runs entirely on this machine.
+      </p>
+    </noscript>
+
+    <script src="/twin.js" defer></script>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

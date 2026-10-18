@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-10-17T17:26:11.699Z",
+  "source": "decide/eval.mjs",
+  "predictionsFile": null,
+  "configured": {
+    "jev": false,
+    "d1": false,
+    "both": false
+  },
+  "counts": {
+    "predictionRows": 0,
+    "withTruth": 0,
+    "ruleBaselineRows": 24
+  },
+  "methods": [
+    {
+      "method": "Jev alone",
+      "status": "not configured",
+      "rows": 0,
+      "accuracy": null,
+      "wrongActionRate": null,
+      "calibrationError": null,
+      "latencyMs": null,
+      "costPerDecision": null
+    },
+    {
+      "method": "d1 alone",
+      "status": "not configured",
+      "rows": 0,
+      "accuracy": null,
+      "wrongActionRate": null,
+      "calibrationError": null,
+      "latencyMs": null,
+      "costPerDecision": null
+    },
+    {
+      "method": "Jev+d1 (policy)",
+      "status": "not configured",
+      "rows": 0,
+      "accuracy": null,
+      "wrongActionRate": null,
+      "calibrationError": null,
+      "latencyMs": null,
+      "costPerDecision": null
+    },
+    {
+      "method": "LLM-only baseline",
+      "status": "ok (rule baseline)",
+      "rows": 24,
+      "accuracy": 0.8333333333333334,
+      "wrongActionRate": 0.041666666666666664,
+      "calibrationError": null,
+      "latencyMs": null,
+      "costPerDecision": null,
+      "skipped": {
+        "noTruth": 0,
+        "noPrediction": 0,
+        "invalidDistribution": 0
+      }
+    }
+  ],
+  "notes": [
+    "LLM-only baseline row uses evaluation-results.json produced by evaluate.mjs (domain.mjs rule extractor). Rules emit no probability and no timing, so calibration, latency and cost are null."
+  ]
+}

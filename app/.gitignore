@@ -1,0 +1,6 @@
+data/
+labels.json
+bee-sync/
+*.log
+.env
+node_modules/

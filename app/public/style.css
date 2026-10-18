@@ -1,0 +1,1970 @@
+/* style.css — the interface. Every value comes from tokens.css.
+
+   The composition is the Bee reference's: one scrolling column, a warm
+   off-white page, a saturated gradient hero with a rounded bottom edge, white
+   cards with a hairline ring, and a floating dock for navigation.
+
+   Three rules hold the whole thing together:
+
+     1. A card is a card because of its ring, not a glow. `--lift` is reserved
+        for the two surfaces that genuinely float: the sheet and the dock.
+     2. The hero is the only saturated surface on a screen. Everything below it
+        is the page and the cards. Yellow does not appear as a button colour —
+        a primary button is ink, and in dark mode it inverts to yellow.
+     3. Text is 13px or larger, and a control is 44px or larger, everywhere. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  scroll-padding-top: var(--safe-top);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  font-variant-numeric: var(--numerals);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  font-variant-numeric: var(--numerals);
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    background-color var(--motion-base) var(--ease-out),
+    color var(--motion-base) var(--ease-out);
+}
+
+/* Form controls do not inherit the face by default — Chrome gives them Arial or
+   monospace — so the page would render in three typefaces without these lines. */
+input,
+select,
+textarea {
+  font: inherit;
+  font-variant-numeric: var(--numerals);
+}
+
+/* every control gives a little under a finger, the same amount */
+button:active {
+  transform: scale(var(--press));
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pri);
+  outline-offset: 2px;
+  border-radius: var(--r-small);
+}
+
+svg {
+  display: block;
+  flex: none;
+}
+
+h1, h2, h3, p, dl, dt, dd, figure {
+  margin: 0;
+}
+
+/* The display face carries the chrome and the headings, and every one of those
+   strings is written by this app, so none of them can contain a character the
+   face lacks. A heading that quotes the wearer — a commitment's own sentence, a
+   plan's title, a sheet's title — stays in the text face. */
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  text-wrap: balance;
+}
+
+h3 {
+  font-family: var(--font);
+  font-weight: var(--weight-semibold);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: var(--hair);
+  height: var(--hair);
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* --- the column ----------------------------------------------------------- */
+
+#app {
+  width: 100%;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding-bottom: calc(var(--dock-gap) * 2 + var(--dock-h) + var(--safe-bottom) + var(--s-13));
+}
+
+/* An author rule that sets `display` beats the user agent's `[hidden] { display:
+   none }`, so every element the app toggles with the `hidden` attribute needs
+   this to actually hide. Without it the preview badge stayed on screen in the
+   real path and labelled real Bee data as synthetic. */
+[hidden] {
+  display: none !important;
+}
+
+main {
+  padding: var(--s-10) var(--gutter) 0;
+}
+
+/* --- the material ---------------------------------------------------------
+   One recipe, three sizes. Chrome is glass; content is not. */
+
+.pill,
+.av:not([class*="av-"]),
+.ib,
+.wks button {
+  background: var(--glass-veil);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: var(--hair) solid var(--glass-edge);
+  box-shadow: inset 0 var(--hair) 0 var(--glass-rim);
+  /* the glass sits on a field that never inverts, so its ink does not either */
+  color: var(--field-ink);
+}
+
+.hero-card {
+  background: var(--glass-veil-deep);
+  -webkit-backdrop-filter: blur(var(--glass-blur-deep)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur-deep)) saturate(var(--glass-sat));
+  border: var(--hair) solid var(--glass-rim-deep);
+  box-shadow: inset 0 var(--hair) 0 var(--glass-rim-deep), var(--glass-shadow);
+}
+
+/* --- the hero ------------------------------------------------------------- */
+
+.hero {
+  background: var(--hero);
+  color: var(--yel-ink);
+  padding: calc(var(--safe-top) + var(--s-6)) var(--gutter) var(--s-9);
+  border-radius: 0 0 var(--r-hero) var(--r-hero);
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-7);
+}
+
+.hero-top .pill {
+  margin-right: auto;
+}
+
+.hero-hi {
+  font-size: var(--text-card);
+  font-weight: var(--weight-medium);
+}
+
+.hero-h1 {
+  font-size: var(--text-hero);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--track-hero);
+}
+
+.hero-sub {
+  margin-top: var(--s-3);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  color: var(--hero-mute);
+}
+
+.hero-sub b {
+  font-weight: var(--weight-bold);
+  color: var(--yel-ink);
+}
+
+/* the hero card is glass over the one saturated surface in the app, so the
+   frost has the gradient to bend */
+.hero-card {
+  margin-top: var(--s-8);
+  padding: var(--s-6) var(--s-7);
+  border-radius: var(--r-card);
+  color: var(--field-ink);
+}
+
+.hero-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  font-size: var(--text-lbl);
+  color: var(--field-mute);
+}
+
+.hero-card p {
+  margin: var(--s-2) 0 var(--s-5);
+  font-size: var(--text-body);
+}
+
+.hero-cap {
+  font-size: var(--text-lbl);
+  color: var(--hero-mute);
+}
+
+/* the pill that says Bee is connected */
+.rec {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 1px var(--s-4);
+  border-radius: var(--r-chip);
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-weight: var(--weight-semibold);
+}
+
+.rec i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live);
+}
+
+/* the icon button that opens the history */
+.ib {
+  width: var(--target);
+  height: var(--target);
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--yel-ink);
+}
+
+.ib svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* the week strip: on Today it is four read-only chips, on the Twin it is four
+   buttons that choose which week the field is showing */
+.wks {
+  display: flex;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* the row bleeds to the screen edge so it reads as scrollable */
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+}
+
+.wks::-webkit-scrollbar {
+  display: none;
+}
+
+.wks > * {
+  flex: none;
+  min-height: var(--target);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0 var(--s-6);
+  border-radius: var(--r-chip);
+  color: var(--field-ink);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+/* a read-only chip carries a line of fact under the label; the full rule is in
+   the week-strip block further down */
+
+.wks button[aria-pressed="true"] {
+  background: var(--field-ink);
+  border-color: var(--field-ink);
+  box-shadow: none;
+  color: #ffffff;
+}
+
+/* --- pills, avatars and badges -------------------------------------------- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 6px var(--s-5);
+  border-radius: var(--r-chip);
+  color: var(--yel-ink);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+.pill svg {
+  width: 14px;
+  height: 14px;
+}
+
+.pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+}
+
+.pill.quiet,
+.pill.plain {
+  background: var(--chip);
+  border-color: var(--line);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  color: var(--fg);
+  font-weight: var(--weight-medium);
+}
+
+.av {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--chip);
+  color: var(--fg);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+}
+
+.av-sm {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+
+/* a tinted avatar is a person, and a person keeps one colour everywhere. The
+   extra class keeps the tint ahead of the glass recipe on the same element. */
+.av.av-1 { background: var(--av-1); }
+.av.av-2 { background: var(--av-2); }
+.av.av-3 { background: var(--av-3); }
+.av.av-4 { background: var(--av-4); }
+.av.av-5 { background: var(--av-5); }
+.av.av-6 { background: var(--av-6); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: 3px var(--s-3);
+  border-radius: var(--r-chip);
+  background: var(--warn-bg);
+  color: var(--warn);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+/* --- sections and cards --------------------------------------------------- */
+
+.sec {
+  margin-bottom: var(--s-11);
+}
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+}
+
+h2 {
+  font-size: var(--text-title);
+  letter-spacing: var(--track-head);
+}
+
+.sec-note {
+  margin: calc(var(--s-1) * -1) 0 var(--s-4);
+  font-size: var(--text-lbl);
+  color: var(--mute);
+}
+
+/* a content card is opaque. It holds text, so nothing is asked to show through
+   it; the soft shadow and the hairline are what give it an edge. */
+.card {
+  background: var(--card);
+  border-radius: var(--r-card);
+  padding: var(--s-7) var(--s-8);
+  margin-bottom: var(--s-5);
+  box-shadow: var(--card-shadow);
+}
+
+.card:last-child {
+  margin-bottom: 0;
+}
+
+.lbl {
+  font-size: var(--text-lbl);
+  color: var(--mute);
+}
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-5);
+}
+
+.card-head > div {
+  min-width: 0;
+}
+
+.card-title {
+  font-size: var(--text-card);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--track-card);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-width: 0;
+}
+
+.card-row .card-title {
+  flex: 1;
+}
+
+.plus {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--chip);
+  color: var(--fg);
+}
+
+.plus svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- the slip bar --------------------------------------------------------- */
+
+.risk {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin: var(--s-3) 0 var(--s-3);
+  font-size: var(--text-ui);
+}
+
+.rb,
+.b {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--r-chip);
+  background: var(--chip);
+  overflow: hidden;
+}
+
+.rb u,
+.b u {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--fg);
+  transition: width var(--motion-slow) var(--ease-out);
+}
+
+.risk-val {
+  flex: none;
+  font-variant-numeric: var(--numerals);
+  color: var(--mute);
+}
+
+.b-warn u {
+  background: var(--warn);
+}
+
+.b-ok u {
+  background: var(--ok);
+}
+
+/* --- chips and buttons ---------------------------------------------------- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 3px var(--s-4);
+  border-radius: var(--r-chip);
+  background: var(--lav2);
+  color: var(--fg);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-medium);
+}
+
+.chip svg {
+  width: 13px;
+  height: 13px;
+}
+
+.chip.ok { background: var(--ok-bg); color: var(--ok); }
+.chip.warn { background: var(--warn-bg); color: var(--warn); }
+.chip.miss { background: var(--miss-bg); color: var(--miss); }
+.chip.quiet { background: var(--chip); color: var(--mute); }
+
+.btn {
+  min-height: var(--target);
+  padding: 0 var(--s-8);
+  border: var(--hair) solid var(--line);
+  border-radius: var(--r-chip);
+  background: var(--card);
+  color: var(--fg);
+  font-size: var(--text-ui);
+  font-weight: var(--weight-medium);
+  transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.btn:active {
+  transform: scale(var(--press));
+}
+
+.btn-pri {
+  background: var(--pri);
+  color: var(--pri-fg);
+  border-color: var(--pri);
+  font-weight: var(--weight-semibold);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-row {
+  display: flex;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+}
+
+.btn-row > button {
+  flex: 1;
+  min-width: 0;
+  padding-inline: var(--s-4);
+}
+
+/* --- proof rows ----------------------------------------------------------- */
+
+.proof {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding: var(--s-4) 0;
+  border-top: var(--hair) solid var(--line);
+  font-size: var(--text-ui);
+}
+
+.proof:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.proof:last-child {
+  padding-bottom: 0;
+}
+
+.proof b {
+  font-weight: var(--weight-bold);
+  font-variant-numeric: var(--numerals);
+}
+
+.proof .lbl {
+  text-align: right;
+}
+
+/* --- phrase and audience rows (the Record screen) ------------------------- */
+
+.ph {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding: var(--s-2) 0;
+  border-top: var(--hair) solid rgba(21, 20, 13, 0.12);
+  font-size: var(--text-body);
+}
+
+.ph:first-of-type {
+  border-top: 0;
+}
+
+.ph b {
+  font-variant-numeric: var(--numerals);
+  font-weight: var(--weight-semibold);
+}
+
+/* the "not enough data" mark. It appears both in a phrase table on a white card
+   and inside a story card on a coloured field, so it takes its colour from the
+   surface it lands on rather than picking one of the two. */
+.ph-hidden {
+  color: var(--mute);
+}
+
+.story .ph-hidden {
+  color: var(--hero-mute);
+}
+
+.story.d .ph-hidden {
+  color: rgba(246, 244, 232, 0.7);
+}
+
+.bar2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 88px 46px;
+  gap: var(--s-4);
+  align-items: center;
+  margin: var(--s-4) 0;
+  font-size: var(--text-ui);
+}
+
+.bar2 span:last-child {
+  text-align: right;
+  font-variant-numeric: var(--numerals);
+  color: var(--mute);
+}
+
+/* --- the hour chart ------------------------------------------------------- */
+
+.hb {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 130px;
+  margin: var(--s-7) 0 var(--s-2);
+}
+
+.hb i {
+  flex: 1;
+  border-radius: 5px 5px 2px 2px;
+  background: var(--fg);
+}
+
+.hb-x {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-lbl);
+}
+
+/* --- the calibration plot ------------------------------------------------- */
+
+.cal {
+  width: 100%;
+  height: auto;
+  margin-top: var(--s-5);
+  color: var(--field-ink);
+}
+
+.cal-note {
+  margin-top: var(--s-4);
+  font-size: var(--text-lbl);
+  color: var(--mute);
+}
+
+/* --- story cards ---------------------------------------------------------- */
+
+.stories {
+  display: flex;
+  gap: var(--s-5);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 0 var(--gutter) var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.stories::-webkit-scrollbar {
+  display: none;
+}
+
+.story {
+  flex: 0 0 86%;
+  scroll-snap-align: center;
+  border-radius: var(--r-story);
+  padding: var(--s-9);
+  min-height: 360px;
+  color: var(--yel-ink);
+  box-shadow: var(--ring);
+}
+
+.story h2 {
+  font-size: var(--text-title);
+}
+
+.story.y { background: var(--yel); }
+.story.y2 { background: var(--yel2); }
+.story.l { background: var(--lav); }
+.story.w {
+  background: var(--card);
+  color: var(--fg);
+}
+
+/* the one dark field, so a story can hold a different kind of weight */
+.story.d {
+  background: var(--dark);
+  color: var(--dark-fg);
+  box-shadow: none;
+}
+
+.story.d h2,
+.story.d b {
+  color: var(--yel);
+}
+
+.story.d .lbl,
+.story.d .hb-x,
+.story.d .bar2 span:last-child {
+  color: rgba(246, 244, 232, 0.7);
+}
+
+.story.d .bar2 i,
+.story.d .rb,
+.story.d .b {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.story.d .bar2 i u {
+  background: var(--yel);
+}
+
+.story.d .story-line {
+  background: none;
+  color: rgba(246, 244, 232, 0.7);
+}
+
+.story .lbl,
+.story .hb-x {
+  color: var(--hero-mute);
+}
+
+.story.w .lbl,
+.story.w .hb-x {
+  color: var(--mute);
+}
+
+/* The one big number on a story card. It is set in the display face and it is a
+   bare number: that face has no percent sign, so the unit is written into the
+   line underneath instead of being appended to the figure. */
+.big {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: var(--weight-heavy);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  margin: var(--s-6) 0 var(--s-3);
+  font-variant-numeric: var(--numerals);
+}
+
+/* --- the Twin ------------------------------------------------------------- */
+
+.twin-wrap {
+  width: 100%;
+  height: 320px;
+  touch-action: manipulation;
+}
+
+#twin-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin-top: var(--s-3);
+  font-size: var(--text-lbl);
+  color: var(--hero-mute);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.legend i {
+  width: 11px;
+  height: 11px;
+  margin-right: 6px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 var(--hair) rgba(21, 20, 13, 0.28);
+}
+
+.cap {
+  display: grid;
+  gap: var(--s-1);
+  margin-bottom: var(--s-5);
+}
+
+.cap-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  font-size: var(--text-ui);
+}
+
+.cap-row b {
+  font-variant-numeric: var(--numerals);
+  font-weight: var(--weight-bold);
+}
+
+/* --- the day / week scrubber ---------------------------------------------- */
+
+.scrub {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+}
+
+.scrub-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  font-size: var(--text-lbl);
+  color: var(--hero-mute);
+}
+
+.scrub-val {
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: var(--numerals);
+  color: var(--yel-ink);
+}
+
+.scrub input[type="range"] {
+  width: 100%;
+  min-height: var(--target);
+  accent-color: var(--yel-ink);
+}
+
+/* --- the sheet ------------------------------------------------------------ */
+
+#scrim {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--scrim);
+  z-index: 20;
+}
+
+#scrim.on {
+  display: flex;
+}
+
+/* the sheet is opaque: it holds text, and a blurred ledger behind a paragraph
+   only makes the paragraph harder to read */
+.sheet {
+  width: 100%;
+  max-width: var(--col);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--card);
+  color: var(--fg);
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  padding: var(--s-6) var(--gutter) calc(var(--s-8) + var(--safe-bottom));
+  animation: sheet-up var(--motion-base) var(--ease-out);
+  overscroll-behavior: contain;
+}
+
+/* the grabber, so a sheet reads as something that was pulled up */
+.sheet::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 4px;
+  margin: 0 auto var(--s-7);
+  border-radius: var(--r-chip);
+  background: var(--line-2);
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(24px); opacity: 0; }
+}
+
+.sheet-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-5);
+}
+
+.sheet-h2 {
+  font-family: var(--font);
+  font-size: var(--text-sheet);
+  letter-spacing: var(--track-head);
+  line-height: var(--leading-snug);
+  margin: var(--s-1) 0 var(--s-5);
+}
+
+.sheet-lbl {
+  display: block;
+  margin: var(--s-8) 0 var(--s-3);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  color: var(--mute);
+}
+
+.close {
+  width: var(--target);
+  height: var(--target);
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--chip);
+  color: var(--fg);
+}
+
+/* the quote card: the agent's field, so it is the soft yellow */
+.qy {
+  border-radius: var(--r-quote);
+  padding: var(--s-6);
+  background: var(--yel2);
+  color: var(--yel-ink);
+}
+
+.qy .play span {
+  font-size: var(--text-card);
+  line-height: var(--leading-normal);
+}
+
+/* the reasoning card: soft lilac, so the two cards read as a pair */
+.qv {
+  border-radius: var(--r-quote);
+  padding: var(--s-6);
+  margin-top: var(--s-5);
+  background: var(--lav2);
+  color: var(--yel-ink);
+}
+
+/* The quote and Why cards hold a fixed light field, so the metadata inside them
+   takes the field's mute rather than the page's, which inverts. */
+.qy .lbl,
+.qy .note,
+.qy .proof .lbl,
+.qv .lbl,
+.qv .note,
+.qv .proof .lbl {
+  color: var(--field-mute);
+}
+
+.play {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-5);
+}
+
+.play b {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--yel-ink);
+  color: #ffffff;
+}
+
+.play b svg {
+  width: 16px;
+  height: 16px;
+}
+
+.wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 28px;
+  margin-top: var(--s-4);
+}
+
+.wave i {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--yel-ink);
+  opacity: 0.55;
+}
+
+.qv b {
+  font-weight: var(--weight-bold);
+}
+
+.m {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 92px;
+  gap: var(--s-4);
+  align-items: center;
+  margin-top: var(--s-3);
+  font-size: var(--text-ui);
+}
+
+.m > .b {
+  background: rgba(21, 20, 13, 0.14);
+}
+
+.m > .b u {
+  background: var(--yel-ink);
+}
+
+.m span:last-child {
+  text-align: right;
+  font-variant-numeric: var(--numerals);
+}
+
+.fa {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-5);
+  font-size: var(--text-ui);
+  padding: var(--s-3) 0;
+  border-top: var(--hair) solid rgba(21, 20, 13, 0.12);
+}
+
+.fa:first-of-type {
+  border-top: 0;
+}
+
+.fa span:last-child {
+  text-align: right;
+  color: var(--hero-mute);
+  font-variant-numeric: var(--numerals);
+}
+
+.fa b {
+  color: var(--yel-ink);
+  font-weight: var(--weight-semibold);
+}
+
+.masked {
+  color: var(--hero-mute);
+  font-style: italic;
+}
+
+.act {
+  display: flex;
+  gap: var(--s-3);
+  margin-top: var(--s-7);
+}
+
+.act > button {
+  flex: 1;
+  min-width: 0;
+  padding-inline: var(--s-4);
+}
+
+/* --- the Trust transcript ------------------------------------------------- */
+
+.tx {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.tx-you {
+  font-size: var(--text-body);
+}
+
+.tx-you b {
+  font-weight: var(--weight-semibold);
+}
+
+.mask {
+  display: inline-block;
+  padding: 2px var(--s-3);
+  border-radius: var(--r-small);
+  background: var(--chip);
+  color: var(--mute);
+  font-size: var(--text-ui);
+}
+
+/* --- forms ---------------------------------------------------------------- */
+
+.field {
+  display: grid;
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+}
+
+.field label {
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  color: var(--mute);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: var(--target);
+  padding: 0 var(--s-5);
+  border: var(--hair) solid var(--line-2);
+  border-radius: var(--r-small);
+  background: var(--card);
+  color: var(--fg);
+  font-size: var(--text-body);
+}
+
+.field input::placeholder {
+  color: var(--mute);
+}
+
+.field-hint {
+  font-size: var(--text-lbl);
+  color: var(--mute);
+}
+
+/* --- empty and note states ------------------------------------------------ */
+
+.empty {
+  padding: var(--s-6);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  color: var(--mute);
+}
+
+.note {
+  font-size: var(--text-lbl);
+  line-height: var(--leading-normal);
+  color: var(--mute);
+}
+
+/* --- the dock ------------------------------------------------------------- */
+
+#dock {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--dock-gap) + var(--safe-bottom));
+  width: min(calc(var(--col) - 32px), calc(100% - 32px));
+  display: flex;
+  padding: var(--s-2);
+  border-radius: var(--r-chip);
+  background: var(--dock);
+  border: var(--hair) solid var(--dock-edge);
+  /* the dock is the one surface that sits on the page and moves over it, so it
+     gets the deepest frost: the ledger scrolls underneath and you can see it */
+  -webkit-backdrop-filter: blur(var(--dock-blur)) saturate(var(--dock-sat));
+  backdrop-filter: blur(var(--dock-blur)) saturate(var(--dock-sat));
+  box-shadow: inset 0 var(--hair) 0 var(--dock-rim), var(--dock-shadow);
+  z-index: 5;
+}
+
+.dock-tab {
+  flex: 1;
+  min-height: var(--dock-h);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--s-1) 0;
+  border: 0;
+  border-radius: var(--r-chip);
+  background: none;
+  color: var(--dock-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+}
+
+.dock-tab svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* the active tab is a second piece of glass laid on the first */
+.dock-tab[aria-current="page"] {
+  background: var(--tab-active-bg);
+  color: var(--tab-active-ink);
+  box-shadow: var(--tab-active-shadow);
+  font-weight: var(--weight-bold);
+}
+
+/* --- toast ---------------------------------------------------------------- */
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--dock-gap) * 2 + var(--dock-h) + var(--safe-bottom) + var(--s-3));
+  transform: translateX(-50%);
+  max-width: calc(100% - 40px);
+  padding: var(--s-4) var(--s-7);
+  border-radius: var(--r-chip);
+  background: var(--pri);
+  color: var(--pri-fg);
+  font-size: var(--text-ui);
+  box-shadow: inset 0 var(--hair) 0 rgba(255, 255, 255, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-base) var(--ease-out);
+  z-index: 30;
+}
+
+#toast.on {
+  opacity: 1;
+}
+
+/* --- the desktop presentation -------------------------------------------- */
+
+@media (min-width: 560px) {
+  body {
+    /* the column is a mobile app; on a wide screen it stays a column, centred,
+       with the page colour filling the rest. No device frame. */
+    background: var(--bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Below: the parts the four new screens added to the reference's vocabulary —
+   a plain header for Record and Trust, the source glyph, the shared row, the
+   story line, the plan timeline and the consent checkbox.
+   ========================================================================== */
+
+/* --- a plain header, for the screens that are not the hero ----------------- */
+
+.head {
+  padding: calc(var(--safe-top) + var(--s-10)) var(--gutter) var(--s-5);
+}
+
+.head .hero-top {
+  margin-bottom: var(--s-6);
+}
+
+.head h1 {
+  font-size: var(--text-hero);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--track-hero);
+}
+
+.head-sub {
+  margin-top: var(--s-3);
+  font-size: var(--text-body);
+  color: var(--mute);
+}
+
+.pill.quiet {
+  background: var(--chip);
+  color: var(--mute);
+}
+
+.pill.plain {
+  background: var(--chip);
+  color: var(--fg);
+}
+
+/* --- a source glyph -------------------------------------------------------- */
+
+.src {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--chip);
+  color: var(--fg);
+}
+
+.src svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* --- the shared row ------------------------------------------------------- */
+
+.stack {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.day-group {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  margin: var(--s-7) 0 var(--s-3);
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  color: var(--mute);
+}
+
+.day-group:first-child {
+  margin-top: 0;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-5);
+}
+
+.row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-open {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  width: 100%;
+  min-height: var(--target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+}
+
+.row-open .card-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex: none;
+}
+
+.row-when {
+  font-size: var(--text-lbl);
+  color: var(--mute);
+  white-space: nowrap;
+}
+
+.conf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: var(--s-2) 0 var(--s-1);
+}
+
+.conf-bar {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.conf-bar i {
+  width: 10px;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--chip-2);
+}
+
+.conf-bar i.on {
+  background: var(--fg);
+}
+
+.conf-num {
+  font-size: var(--text-lbl);
+  color: var(--mute);
+  font-variant-numeric: var(--numerals);
+}
+
+.slip .card-row {
+  margin-bottom: var(--s-1);
+}
+
+/* --- filters --------------------------------------------------------------- */
+
+.filters {
+  display: flex;
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filt {
+  flex: none;
+  min-height: var(--target);
+  padding: 0 var(--s-7);
+  border: var(--hair) solid var(--line);
+  border-radius: var(--r-chip);
+  background: var(--card);
+  color: var(--fg);
+  font-size: var(--text-ui);
+}
+
+.filt[aria-pressed="true"] {
+  background: var(--pri);
+  color: var(--pri-fg);
+  border-color: var(--pri);
+  font-weight: var(--weight-semibold);
+}
+
+/* --- chips that are buttons ------------------------------------------------ */
+
+.chip.do {
+  min-height: var(--target);
+  padding: 0 var(--s-7);
+  border: 0;
+  background: var(--pri);
+  color: var(--pri-fg);
+  font-size: var(--text-ui);
+  font-weight: var(--weight-semibold);
+}
+
+.chip.do svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* the lilac chips hold a fixed light field, so their ink is fixed too */
+.chip.draft { background: var(--lav2); color: var(--field-ink); }
+.chip.ask { background: var(--lav2); color: var(--field-ink); }
+.chip.execute { background: var(--ok-bg); color: var(--ok); }
+.chip.remember { background: var(--chip); color: var(--fg); }
+.chip.ignore { background: var(--chip); color: var(--mute); }
+.chip.unscored { background: var(--chip); color: var(--fg); }
+
+/* --- the week strip ------------------------------------------------------- */
+
+/* A week chip is glass, like the rest of the hero's chrome. It carries a label
+   and one line of fact, so it is taller than the dock's tabs and reads as a
+   small card rather than a button. */
+.wk {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  min-height: 52px;
+  padding: var(--s-3) var(--s-6);
+  border-radius: var(--r-card);
+  background: var(--glass-veil-deep);
+  border: var(--hair) solid var(--glass-edge);
+  box-shadow: inset 0 var(--hair) 0 var(--glass-rim);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  color: var(--yel-ink);
+}
+
+.wk b {
+  font-size: var(--text-ui);
+  font-weight: var(--weight-bold);
+}
+
+.wk span {
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-medium);
+  color: var(--hero-mute);
+  font-variant-numeric: var(--numerals);
+}
+
+/* --- the Twin legend ------------------------------------------------------ */
+
+.legend i.sw {
+  background: var(--fg);
+}
+
+.legend i.sw.tier-execute { background: var(--tier-execute); }
+.legend i.sw.tier-draft { background: var(--tier-draft); }
+.legend i.sw.tier-ask { background: var(--tier-ask); }
+.legend i.sw.tier-remember { background: var(--tier-remember); }
+.legend i.sw.tier-ignore { background: var(--tier-ignore); }
+
+.legend-note {
+  color: var(--hero-mute);
+  opacity: 0.9;
+}
+
+.twin-holder {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-top: var(--s-5);
+}
+
+.twin-note {
+  margin-top: var(--s-4);
+  font-size: var(--text-ui);
+  color: var(--hero-mute);
+}
+
+/* the scrubber sits on the hero, so it takes the hero's ink */
+.scrub {
+  margin-top: var(--s-5);
+}
+
+.scrub label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  font-size: var(--text-lbl);
+  color: var(--hero-mute);
+}
+
+.scrub-value {
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: var(--numerals);
+  color: var(--yel-ink);
+}
+
+.scrub input[type="range"] {
+  width: 100%;
+  min-height: var(--target);
+  accent-color: var(--yel-ink);
+}
+
+/* --- the story line ------------------------------------------------------- */
+
+.story-line {
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  color: var(--hero-mute);
+}
+
+.story.w .story-line {
+  color: var(--mute);
+}
+
+.story .ph {
+  border-top-color: var(--field-line);
+}
+
+.story.w .ph {
+  border-top-color: var(--line);
+}
+
+/* --- the disclosure, the consent checkbox and the log --------------------- */
+
+.disc {
+  padding: 0;
+  overflow: hidden;
+}
+
+.disc > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  min-height: var(--target);
+  padding: var(--s-6);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  list-style: none;
+  cursor: pointer;
+}
+
+.disc > summary::-webkit-details-marker {
+  display: none;
+}
+
+.disc > summary svg {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.disc[open] > summary svg {
+  transform: rotate(180deg);
+}
+
+.disc > form {
+  padding: 0 var(--s-6) var(--s-6);
+  border-top: var(--hair) solid var(--line);
+  padding-top: var(--s-6);
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-4);
+  min-height: var(--target);
+  font-size: var(--text-ui);
+  line-height: var(--leading-normal);
+  color: var(--mute);
+}
+
+.check input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  accent-color: var(--pri);
+}
+
+.log {
+  margin: var(--s-5) 0 0;
+  padding: var(--s-5);
+  border-radius: var(--r-small);
+  background: var(--chip);
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: var(--text-lbl);
+  line-height: var(--leading-normal);
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow: auto;
+}
+
+/* --- the negotiation timeline --------------------------------------------- */
+
+.timeline {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: var(--s-5);
+}
+
+.turn {
+  padding: var(--s-5);
+  border-radius: var(--r-small);
+  background: var(--chip);
+  font-size: var(--text-ui);
+}
+
+.turn.agent {
+  background: var(--yel2);
+  color: var(--yel-ink);
+}
+
+.turn.simulated {
+  border: var(--hair) dashed var(--line-2);
+  background: none;
+}
+
+.turn-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  margin-bottom: var(--s-2);
+}
+
+.turn-actor {
+  font-weight: var(--weight-semibold);
+}
+
+.turn-at {
+  color: inherit;
+  opacity: 0.7;
+  font-variant-numeric: var(--numerals);
+}
+
+.turn-detail {
+  margin-bottom: var(--s-2);
+}
+
+.turn-fields b {
+  font-weight: var(--weight-semibold);
+}
+
+.sim {
+  padding: 1px var(--s-3);
+  border-radius: var(--r-chip);
+  background: var(--chip);
+  color: var(--mute);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+}
+
+/* --- plan approvals ------------------------------------------------------- */
+
+.people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+}
+
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-5) var(--s-2) var(--s-2);
+  border-radius: var(--r-chip);
+  background: var(--chip);
+  font-size: var(--text-ui);
+}
+
+.person.on {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.person b {
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-semibold);
+  opacity: 0.8;
+}
+
+/* --- receipts ------------------------------------------------------------- */
+
+.receipt {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-5);
+}
+
+.receipt-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--fg);
+}
+
+.receipt-dot.draft { background: var(--tier-draft); }
+.receipt-dot.ask { background: var(--tier-ask); }
+.receipt-dot.execute { background: var(--ok); }
+.receipt-dot.ignore { background: var(--chip-2); }
+.receipt-dot.ingest { background: var(--lav); }
+
+.receipt-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.receipt-body h3 {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+
+.receipt-body p {
+  font-size: var(--text-ui);
+  color: var(--mute);
+}
+
+.receipt time {
+  font-size: var(--text-lbl);
+  color: var(--mute);
+  font-variant-numeric: var(--numerals);
+}
+
+/* --- the receipt sheet's extras ------------------------------------------- */
+
+.sheet-row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: var(--s-2) var(--s-5);
+  font-size: var(--text-ui);
+}
+
+.sheet-row dt {
+  color: var(--mute);
+}
+
+.sheet-row dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.qv.gap {
+  margin-top: var(--s-4);
+}
+
+.qv p {
+  font-size: var(--text-ui);
+  line-height: var(--leading-normal);
+}
+
+.dist {
+  display: grid;
+  gap: var(--s-1);
+}
+
+/* --- the undo bar --------------------------------------------------------- */
+
+.undo {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--dock-gap) * 2 + var(--dock-h) + var(--safe-bottom) + var(--s-3));
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  width: min(calc(var(--col) - 32px), calc(100% - 32px));
+  padding: var(--s-4);
+  padding-left: var(--s-7);
+  border-radius: var(--r-chip);
+  background: var(--pri);
+  color: var(--pri-fg);
+  font-size: var(--text-ui);
+  z-index: 25;
+}
+
+.undo .btn {
+  background: none;
+  border-color: currentColor;
+  color: inherit;
+  margin-left: auto;
+}
+
+body.locked {
+  overflow: hidden;
+}
+
+.noscript {
+  padding: var(--s-9);
+}
+
+/* --- the hero's live line -------------------------------------------------
+   Drawn only when a source says a conversation is open, which no real Bee
+   read can say. It is glass, like the rest of the hero's chrome. */
+.hero-live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+  padding: var(--s-2) var(--s-6);
+  border-radius: var(--r-chip);
+  background: var(--glass-veil);
+  border: var(--hair) solid var(--glass-edge);
+  box-shadow: inset 0 var(--hair) 0 var(--glass-rim);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  font-size: var(--text-lbl);
+  font-weight: var(--weight-medium);
+  color: var(--yel-ink);
+}
+
+.hero-live b {
+  font-weight: var(--weight-bold);
+}
+
+.hero-live .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+}
+
+/* the preview badge is a caption of its own, not a chip in the top bar */
+.badge.preview-badge {
+  margin-top: var(--s-5);
+}
+
+/* --- story cards ---------------------------------------------------------- */
+
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.story > h2 {
+  margin-bottom: var(--s-2);
+}
+
+.story .big {
+  margin-top: auto;
+}
+
+.story.d .story-line {
+  margin-top: auto;
+}
+
+.story .proof {
+  border-top-color: var(--field-line);
+}
+
+.story.d .proof {
+  border-top-color: var(--dark-line);
+}
+
+.story.d .proof .lbl {
+  color: rgba(246, 244, 232, 0.7);
+}
+
+.story .bar2 {
+  margin: var(--s-2) 0;
+}
+
+.story .cal {
+  width: 100%;
+  height: auto;
+  margin: var(--s-5) 0 var(--s-3);
+  color: var(--field-ink);
+}
+
+.story.d .cal {
+  color: var(--yel);
+}
+
+/* --- the pieces the app renders but the base sheet does not yet name ------- */
+
+.full-btn {
+  width: 100%;
+}
+
+/* a track with no rate to put in it is hatched, so "unknown" cannot read as 0 */
+.b-unknown u {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--chip-2) 0 4px,
+    var(--chip) 4px 8px
+  );
+}
+
+.tx-other {
+  font-size: var(--text-ui);
+}
+
+.story.d .mask {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--dark-fg);
+}
