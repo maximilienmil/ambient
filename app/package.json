@@ -14,7 +14,8 @@
     "eval": "node decide/eval.mjs",
     "decide": "node decide/run.mjs",
     "ingest": "node ingest.mjs",
-    "labels:export": "node labels-export.mjs"
+    "labels:export": "node labels-export.mjs",
+    "mcp": "node mcp-server.mjs"
   },
   "dependencies": {
     "@phosphor-icons/core": "^2.1.1"

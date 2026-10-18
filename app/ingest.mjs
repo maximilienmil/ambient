@@ -42,7 +42,9 @@ export function parseArgs(argv) {
     full: false,
     quiet: false,
     strict: process.env.LATENT_STRICT_REDACTION === '1',
-    conversations: 25,
+    // The account holds more than a year of conversations. The old default of
+    // 25 made "a year of data" false and left the record with one month.
+    conversations: 2000,
     maxTodos: 500,
     maxFacts: 500,
     db: process.env.LATENT_DB || path.join(root, 'data', 'latent.sqlite'),
@@ -114,7 +116,7 @@ export async function runIngest(options, adapter = bee) {
     let nextCursor = cursor;
 
     if (backfill) {
-      const list = await adapter.listConversations({ max: options.conversations, limit: 25 });
+      const list = await adapter.listConversations({ max: options.conversations, limit: 100 });
       conversationIds = list.map((c) => String(c.id));
       emit(`Bee conversations available: ${list.length} (cap ${options.conversations}).`);
     } else {

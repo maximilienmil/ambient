@@ -227,9 +227,13 @@ function resultOf(row) {
   const at = closedBy?.at ? new Date(closedBy.at).toISOString().slice(0, 10) : null;
   switch (row.state) {
     case 'done':
-      return closedBy?.source === 'bee.todo'
-        ? `Closed. Bee marked this todo complete${at ? ` on ${at}` : ''}.`
-        : `Closed${at ? ` on ${at}` : ''}.`;
+      if (closedBy?.source === 'bee.todo') {
+        return `Closed. Bee marked this todo complete${at ? ` on ${at}` : ''}.`;
+      }
+      if (closedBy?.source === 'agent') {
+        return `Closed by an agent${at ? ` on ${at}` : ''}.`;
+      }
+      return `Closed${at ? ` on ${at}` : ''}.`;
     case 'obsolete':
       return closedBy?.source === 'merge'
         ? 'Merged. Another copy of this row was kept.'
@@ -322,7 +326,7 @@ export function getItem(db, id) {
 
 // --- wearer actions ---------------------------------------------------------
 
-export function approveCommitment(db, id) {
+export function approveCommitment(db, id, { actor = 'user' } = {}) {
   const item = getItem(db, id);
   if (!item) fail('That commitment no longer exists.', 404);
   if (item.state !== 'live' && item.state !== 'blocked') fail('This commitment is already closed.', 409);
@@ -341,21 +345,25 @@ export function approveCommitment(db, id) {
   } else if (item.decision === 'draft') {
     db.prepare('UPDATE commitments SET state=?, closed_by=? WHERE id=?').run(
       'done',
-      JSON.stringify({ source: 'user', at }),
+      JSON.stringify({ source: actor, at }),
       id,
     );
     decision = 'execute';
     title = `Approved: ${item.title}`;
-    detail = 'Marked complete by you. No external system was modified.';
+    detail =
+      actor === 'agent'
+        ? 'Closed by an agent through MCP. No external system was modified.'
+        : 'Marked complete by you. No external system was modified.';
   } else {
     db.prepare('UPDATE commitments SET state=?, closed_by=? WHERE id=?').run(
       'done',
-      JSON.stringify({ source: 'user', at }),
+      JSON.stringify({ source: actor, at }),
       id,
     );
     decision = 'execute';
     title = `Handled: ${item.title}`;
-    detail = 'Marked complete by you.';
+    detail =
+      actor === 'agent' ? 'Closed by an agent through MCP.' : 'Marked complete by you.';
   }
 
   const receipt = insertReceipt(db, { kind: decision, decision, title, detail, commitmentId: id });
@@ -439,7 +447,7 @@ export function restoreCommitments(db, entries) {
  * retired with a receipt pointing at the keeper, so the merge is visible and
  * reversible rather than a delete.
  */
-export function mergeCommitments(db, ids) {
+export function mergeCommitments(db, ids, { actor = 'user' } = {}) {
   const unique = [...new Set((Array.isArray(ids) ? ids : []).map(String))];
   if (unique.length < 2) fail('Pick at least two copies to merge.');
   const marks = unique.map(() => '?').join(',');
@@ -459,7 +467,7 @@ export function mergeCommitments(db, ids) {
   const retire = db.prepare("UPDATE commitments SET state='obsolete', closed_by=? WHERE id=?");
   for (const row of rows) {
     if (row.id === keeper.id) continue;
-    retire.run(JSON.stringify({ source: 'merge', into: keeper.id, at }), row.id);
+    retire.run(JSON.stringify({ source: 'merge', into: keeper.id, at, by: actor }), row.id);
   }
 
   const receipt = insertReceipt(db, {
@@ -475,7 +483,7 @@ export function mergeCommitments(db, ids) {
  * Merge every duplicate group at once. Each group still writes its own
  * receipt, so the audit trail reads the same as six separate merges.
  */
-export function mergeAllDuplicates(db) {
+export function mergeAllDuplicates(db, { actor = 'user' } = {}) {
   const open = listItems(db).filter((item) => ['live', 'blocked'].includes(item.state));
   const groups = new Map();
   for (const item of open) {
@@ -488,7 +496,7 @@ export function mergeAllDuplicates(db) {
   let count = 0;
   for (const ids of groups.values()) {
     if (ids.length < 2) continue;
-    merged += mergeCommitments(db, ids).merged;
+    merged += mergeCommitments(db, ids, { actor }).merged;
     count += 1;
   }
   return { groups: count, merged };
@@ -960,7 +968,12 @@ export function todayOf(db, items) {
     closedThisWeek: closed.slice(0, 8).map((item) => ({
       id: item.id,
       title: item.title,
-      proof: item.closedBy?.source === 'bee.todo' ? 'Bee marked the whole todo complete' : 'Closed by you here',
+      proof:
+        item.closedBy?.source === 'bee.todo'
+          ? 'Bee marked the whole todo complete'
+          : item.closedBy?.source === 'agent'
+            ? 'Closed by an agent through MCP'
+            : 'Closed by you here',
       at: item.closedBy?.at || null,
     })),
     closedThisWeekTotal: closed.length,
