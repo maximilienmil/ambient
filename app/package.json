@@ -15,7 +15,11 @@
     "decide": "node decide/run.mjs",
     "ingest": "node ingest.mjs",
     "labels:export": "node labels-export.mjs",
-    "mcp": "node mcp-server.mjs"
+    "mcp": "node mcp-server.mjs",
+    "audit-sample": "node audit-sample.mjs",
+    "time-split": "node time-split.mjs",
+    "fixtures": "node fixtures/generate.mjs",
+    "demo": "LATENT_DB=data/latent-fixture.sqlite node server.mjs"
   },
   "dependencies": {
     "@phosphor-icons/core": "^2.1.1"
