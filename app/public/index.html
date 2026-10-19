@@ -17,8 +17,49 @@
   </head>
   <body>
     <div id="app">
+      <!-- ================================================ HORIZON ======= -->
+      <section class="view" id="horizon-screen">
+        <header class="hero horizon-hero">
+          <div class="hero-top">
+            <span class="pill"><span class="dot"></span> Your next seven days</span>
+            <span class="av" id="horizon-avatar" aria-hidden="true">M</span>
+          </div>
+          <p class="badge preview-badge" hidden>Preview · synthetic data</p>
+          <p class="hero-hi">A year of promises,</p>
+          <h1 class="hero-h1">one week ahead.</h1>
+          <p class="hero-sub" id="horizon-sub">Reading the shape of your week.</p>
+
+          <div class="horizon-score" aria-live="polite">
+            <div><span class="horizon-eyebrow">Chance of a clear week</span><strong id="horizon-score">—</strong><span id="horizon-score-note">Waiting for dated promises</span></div>
+            <div class="horizon-spark" id="horizon-spark" aria-hidden="true"></div>
+          </div>
+          <div class="horizon-map-wrap">
+            <svg class="horizon-map" id="horizon-map" viewBox="0 0 760 260" role="img" aria-label="Your past promises and the week ahead"></svg>
+            <div class="horizon-map-labels"><span>Then</span><span>Today</span><span>Next</span></div>
+          </div>
+        </header>
+        <main>
+          <section class="sec horizon-intro">
+            <div class="sec-head"><h2>Your week, before it happens</h2><span class="lbl" id="horizon-sample">160 weeks simulated</span></div>
+            <p class="sec-note" id="horizon-explainer"></p>
+            <div class="horizon-actions">
+              <button class="btn btn-pri" type="button" id="trade-btn">Show the trade</button>
+              <span class="note" id="trade-note">See what one fewer promise would change.</span>
+            </div>
+          </section>
+          <section class="sec">
+            <div class="sec-head"><h2>Coming due</h2><span class="lbl" id="horizon-due-count"></span></div>
+            <div class="stack" id="horizon-due-list"></div>
+          </section>
+          <section class="sec">
+            <div class="sec-head"><h2>One thing to keep in view</h2></div>
+            <div class="card horizon-question" id="horizon-question"></div>
+          </section>
+        </main>
+      </section>
+
       <!-- ================================================== TODAY ========= -->
-      <section class="view" id="today-screen">
+      <section class="view" id="today-screen" hidden>
         <header class="hero">
           <div class="hero-top">
             <button class="ib" type="button" id="history-btn" data-history aria-label="What Bee sent">
@@ -295,7 +336,13 @@
 
     <!-- ============================================== the dock ========== -->
     <nav id="dock" aria-label="Sections">
-      <button class="dock-tab" type="button" data-tab="today-screen" aria-current="page">
+      <button class="dock-tab" type="button" data-tab="horizon-screen" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 18c3-7 6-11 9-11s6 4 9 11" /><path d="M3 18h18" /><path d="M12 7v11" />
+        </svg>
+        Horizon
+      </button>
+      <button class="dock-tab" type="button" data-tab="today-screen" aria-current="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M3 10.4 12 3l9 7.4" /><path d="M5.8 9.4V21h12.4V9.4" /><path d="M10 21v-6h4v6" />
         </svg>

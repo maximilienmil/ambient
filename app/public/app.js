@@ -6,12 +6,13 @@
 const state = {
   token: null,
   ledger: null,
-  tab: 'today-screen',
+  tab: 'horizon-screen',
   filter: 'all',
   visible: 14,
   editId: null,
   undo: null,
   undoTimer: null,
+  horizonTrade: null,
 };
 
 /* --- tiny helpers --------------------------------------------------------- */
@@ -290,6 +291,140 @@ function timeGreeting() {
   if (hour < 12) return 'Good morning';
   if (hour < 18) return 'Good afternoon';
   return 'Good evening';
+}
+
+function horizonDate(value) {
+  const day = String(value || '').slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(day) ? new Date(`${day}T12:00:00`) : new Date(NaN);
+}
+
+function horizonDueItems() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = new Date(start);
+  end.setDate(end.getDate() + 7);
+  return (state.ledger.items || [])
+    .filter((item) => {
+      if (!['live', 'blocked'].includes(item.state) || !item.dueAt) return false;
+      const due = horizonDate(item.dueAt);
+      return due >= start && due < end;
+    })
+    .sort((a, b) => String(a.dueAt).localeCompare(String(b.dueAt)));
+}
+
+function horizonSimulation(count, rate) {
+  if (!count || typeof rate !== 'number' || !Number.isFinite(rate)) return null;
+  // A fixed seed makes the same ledger produce the same 160-week forecast.
+  let seed = (count * 2654435761 + Math.round(rate * 10000) + 17) >>> 0;
+  const random = () => {
+    seed = (1664525 * seed + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+  let clean = 0;
+  const weeks = Array.from({ length: 160 }, (_, week) => {
+    let clear = true;
+    for (let promise = 0; promise < count; promise += 1) {
+      if (random() >= rate) clear = false;
+    }
+    if (clear) clean += 1;
+    return { week, clear };
+  });
+  return { weeks, clean, chance: clean / weeks.length };
+}
+
+function renderHorizonMap(due) {
+  const svg = $('#horizon-map');
+  const width = 760;
+  const center = 390;
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  const past = (state.ledger.items || [])
+    .filter((item) => item.origin === 'conversation')
+    .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))
+    .slice(-18);
+  const dots = past.map((item, index) => {
+    const x = 38 + (index / Math.max(1, past.length - 1)) * (center - 78);
+    const y = 54 + ((index * 47) % 148);
+    const dueDate = item.dueAt ? horizonDate(item.dueAt) : null;
+    const days = dueDate ? Math.max(0, Math.min(7, (dueDate - start) / 86400000)) : -1;
+    const targetX = days >= 0 ? center + 34 + (days / 7) * 280 : center;
+    const targetY = days >= 0 ? 56 + ((index * 31) % 138) : 130;
+    const trade = state.horizonTrade === item.id;
+    return `<path class="horizon-thread${trade ? ' is-trade' : ''}" d="M${x.toFixed(1)} ${y} Q${((x + targetX) / 2).toFixed(1)} ${(Math.min(y, targetY) - 48).toFixed(1)} ${targetX.toFixed(1)} ${targetY}" />
+      <circle class="horizon-bead" cx="${x.toFixed(1)}" cy="${y}" r="${trade ? 5 : 3.5}" />`;
+  }).join('');
+  const fan = Array.from({ length: 17 }, (_, index) => {
+    const y = 130 + (index - 8) * 12;
+    const edgeY = 20 + index * 13.7;
+    const selected = index === 8;
+    return `<path class="horizon-fan${selected ? ' is-peak' : ''}" d="M${center} 130 Q${center + 96} ${y - 7} ${width - 12} ${edgeY}" />`;
+  }).join('');
+  const future = due.map((item, index) => {
+    const date = horizonDate(item.dueAt);
+    const days = Math.max(0, Math.min(7, (date - start) / 86400000));
+    const x = center + 34 + (days / 7) * 280;
+    const y = 64 + ((index * 37) % 126);
+    const selected = state.horizonTrade === item.id;
+    return `<path class="horizon-promise${selected ? ' is-trade' : ''}" d="M${center} 130 Q${(center + (x - center) / 2).toFixed(1)} ${(y - 38).toFixed(1)} ${x.toFixed(1)} ${y}" />
+      <circle class="horizon-due-dot${selected ? ' is-trade' : ''}" cx="${x.toFixed(1)}" cy="${y}" r="${selected ? 7 : 5}" />`;
+  }).join('');
+  svg.innerHTML = `<title>Promises move from conversations in your past toward their due dates in the week ahead.</title>
+    <defs><linearGradient id="horizon-ribbon" x1="0" x2="1"><stop offset="0" stop-color="var(--lav)" stop-opacity="0.04"/><stop offset="1" stop-color="var(--lav)" stop-opacity="0.42"/></linearGradient></defs>
+    <path class="horizon-band" d="M${center} 130 C${center + 100} 46 ${width - 90} 19 ${width - 10} 20 L${width - 10} 240 C${width - 90} 239 ${center + 100} 214 ${center} 130Z" />
+    ${fan}${dots}<path class="horizon-today-line" d="M${center} 20V240"/>${future}
+    <circle class="horizon-today-dot" cx="${center}" cy="130" r="7"/>`;
+}
+
+function renderHorizon() {
+  const due = horizonDueItems();
+  const rate = state.ledger.today?.baseRate?.rate;
+  const simulation = horizonSimulation(due.length, rate);
+  const trade = due[0] || null;
+  const shown = state.horizonTrade ? due.find((item) => item.id === state.horizonTrade) : null;
+  const effectiveCount = Math.max(0, due.length - (shown ? 1 : 0));
+  const adjusted = horizonSimulation(effectiveCount, rate);
+  const owner = state.ledger.owner || 'you';
+
+  $('#horizon-avatar').textContent = owner.slice(0, 1).toUpperCase();
+  $('#horizon-sub').textContent = due.length
+    ? `${due.length} promise${due.length === 1 ? '' : 's'} come due. Latent traced them forward from what you said.`
+    : 'No promise has a due date this week. Your past is here; the future stays open.';
+  $('#horizon-score').textContent = simulation ? percent(simulation.chance) : '—';
+  $('#horizon-score-note').textContent = simulation
+    ? `Base-rate scenario · ${due.length} dated ${due.length === 1 ? 'promise' : 'promises'}`
+    : 'No dated promises to score';
+  $('#horizon-sample').textContent = simulation ? '160 weeks simulated' : 'Forecast waiting';
+  $('#horizon-explainer').textContent = simulation
+    ? `A simple scenario from Bee’s recorded close rate (${percent(rate)}). It samples 160 possible weeks; this is a base rate, not a calibrated personal forecast.`
+    : 'Latent will draw a forecast when Bee has a dated promise in this week. An empty calendar is not treated as a clear week.';
+  $('#horizon-spark').innerHTML = simulation
+    ? simulation.weeks.map((week) => `<i class="${week.clear ? 'is-clear' : ''}"></i>`).join('')
+    : '<span class="horizon-spark-empty">—</span>';
+  $('#horizon-due-count').textContent = due.length ? `${due.length} this week` : 'Nothing dated';
+  $('#horizon-due-list').innerHTML = due.length ? due.map((item) => {
+    const selected = state.horizonTrade === item.id;
+    return `<button class="horizon-row${selected ? ' is-trade' : ''}" type="button" data-item="${escapeHTML(item.id)}">
+      <span class="horizon-row-date">${escapeHTML(horizonDate(item.dueAt).toLocaleDateString('en-US', { weekday: 'short' }))}</span>
+      <span class="horizon-row-copy"><b>${escapeHTML(item.title)}</b><small>${escapeHTML(item.source || 'From your record')}</small></span>
+      <span class="horizon-row-arrow" aria-hidden="true">↗</span>
+    </button>`;
+  }).join('') : '<div class="card empty"><p>No dated promises are coming due in the next seven days.</p><p class="note">Older and undated promises remain in your record. Latent leaves them out of this forecast.</p></div>';
+  if (shown) {
+    $('#trade-note').textContent = `Setting aside “${shown.title}” changes the base-rate scenario to ${adjusted ? percent(adjusted.chance) : '—'}. Nothing is changed in Bee.`;
+    $('#trade-btn').textContent = 'Clear trade';
+    $('#trade-btn').dataset.clearTrade = 'true';
+  } else {
+    $('#trade-note').textContent = trade
+      ? `See the effect of setting aside “${trade.title}”. Nothing changes until you choose it.`
+      : 'Add due dates in Bee to compare the week ahead.';
+    $('#trade-btn').textContent = 'Show the trade';
+    delete $('#trade-btn').dataset.clearTrade;
+  }
+  const question = due[0];
+  $('#horizon-question').innerHTML = question
+    ? `<span class="horizon-question-mark">?</span><div><b>One thing to keep in view</b><p>“${escapeHTML(question.title)}” is due ${escapeHTML(horizonDate(question.dueAt).toLocaleDateString('en-US', { weekday: 'long' }))}. Does that still fit this week?</p><button class="text-btn" type="button" data-item="${escapeHTML(question.id)}">Open its receipt <span aria-hidden="true">↗</span></button></div>`
+    : '<div><b>One question, when there is one</b><p>Latent will bring forward a single promise when the record gives it a date. You do not need to sort the whole list.</p></div>';
+  renderHorizonMap(due);
 }
 
 function renderToday() {
@@ -1332,6 +1467,7 @@ function go(screen) {
     const active = button.dataset.tab === screen;
     button.setAttribute('aria-current', active ? 'page' : 'false');
   });
+  if (screen === 'horizon-screen') renderHorizon();
   window.scrollTo({ top: 0, behavior: 'auto' });
   /* A tab comes in from just below its resting place, by an amount small enough
      that it reads as the page settling rather than as a transition. */
@@ -1489,6 +1625,7 @@ function render() {
     badge.hidden = !preview;
   });
   renderToday();
+  renderHorizon();
   renderTwin();
   renderRecord();
   renderTrust();
@@ -1507,6 +1644,14 @@ $$('#dock .dock-tab').forEach((button) => {
    works without being bound again. */
 document.addEventListener('click', (event) => {
   const target = event.target;
+
+  const tradeButton = target.closest('#trade-btn');
+  if (tradeButton) {
+    const candidate = horizonDueItems()[0];
+    state.horizonTrade = tradeButton.dataset.clearTrade ? null : candidate?.id || null;
+    renderHorizon();
+    return;
+  }
 
   const tab = target.closest('#dock .dock-tab');
   if (tab) return; // handled above, and it must not fall through
