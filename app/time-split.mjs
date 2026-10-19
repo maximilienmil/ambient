@@ -8,7 +8,8 @@
 import { openDb } from './db.mjs';
 
 /**
- * Split commitments by time.
+ * Split commitments by creation time without treating an open row as a failed
+ * outcome. Only explicit, independently stored outcome labels are eligible.
  *
  * splitPoint: ISO date string or month index (e.g., 2026-03 for March 2026)
  *
@@ -17,9 +18,7 @@ import { openDb } from './db.mjs';
 export function timeSplitCommitments(dbPath, splitPoint) {
   const db = openDb(dbPath);
 
-  const all = db
-    .prepare('SELECT * FROM commitments WHERE state IN (?, ?)')
-    .all('live', 'done');
+  const all = db.prepare('SELECT * FROM commitments').all();
 
   const train = [];
   const test = [];
@@ -47,37 +46,33 @@ export function timeSplitCommitments(dbPath, splitPoint) {
  *
  * Actual outcome: 1 for done, 0 for not-done, excluded for unknown.
  */
-export function calculateBaselineBrier(commitments) {
-  if (commitments.length === 0) return { brier: null, baselineRate: null, count: 0 };
+function explicitOutcome(commitment) {
+  const evidence = typeof commitment.evidence === 'string'
+    ? (() => { try { return JSON.parse(commitment.evidence); } catch { return {}; } })()
+    : commitment.evidence || {};
+  const value = commitment.outcomeLabel ?? evidence.outcomeLabel ?? evidence.outcome;
+  if (value === 'done' || value === 1) return 1;
+  if (value === 'not-done' || value === 0) return 0;
+  return null;
+}
 
-  // Calculate overall completion rate from training data
-  const doneCount = commitments.filter((c) => c.state === 'done').length;
-  const baselineRate = doneCount / commitments.length;
+export function calculateBaselineBrier(commitments, baselineRate = null) {
+  const labeled = commitments.map((commitment) => ({ commitment, outcome: explicitOutcome(commitment) }))
+    .filter((row) => row.outcome !== null);
+  if (labeled.length === 0) return { brier: null, baselineRate, count: 0, unknownCount: commitments.length };
 
-  // Calculate Brier score on test data
+  const doneCount = labeled.filter((row) => row.outcome === 1).length;
+  const rate = baselineRate ?? doneCount / labeled.length;
   let sumSquaredError = 0;
-  let count = 0;
-
-  for (const c of commitments) {
-    if (c.state === 'done') {
-      sumSquaredError += Math.pow(1 - baselineRate, 2);
-      count += 1;
-    } else if (c.state === 'live') {
-      // Assume live = not done for baseline calculation
-      sumSquaredError += Math.pow(0 - baselineRate, 2);
-      count += 1;
-    }
-    // Unknown excluded
+  for (const { outcome } of labeled) {
+    sumSquaredError += (outcome - rate) ** 2;
   }
-
-  const brier = count > 0 ? sumSquaredError / count : null;
-
   return {
-    brier,
-    baselineRate,
-    count,
+    brier: sumSquaredError / labeled.length,
+    baselineRate: rate,
+    count: labeled.length,
     doneCount,
-    liveCount: commitments.filter((c) => c.state === 'live').length,
+    unknownCount: commitments.length - labeled.length,
   };
 }
 
@@ -90,7 +85,17 @@ export function evaluateTimeSplit(dbPath, splitPoint) {
   const { train, test, splitPoint: actualSplit } = timeSplitCommitments(dbPath, splitPoint);
 
   const trainBaseline = calculateBaselineBrier(train);
-  const testBaseline = calculateBaselineBrier(test);
+  // The test baseline uses only the older training period's completion rate.
+  const testLabels = calculateBaselineBrier(test);
+  const testBaseline = trainBaseline.baselineRate === null
+    ? { ...testLabels, brier: null, baselineRate: null }
+    : calculateBaselineBrier(test, trainBaseline.baselineRate);
+  const status = trainBaseline.count === 0 || testBaseline.count < 40 ? 'cannot_evaluate' : 'baseline_available';
+  const reason = trainBaseline.count === 0
+    ? 'No explicit, independently supported training labels.'
+    : testBaseline.count < 40
+      ? 'Fewer than 40 explicit, independently supported test labels.'
+      : null;
 
   return {
     splitPoint: actualSplit,
@@ -102,6 +107,8 @@ export function evaluateTimeSplit(dbPath, splitPoint) {
       count: test.length,
       baseline: testBaseline,
     },
+    status,
+    reason,
   };
 }
 
@@ -116,17 +123,18 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   console.log(`Split point: ${result.splitPoint}`);
   console.log('');
   console.log('Training set:');
-  console.log(`  Count: ${result.train.count}`);
-  console.log(`  Baseline completion rate: ${(result.train.baseline?.baselineRate * 100).toFixed(1)}%`);
-  console.log(`  Baseline Brier score: ${result.train.baseline?.brier?.toFixed(4) || 'N/A'}`);
+  console.log(`  Rows: ${result.train.count}; explicit labels: ${result.train.baseline.count}; unknown: ${result.train.baseline.unknownCount}`);
+  console.log(`  Baseline completion rate: ${result.train.baseline.baselineRate === null ? 'N/A' : `${(result.train.baseline.baselineRate * 100).toFixed(1)}%`}`);
+  console.log(`  Baseline Brier score: ${result.train.baseline.brier === null ? 'N/A' : result.train.baseline.brier.toFixed(4)}`);
   console.log('');
   console.log('Test set:');
-  console.log(`  Count: ${result.test.count}`);
-  console.log(`  Baseline completion rate: ${(result.test.baseline?.baselineRate * 100).toFixed(1)}%`);
-  console.log(`  Baseline Brier score: ${result.test.baseline?.brier?.toFixed(4) || 'N/A'}`);
+  console.log(`  Rows: ${result.test.count}; explicit labels: ${result.test.baseline.count}; unknown: ${result.test.baseline.unknownCount}`);
+  console.log(`  Baseline completion rate: ${result.train.baseline.baselineRate === null ? 'N/A' : `${(result.train.baseline.baselineRate * 100).toFixed(1)}%`}`);
+  console.log(`  Baseline Brier score: ${result.test.baseline.brier === null ? 'N/A' : result.test.baseline.brier.toFixed(4)}`);
   console.log('');
   console.log('Interpretation:');
   console.log('  - Baseline Brier is the score to beat with the predictor');
   console.log('  - Predictor passes only if Brier < baseline AND AUC ≥ 0.6');
   console.log('  - At least 40 labeled test items required');
+  console.log(`  Result: ${result.status}${result.reason ? ` — ${result.reason}` : ''}`);
 }

@@ -45,6 +45,29 @@ export function explicitDueDate(text) {
   return parsed.toISOString().slice(0, 10) === value ? value : null;
 }
 
+/** Resolve explicit dates and a small set of relative phrases against speech time. */
+export function resolveDueDate(text, spokenAt) {
+  const exact = explicitDueDate(text);
+  if (exact) return exact;
+  const timestamp = Number.isFinite(spokenAt) ? spokenAt : Date.parse(spokenAt || '');
+  if (!Number.isFinite(timestamp)) return null;
+  const base = new Date(timestamp);
+  const date = new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth(), base.getUTCDate()));
+  const value = String(text || '').toLowerCase();
+  if (/\b(?:today|tonight|this evening)\b/.test(value)) return date.toISOString().slice(0, 10);
+  if (/\b(?:tomorrow|by tomorrow)\b/.test(value)) date.setUTCDate(date.getUTCDate() + 1);
+  else {
+    const match = value.match(/\b(?:(?:by|before|on|due)\s+)?(next\s+)?(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/);
+    if (!match) return null;
+    const weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const target = weekdays.indexOf(match[2]);
+    let days = (target - date.getUTCDay() + 7) % 7;
+    if (match[1] && days === 0) days = 7;
+    date.setUTCDate(date.getUTCDate() + days);
+  }
+  return date.toISOString().slice(0, 10);
+}
+
 /** Best-effort named counterparty. Returns null rather than guessing. */
 export function findCounterparty(text) {
   const named = text.match(
@@ -118,7 +141,7 @@ export function extractCommitments(kept, owner) {
       spanStart,
       spanEnd,
       spokenAt: utterance.spokenAt,
-      dueAt: explicitDueDate(quote),
+      dueAt: resolveDueDate(quote, utterance.spokenAt),
       tier: classification.tier,
       evidence: {
         utteranceId: utterance.id,

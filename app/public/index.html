@@ -48,12 +48,47 @@
             </div>
           </section>
           <section class="sec">
+            <div class="sec-head"><h2>Say a promise</h2><span class="lbl">Scenario only</span></div>
+            <p class="sec-note">Try one promise and see how the base-rate scenario shifts. This stays on this screen.</p>
+            <form class="horizon-say" id="horizon-say-form">
+              <label class="sr-only" for="horizon-say-text">Promise</label>
+              <input id="horizon-say-text" name="promise" maxlength="120" placeholder="I’ll send the draft…" required />
+              <label class="sr-only" for="horizon-say-day">Due day</label>
+              <select id="horizon-say-day" name="day" aria-label="Due day"></select>
+              <button class="btn btn-sec" type="submit">Try it</button>
+            </form>
+            <p class="note" id="horizon-say-note" aria-live="polite"></p>
+            <button class="btn btn-pri" id="fixture-stream-btn" type="button" hidden>Play the live moment</button>
+            <p class="note" id="fixture-stream-note" aria-live="polite"></p>
+          </section>
+          <section class="sec">
             <div class="sec-head"><h2>Coming due</h2><span class="lbl" id="horizon-due-count"></span></div>
             <div class="stack" id="horizon-due-list"></div>
           </section>
           <section class="sec">
             <div class="sec-head"><h2>One thing to keep in view</h2></div>
             <div class="card horizon-question" id="horizon-question"></div>
+          </section>
+        </main>
+      </section>
+
+      <!-- ============================================== RECONCILE ======= -->
+      <section class="view" id="reconcile-screen" hidden>
+        <header class="hero">
+          <div class="hero-top"><span class="pill">Bee’s record</span></div>
+          <p class="hero-hi">Keep what holds up.</p>
+          <h1 class="hero-h1">Reconcile.</h1>
+          <p class="hero-sub" id="reconcile-sub">Checking the record for safe proposals.</p>
+        </header>
+        <main>
+          <section class="sec">
+            <div class="sec-head"><h2>Duplicate to-dos</h2><span class="lbl" id="reconcile-todo-count"></span></div>
+            <p class="sec-note">Only exact text matches are proposed. Bee’s original to-dos stay untouched.</p>
+            <div class="stack" id="reconcile-todos"></div>
+          </section>
+          <section class="sec">
+            <div class="sec-head"><h2>Unconfirmed facts</h2><span class="lbl" id="reconcile-fact-count"></span></div>
+            <div class="card" id="reconcile-facts"></div>
           </section>
         </main>
       </section>
@@ -348,23 +383,11 @@
         </svg>
         Today
       </button>
-      <button class="dock-tab" type="button" data-tab="twin-screen">
+      <button class="dock-tab" type="button" data-tab="reconcile-screen" aria-current="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="9.5" cy="10" r="5.5" /><circle cx="15.5" cy="15" r="4" /><circle cx="18.5" cy="7" r="2" />
+          <path d="M4 12a8 8 0 0 1 14-5l2 2"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M4 20v-5h5"/>
         </svg>
-        Twin
-      </button>
-      <button class="dock-tab" type="button" data-tab="record-screen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M3 20.5h18" /><path d="M6.5 20.5V13" /><path d="M12 20.5V4.5" /><path d="M17.5 20.5v-5" />
-        </svg>
-        Record
-      </button>
-      <button class="dock-tab" type="button" data-tab="trust-screen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 3.2 19 5.8v5.9c0 4.2-2.9 7.2-7 8.6-4.1-1.4-7-4.4-7-8.6V5.8z" /><path d="m8.9 11.9 2.2 2.2 4-4.2" />
-        </svg>
-        Trust
+        Reconcile
       </button>
     </nav>
 

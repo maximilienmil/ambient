@@ -1385,6 +1385,27 @@ h2 {
   margin-top: var(--s-6);
 }
 
+.horizon-say {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.horizon-say input,
+.horizon-say select {
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0 var(--s-4);
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+}
+
+.horizon-say input { flex: 1 1 190px; min-width: 0; }
+.horizon-say select { flex: 0 0 auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
 .horizon-row {
   width: 100%;
   min-height: 68px;

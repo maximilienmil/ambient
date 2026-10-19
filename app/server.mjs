@@ -14,6 +14,8 @@ import { spawn } from 'node:child_process';
 import { migrate } from './db.mjs';
 import * as L from './ledger.mjs';
 import { previewLedger } from './preview-data.mjs';
+import { generateChangeset } from './reconcile.mjs';
+import { demoStream } from './stream-handler.mjs';
 
 /**
  * Preview mode serves a synthetic ledger instead of the real one, so the
@@ -23,6 +25,7 @@ import { previewLedger } from './preview-data.mjs';
  * read-only in this mode and is never written to.
  */
 const PREVIEW = process.env.PREVIEW === '1';
+const FIXTURE = process.env.LATENT_FIXTURE === '1';
 
 /** Preview mode never takes a write. */
 function refuseWrite() {
@@ -31,8 +34,9 @@ function refuseWrite() {
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = process.env.LATENT_DATA_DIR || path.join(root, 'data');
-mkdirSync(dataDir, { recursive: true, mode: 0o700 });
-const dbPath = path.join(dataDir, 'latent.sqlite');
+const dbPath = process.env.LATENT_DB || path.join(dataDir, 'latent.sqlite');
+const dbDir = path.dirname(dbPath);
+mkdirSync(dbDir, { recursive: true, mode: 0o700 });
 // Preview mode opens the real ledger read-only and never migrates it, so a
 // preview session cannot alter the real database even by accident.
 const dbPresent = existsSync(dbPath);
@@ -182,11 +186,22 @@ const server = http.createServer(async (req, res) => {
     // can never serve the real rows and a real build can never serve synthetic
     // ones. The flag travels with the payload and the client reads it.
     if (method === 'GET' && route === '/api/ledger') {
-      return send(res, 200, PREVIEW ? previewLedger() : L.buildLedger(db));
+      const ledger = PREVIEW ? previewLedger() : L.buildLedger(db);
+      return send(res, 200, FIXTURE && !PREVIEW ? { ...ledger, preview: true, fixtureMode: true } : ledger);
     }
     if (method === 'GET' && route === '/api/evaluation') {
       const file = path.join(root, 'evaluation-results.json');
       return send(res, 200, existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { status: 'not_run' });
+    }
+    if (method === 'GET' && route === '/api/reconcile') {
+      if (PREVIEW) return send(res, 200, { preview: true, summary: { todosToRetire: 0, factsKeptPendingEvidence: 0 }, operations: [] });
+      const changeset = await generateChangeset(dbPath);
+      return send(res, 200, FIXTURE ? { ...changeset, preview: true } : changeset);
+    }
+    if (method === 'POST' && route === '/api/stream-demo') {
+      if (!FIXTURE || PREVIEW) refuseWrite();
+      const result = await demoStream({ dbPath });
+      return send(res, 200, { ...result, ledger: { ...L.buildLedger(db), preview: true, fixtureMode: true } });
     }
 
     if (method === 'POST' && route === '/api/sync') {
@@ -272,7 +287,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(port, '127.0.0.1', () => {
   console.log(`Latent is running at ${origin}`);
-  console.log(`Ledger: ${dbPath}`);
+  console.log(`Ledger: ${dbPath}${FIXTURE || dbPath.includes('fixture') ? ' (fixture mode)' : ''}`);
 });
 process.on('SIGINT', () => server.close(() => {
   db.close();

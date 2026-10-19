@@ -1,13 +1,14 @@
 # Latent
 
-Your own Bee conversations, kept as a ledger of commitments you can decide on.
+Latent turns Bee's record into a week-ahead scenario, then shows which record
+changes have evidence. Bee data stays in a local SQLite ledger.
 
-Ingest reads the real Bee account through the Bee CLI into local SQLite: the
-wearer's own utterances verbatim, bystander speech dropped before storage. The
-app then shows the ledger four ways — as a field you can scrub through the day,
-as a feed of one-line rows, as a receipt for every decision, and as the two-sided
-plan exchange — and gives you one action that retires everything the pipeline has
-marked obsolete, with ten seconds to undo it.
+Ingest reads the Bee account through the Bee CLI into local SQLite. It keeps the
+wearer's utterances and drops bystander speech before storage. The main flow has
+three screens: Horizon traces recorded promises into a base-rate week scenario;
+Reconcile proposes only exact duplicate to-dos and holds unconfirmed facts when
+independent evidence is missing; Today keeps the current record and decisions
+close at hand. Scenarios stay local, and Bee is never changed by a proposal.
 
 ## Run
 
@@ -19,6 +20,15 @@ npm ci                       # runtime deps + the UI bundler
 npm run build                # bundles ui/twin.jsx -> public/twin.js
 npm start                    # http://127.0.0.1:4317
 ```
+
+`npm run demo` opens the isolated synthetic fixture. It is marked **Preview ·
+synthetic data** and never reads Bee. For a real account, run `npm start` after
+`npm run ingest`. In another terminal, `npm run stream` watches `bee stream`
+and catches up with incremental ingest after disconnects; an open app checks
+for new ledger rows every 2.5 seconds. Run `npm run reconcile` to write a local,
+ignored `changeset.json`; it proposes exact duplicate to-dos and holds
+unconfirmed facts until independent evidence is available. It does not apply
+proposals to Bee.
 
 `npm run ingest` first, or the ledger is empty. `PORT=4318 npm start` picks
 another port; `LATENT_DATA_DIR=/absolute/path` picks another data directory.
@@ -38,7 +48,10 @@ npm run eval                 # offline comparison table, no keys needed
 npm run icons                # regenerate the PWA icons
 ```
 
-## The five screens
+## The three-screen flow
+
+The dock opens Horizon, Today, and Reconcile. The older Twin, Feed, Receipt,
+Trust, and plan panels remain in the codebase but are not part of this flow.
 
 One typeface, tabular numerals throughout, four type steps (34 / 20 / 16 / 13),
 body copy never below 16px, every control at least 44x44, and `tokens.css` is the

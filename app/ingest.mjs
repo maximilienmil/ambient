@@ -266,8 +266,11 @@ export async function runIngest(options, adapter = bee) {
     // ---- Bee facts (the owner's memory, used to ground the Twin) ---------------
     let factsFetched = 0;
     if (backfill) {
-      const list = await adapter.listFacts({ max: options.maxFacts, limit: 50 });
-      for (const fact of list) {
+      // Pull both confirmed and unconfirmed facts
+      const confirmedList = await adapter.listFacts({ max: options.maxFacts, limit: 50 });
+      const unconfirmedList = await adapter.listFacts({ max: options.maxFacts, limit: 50 }, { unconfirmed: true });
+      const facts = new Map([...confirmedList, ...unconfirmedList].map((fact) => [String(fact.id), fact]));
+      for (const fact of facts.values()) {
         upsertFact(db, fact);
         factsFetched += 1;
       }

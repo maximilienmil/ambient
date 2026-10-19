@@ -41,7 +41,9 @@ Any MCP client that speaks stdio:
 
 | Tool | Kind | What it returns |
 | --- | --- | --- |
-| `latent_record` | read | Conversations, days of record, open and done todos, duplicate rows, measured completion rate |
+| `latent_reconcile` | read | Reversible proposals for exact duplicate todos and a hold receipt for each unsupported fact; never applies them |
+| `latent_slip_risk` | read | A review queue with explicit reasons; no probability while independently labeled outcomes are missing |
+| `latent_record` | read | Conversations, days of record, open and done Bee todos, duplicate rows, and Bee's recorded completion-flag rate |
 | `latent_open_items` | read | Open todos, most urgent first, each with the reason for its position |
 | `latent_duplicates` | read | Groups of rows that say the same thing |
 | `latent_should_act` | read | The one row to act on now, why, the suggested action, and three alternatives |

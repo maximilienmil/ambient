@@ -172,7 +172,9 @@ export function generateFixtures(dbPath) {
   // Generate some Bee todos
   for (let i = 1; i <= 10; i++) {
     const todoId = 20000 + i;
-    const todoText = `Demo todo item ${i}`;
+    // One exact duplicate makes the Reconcile demo show the conservative
+    // duplicate proposal. All rows and names remain visibly synthetic.
+    const todoText = i === 10 ? 'Demo todo item 1' : `Demo todo item ${i}`;
     db.prepare(
       `INSERT INTO bee_todos (id, text, alarm_at, completed, bee_created_at, corrections, ingested_at)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -213,6 +215,23 @@ export function generateFixtures(dbPath) {
     );
   }
 
+  // Completed rows give the synthetic forecast a visible base rate. They are
+  // clearly labeled as demo data and carry no claim about a real wearer.
+  for (let i = 1; i <= 20; i++) {
+    db.prepare(
+      `INSERT INTO bee_todos (id, text, alarm_at, completed, bee_created_at, corrections, ingested_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    ).run(
+      String(21000 + i),
+      `Demo completed item ${i}`,
+      null,
+      1,
+      NOW - randomInt(10, 90) * 24 * 60 * 60 * 1000,
+      '[]',
+      new Date().toISOString(),
+    );
+  }
+
   // Generate some facts
   for (let i = 1; i <= 5; i++) {
     const factId = 30000 + i;
@@ -224,6 +243,21 @@ export function generateFixtures(dbPath) {
       `Demo fact ${i}`,
       JSON.stringify(['demo']),
       1,
+      NOW - randomInt(1, 30) * 24 * 60 * 60 * 1000,
+      new Date().toISOString(),
+    );
+  }
+
+  for (let i = 1; i <= 5; i++) {
+    const factId = 31000 + i;
+    db.prepare(
+      `INSERT INTO facts (id, text, tags, confirmed, bee_created_at, ingested_at)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+    ).run(
+      String(factId),
+      `Demo unconfirmed fact ${i}`,
+      JSON.stringify(['demo']),
+      0,
       NOW - randomInt(1, 30) * 24 * 60 * 60 * 1000,
       new Date().toISOString(),
     );

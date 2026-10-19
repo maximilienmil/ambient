@@ -19,7 +19,10 @@
     "audit-sample": "node audit-sample.mjs",
     "time-split": "node time-split.mjs",
     "fixtures": "node fixtures/generate.mjs",
-    "demo": "LATENT_DB=data/latent-fixture.sqlite node server.mjs"
+    "demo": "node fixtures/create-demo.mjs && LATENT_FIXTURE=1 LATENT_DB=data/latent-reconcile-demo.sqlite node server.mjs",
+    "reconcile": "node reconcile.mjs",
+    "stream": "node stream-handler.mjs",
+    "stream:demo": "node stream-handler.mjs demo data/latent-reconcile-demo.sqlite"
   },
   "dependencies": {
     "@phosphor-icons/core": "^2.1.1"

@@ -13,6 +13,8 @@ const state = {
   undo: null,
   undoTimer: null,
   horizonTrade: null,
+  reconcile: null,
+  hypotheticalPromise: null,
 };
 
 /* --- tiny helpers --------------------------------------------------------- */
@@ -303,28 +305,32 @@ function horizonDueItems() {
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const end = new Date(start);
   end.setDate(end.getDate() + 7);
-  return (state.ledger.items || [])
+  const existing = (state.ledger.items || [])
     .filter((item) => {
       if (!['live', 'blocked'].includes(item.state) || !item.dueAt) return false;
       const due = horizonDate(item.dueAt);
       return due >= start && due < end;
     })
     .sort((a, b) => String(a.dueAt).localeCompare(String(b.dueAt)));
+  if (state.hypotheticalPromise) existing.push(state.hypotheticalPromise);
+  return existing;
 }
 
 function horizonSimulation(count, rate) {
   if (!count || typeof rate !== 'number' || !Number.isFinite(rate)) return null;
   // A fixed seed makes the same ledger produce the same 160-week forecast.
-  let seed = (count * 2654435761 + Math.round(rate * 10000) + 17) >>> 0;
-  const random = () => {
-    seed = (1664525 * seed + 1013904223) >>> 0;
-    return seed / 4294967296;
-  };
   let clean = 0;
   const weeks = Array.from({ length: 160 }, (_, week) => {
     let clear = true;
     for (let promise = 0; promise < count; promise += 1) {
-      if (random() >= rate) clear = false;
+      // Each simulated promise/week pair has a stable draw. Adding a promise
+      // therefore cannot turn a previously missed week into a clear one.
+      let seed = (Math.imul(week + 1, 0x9e3779b1) ^ Math.imul(promise + 1, 0x85ebca6b) ^ Math.round(rate * 10000)) >>> 0;
+      seed ^= seed >>> 16;
+      seed = Math.imul(seed, 0x7feb352d) >>> 0;
+      seed ^= seed >>> 15;
+      const sample = (seed >>> 0) / 4294967296;
+      if (sample >= rate) clear = false;
     }
     if (clear) clean += 1;
     return { week, clear };
@@ -386,6 +392,7 @@ function renderHorizon() {
   const owner = state.ledger.owner || 'you';
 
   $('#horizon-avatar').textContent = owner.slice(0, 1).toUpperCase();
+  $('#fixture-stream-btn').hidden = !state.ledger.fixtureMode;
   $('#horizon-sub').textContent = due.length
     ? `${due.length} promise${due.length === 1 ? '' : 's'} come due. Latent traced them forward from what you said.`
     : 'No promise has a due date this week. Your past is here; the future stays open.';
@@ -403,7 +410,10 @@ function renderHorizon() {
   $('#horizon-due-count').textContent = due.length ? `${due.length} this week` : 'Nothing dated';
   $('#horizon-due-list').innerHTML = due.length ? due.map((item) => {
     const selected = state.horizonTrade === item.id;
-    return `<button class="horizon-row${selected ? ' is-trade' : ''}" type="button" data-item="${escapeHTML(item.id)}">
+    return item.id === 'scenario-promise' ? `<div class="horizon-row${selected ? ' is-trade' : ''}">
+      <span class="horizon-row-date">${escapeHTML(horizonDate(item.dueAt).toLocaleDateString('en-US', { weekday: 'short' }))}</span>
+      <span class="horizon-row-copy"><b>${escapeHTML(item.title)}</b><small>Scenario only · not saved to Bee</small></span><span class="horizon-row-arrow" aria-hidden="true">＋</span>
+    </div>` : `<button class="horizon-row${selected ? ' is-trade' : ''}" type="button" data-item="${escapeHTML(item.id)}">
       <span class="horizon-row-date">${escapeHTML(horizonDate(item.dueAt).toLocaleDateString('en-US', { weekday: 'short' }))}</span>
       <span class="horizon-row-copy"><b>${escapeHTML(item.title)}</b><small>${escapeHTML(item.source || 'From your record')}</small></span>
       <span class="horizon-row-arrow" aria-hidden="true">↗</span>
@@ -420,11 +430,29 @@ function renderHorizon() {
     $('#trade-btn').textContent = 'Show the trade';
     delete $('#trade-btn').dataset.clearTrade;
   }
-  const question = due[0];
+  const question = due.find((item) => item.id !== 'scenario-promise');
   $('#horizon-question').innerHTML = question
     ? `<span class="horizon-question-mark">?</span><div><b>One thing to keep in view</b><p>“${escapeHTML(question.title)}” is due ${escapeHTML(horizonDate(question.dueAt).toLocaleDateString('en-US', { weekday: 'long' }))}. Does that still fit this week?</p><button class="text-btn" type="button" data-item="${escapeHTML(question.id)}">Open its receipt <span aria-hidden="true">↗</span></button></div>`
     : '<div><b>One question, when there is one</b><p>Latent will bring forward a single promise when the record gives it a date. You do not need to sort the whole list.</p></div>';
   renderHorizonMap(due);
+}
+
+function renderReconcile() {
+  const data = state.reconcile;
+  if (!data) return;
+  const todos = data.operations.filter((op) => op.type === 'retire_todo');
+  const factCount = data.summary?.factCountReviewed ?? 0;
+  $('#reconcile-sub').textContent = data.preview
+    ? `Preview · synthetic data. ${data.summary?.todoCountReviewed ?? 0} open to-dos checked; Bee is unchanged.`
+    : `${data.summary?.todoCountReviewed ?? 0} open to-dos checked. Only exact duplicate text can be proposed for retirement.`;
+  $('#reconcile-todo-count').textContent = `${todos.length} exact duplicates`;
+  $('#reconcile-todos').innerHTML = todos.length ? todos.map((op) => `
+    <article class="card"><div class="card-head"><div><h3 class="card-title">${escapeHTML(op.receipt.duplicateText)}</h3>
+    <p class="lbl">Duplicate of Bee todo ${escapeHTML(op.receipt.keptTodoId)} · source row ${escapeHTML(op.targetId)}</p></div></div>
+    <p class="note">${escapeHTML(op.reason)} Original Bee data is unchanged.</p></article>`).join('')
+    : '<div class="card empty"><p>No exact duplicate to-dos found.</p></div>';
+  $('#reconcile-fact-count').textContent = `${factCount} reviewed`;
+  $('#reconcile-facts').innerHTML = `<p><b>${num(factCount)} facts kept unconfirmed.</b></p><p class="note">The local ledger has no independent, dated evidence to support confirmation or retirement. Each fact receives a hold proposal with its original Bee text and status as the receipt; no fact is changed.</p>`;
 }
 
 function renderToday() {
@@ -1468,6 +1496,7 @@ function go(screen) {
     button.setAttribute('aria-current', active ? 'page' : 'false');
   });
   if (screen === 'horizon-screen') renderHorizon();
+  if (screen === 'reconcile-screen') renderReconcile();
   window.scrollTo({ top: 0, behavior: 'auto' });
   /* A tab comes in from just below its resting place, by an amount small enough
      that it reads as the page settling rather than as a transition. */
@@ -1626,6 +1655,7 @@ function render() {
   });
   renderToday();
   renderHorizon();
+  renderReconcile();
   renderTwin();
   renderRecord();
   renderTrust();
@@ -1650,6 +1680,21 @@ document.addEventListener('click', (event) => {
     const candidate = horizonDueItems()[0];
     state.horizonTrade = tradeButton.dataset.clearTrade ? null : candidate?.id || null;
     renderHorizon();
+    return;
+  }
+
+  const streamButton = target.closest('#fixture-stream-btn');
+  if (streamButton) {
+    streamButton.disabled = true;
+    $('#fixture-stream-note').textContent = 'Processing a synthetic utterance through the stream extractor…';
+    api('/stream-demo', { method: 'POST' })
+      .then((result) => {
+        state.ledger = result.ledger;
+        render();
+        $('#fixture-stream-note').textContent = `Fixture event processed · ${result.accepted} promise${result.accepted === 1 ? '' : 's'} extracted.`;
+      })
+      .catch((error) => { $('#fixture-stream-note').textContent = error.message; })
+      .finally(() => { streamButton.disabled = false; });
     return;
   }
 
@@ -1763,6 +1808,16 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('submit', (event) => {
+  if (event.target.id === 'horizon-say-form') {
+    event.preventDefault();
+    const text = $('#horizon-say-text').value.trim();
+    const date = $('#horizon-say-day').value;
+    if (!text || !date) return;
+    state.hypotheticalPromise = { id: 'scenario-promise', title: text, dueAt: date, state: 'live', source: 'Scenario' };
+    $('#horizon-say-note').textContent = 'Scenario added to the forecast only. Reloading clears it; Bee was not changed.';
+    renderHorizon();
+    return;
+  }
   if (event.target.id === 'edit-form') {
     event.preventDefault();
     const id = state.editId;
@@ -1843,11 +1898,33 @@ async function boot() {
     const session = await (await fetch('/api/session')).json();
     state.token = session.token;
     state.ledger = await api('/ledger');
+    state.reconcile = await api('/reconcile').catch(() => null);
     const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+    const daySelect = $('#horizon-say-day');
+    daySelect.innerHTML = Array.from({ length: 7 }, (_, index) => {
+      const day = new Date();
+      day.setHours(12, 0, 0, 0);
+      day.setDate(day.getDate() + index);
+      const value = day.toISOString().slice(0, 10);
+      const label = index === 0 ? 'Today' : day.toLocaleDateString('en-US', { weekday: 'long' });
+      return `<option value="${value}">${label}</option>`;
+    }).join('');
     const dateField = $('#plan-date');
     dateField.value = tomorrow;
     dateField.min = tomorrow;
     render();
+    if (!state.ledger.preview) {
+      window.setInterval(async () => {
+        if (document.hidden) return;
+        try {
+          const latest = await api('/ledger');
+          if ((latest.items || []).length !== (state.ledger.items || []).length) {
+            state.ledger = latest;
+            render();
+          }
+        } catch { /* reconnect on the next short poll */ }
+      }, 2500);
+    }
   } catch (error) {
     notify(error.message);
   }

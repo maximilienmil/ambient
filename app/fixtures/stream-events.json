@@ -1,0 +1,44 @@
+[
+  {
+    "type": "new-utterance",
+    "data": {
+      "utterance": {
+        "id": "stream-utt-1",
+        "conversation_id": "stream-conv-1",
+        "speaker": "Demo User",
+        "spoken_at": 1792324800000,
+        "text": "I'll send the report by Friday.",
+        "start": 0,
+        "end": 1
+      }
+    }
+  },
+  {
+    "type": "new-utterance",
+    "data": {
+      "utterance": {
+        "id": "stream-utt-2",
+        "conversation_id": "stream-conv-1",
+        "speaker": "Demo User",
+        "spoken_at": 1792324860000,
+        "text": "We should schedule a meeting.",
+        "start": 1,
+        "end": 2
+      }
+    }
+  },
+  {
+    "type": "new-utterance",
+    "data": {
+      "utterance": {
+        "id": "stream-utt-3",
+        "conversation_id": "stream-conv-2",
+        "speaker": "Demo User",
+        "spoken_at": 1792324920000,
+        "text": "I need to follow up on the contract.",
+        "start": 0,
+        "end": 1
+      }
+    }
+  }
+]

@@ -218,8 +218,10 @@ export async function listTodos(options) {
 }
 
 /** `bee facts list`. https://docs.bee.computer/docs/cli#bee-facts-list */
-export async function listFacts(options) {
-  return pageAll(['facts', 'list'], options);
+export async function listFacts(options, { unconfirmed = false } = {}) {
+  const args = ['facts', 'list'];
+  if (unconfirmed) args.push('--unconfirmed');
+  return pageAll(args, options);
 }
 
 /** `bee todos get <id>` (flat object). */

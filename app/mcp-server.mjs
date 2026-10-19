@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
 import { openDb } from './db.mjs';
 import * as L from './ledger.mjs';
+import { generateChangeset } from './reconcile.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dbPath = process.env.LATENT_DB || path.join(root, 'data', 'latent.sqlite');
@@ -40,14 +41,15 @@ function summary() {
     .get();
   const days = span?.first && span?.last ? Math.round((span.last - span.first) / 86_400_000) : 0;
   const base = ledger.today?.baseRate || null;
+  const todoCounts = db.prepare('SELECT COUNT(*) AS total, SUM(CASE WHEN completed=1 THEN 1 ELSE 0 END) AS done FROM bee_todos').get();
   return {
     owner: ledger.owner,
     conversations: span?.n ?? 0,
     daysOfRecord: days,
     todos: {
-      total: ledger.record?.kept?.total ?? null,
-      done: ledger.record?.kept?.done ?? null,
-      open: open.length,
+      total: todoCounts.total,
+      done: todoCounts.done || 0,
+      open: todoCounts.total - (todoCounts.done || 0),
     },
     duplicateRows: ledger.today?.duplicateRows ?? 0,
     duplicateGroups: (ledger.today?.duplicates || []).length,
@@ -59,6 +61,22 @@ function summary() {
 
 const TOOLS = [
   {
+    name: 'latent_reconcile',
+    description:
+      'Read a reversible changeset proposal for exact duplicate Bee todos and unconfirmed facts. It never applies changes; unsupported facts are held with their source receipt.',
+    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+  },
+  {
+    name: 'latent_slip_risk',
+    description:
+      'List older open commitments as a review queue. No completion model or calibrated slip probability is available, so this returns reasons and no risk percentages.',
+    inputSchema: {
+      type: 'object',
+      properties: { limit: { type: 'number', minimum: 1, maximum: 20, default: 5 } },
+      additionalProperties: false,
+    },
+  },
+  {
     name: 'latent_record',
     description:
       'Read the audit of the Bee record: how many conversations, how many days, how many open todos, how many duplicate rows, and the measured completion rate.',
@@ -67,7 +85,7 @@ const TOOLS = [
   {
     name: 'latent_open_items',
     description:
-      'List open Bee todos, most urgent first. A row with a due date comes before one without; ties break on age. Returns the honest reason each row is where it is.',
+      'List open commitments, most urgent first. A due date comes before an undated row; ties break on age. Returns the reason for each position.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -123,12 +141,40 @@ function rank(items) {
 }
 
 function whyOf(item) {
-  if (item.dueAt) return 'It carries a due date, and that date has passed.';
+  if (item.dueAt) {
+    const due = new Date(item.dueAt);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const day = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+    if (day < today) return `It was due ${day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}.`;
+    if (day.getTime() === today.getTime()) return 'It is due today.';
+    return `It is due ${day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}.`;
+  }
   if (item.age >= 21) return `It has been open for ${item.age} days.`;
   return 'It is the oldest open row without a due date.';
 }
 
 const HANDLERS = {
+  async latent_reconcile() {
+    return generateChangeset(dbPath);
+  },
+
+  latent_slip_risk(args = {}) {
+    const limit = Math.min(20, Math.max(1, Number(args.limit) || 5));
+    return {
+      available: false,
+      reason: 'No independently labeled outcomes are available to estimate slip risk.',
+      rankedForReview: rank(openRows()).slice(0, limit).map((item) => ({
+        id: item.id,
+        title: item.title,
+        daysOpen: item.age,
+        dueAt: item.dueAt || null,
+        why: whyOf(item),
+      })),
+      probability: null,
+    };
+  },
+
   latent_record() {
     return summary();
   },
@@ -204,7 +250,7 @@ function send(message) {
   process.stdout.write(`${JSON.stringify(message)}\n`);
 }
 
-function handle(request) {
+async function handle(request) {
   const { id, method, params } = request;
 
   if (method === 'initialize') {
@@ -234,7 +280,7 @@ function handle(request) {
       return send({ jsonrpc: '2.0', id, error: { code: -32602, message: `Unknown tool: ${name}` } });
     }
     try {
-      const data = handler(params?.arguments || {});
+      const data = await handler(params?.arguments || {});
       return send({
         jsonrpc: '2.0',
         id,
@@ -252,6 +298,12 @@ function handle(request) {
 }
 
 let buffer = '';
+const inFlight = new Set();
+let inputEnded = false;
+function finishIfIdle() {
+  if (inputEnded && inFlight.size === 0) db.close();
+}
+
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', (chunk) => {
   buffer += chunk;
@@ -261,7 +313,12 @@ process.stdin.on('data', (chunk) => {
     buffer = buffer.slice(index + 1);
     if (line) {
       try {
-        handle(JSON.parse(line));
+        const task = handle(JSON.parse(line)).catch(() => {});
+        inFlight.add(task);
+        task.finally(() => {
+          inFlight.delete(task);
+          finishIfIdle();
+        });
       } catch (error) {
         send({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } });
       }
@@ -269,6 +326,9 @@ process.stdin.on('data', (chunk) => {
     index = buffer.indexOf('\n');
   }
 });
-process.stdin.on('end', () => process.exit(0));
+process.stdin.on('end', () => {
+  inputEnded = true;
+  finishIfIdle();
+});
 
 process.stderr.write(`latent mcp ready: ${dbPath}\n`);

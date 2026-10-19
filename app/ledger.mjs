@@ -157,7 +157,6 @@ export function listItems(db, { limit } = {}) {
                       span_start, span_end, created_at, due_at, state, tier, p,
                       jev_scores, d1_scores, evidence, closed_by
                FROM commitments
-               WHERE source_conversation_id IS NULL
                ORDER BY created_at DESC, id ASC`;
   const rows = limit ? db.prepare(`${sql} LIMIT ?`).all(limit) : db.prepare(sql).all();
 

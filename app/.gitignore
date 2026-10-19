@@ -1,5 +1,8 @@
 data/
 labels.json
+changeset.json
+audit-results.json
+calendar-events.json
 bee-sync/
 *.log
 .env
