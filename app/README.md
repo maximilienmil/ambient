@@ -38,7 +38,7 @@ per-run session token on every `/api` call, and rejects cross-origin and
 cross-site requests.
 
 ```bash
-npm test                     # 55 tests
+npm test                     # offline suite
 npm run ingest               # incremental: only what changed since the last run
 npm run ingest -- --full     # backfill from the top (cap with --conversations N)
 npm run ingest -- --strict   # fail closed: no attribution assumption (see below)
@@ -47,6 +47,67 @@ npm run decide               # score the unscored rows (needs model endpoints)
 npm run eval                 # offline comparison table, no keys needed
 npm run icons                # regenerate the PWA icons
 ```
+
+## Horizon capacity API
+
+The October 19 design direction is recorded in [SCOPE.md](../SCOPE.md).
+The production UI is awaiting design review. Its new backend is available now:
+
+- `GET /api/horizon/demo`: computed synthetic launch scenario, available only
+  in fixture or preview mode. Jev and System One are explicitly `not_run`.
+- `POST /api/horizon/compare`: read-only calculation for two to five alternatives.
+  Requires the same session token as other API calls. It never changes a source
+  record, approves an action, or writes a calendar event.
+
+Request shape:
+
+```json
+{
+  "goalId": "release",
+  "variants": [
+    {
+      "id": "current",
+      "input": {
+        "asOf": "2026-10-19T10:00:00-04:00",
+        "availability": [
+          { "start": "2026-10-20T09:00:00-04:00", "end": "2026-10-20T12:00:00-04:00" }
+        ],
+        "events": [],
+        "commitments": [
+          { "id": "release", "title": "Ship the release", "dueAt": "2026-10-23T17:00:00-04:00", "remainingMinutes": 360, "minBlockMinutes": 60 }
+        ]
+      }
+    },
+    {
+      "id": "smaller",
+      "input": {
+        "asOf": "2026-10-19T10:00:00-04:00",
+        "availability": [
+          { "start": "2026-10-20T09:00:00-04:00", "end": "2026-10-20T12:00:00-04:00" }
+        ],
+        "events": [],
+        "commitments": [
+          { "id": "release", "title": "Ship a smaller release", "dueAt": "2026-10-23T17:00:00-04:00", "remainingMinutes": 180, "minBlockMinutes": 60 }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Each alternative returns proposed blocks, work scheduled before the deadline,
+shortfall, and estimated finish when enough future availability was supplied.
+The engine unions overlapping busy events, excludes cancelled/transparent
+events and past time, and respects minimum focus block lengths. It uses explicit
+timezone offsets and earliest-deadline ordering. This is an editable capacity
+scenario, not an optimal schedule or a calibrated prediction of behavior.
+`remainingMinutes` is unscheduled effort: work already represented by busy
+calendar events must not be counted again. Missing estimates are rejected.
+
+Calendar fetching, effort extraction, model assessments, and external approval/
+execution still need to be connected to this API. The synthetic scenario's data
+contract can be populated by those providers; these endpoints do not claim
+that live integrations are finished.
 
 ## The three-screen flow
 

@@ -6,6 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { once } from 'node:events';
 import { openDb, saveCommitment } from '../db.mjs';
+import { horizonDemo } from '../fixtures/horizon-scenario.mjs';
 
 const port = 15371;
 
@@ -39,10 +40,10 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
   seed(dir, [commitment('seed-a'), commitment('seed-b', { tier: 'ask', text: 'Make dinner plans', quote: 'We should get dinner.' })]);
   let proc;
 
-  async function boot() {
+  async function boot(fixture = false) {
     proc = spawn(process.execPath, ['server.mjs'], {
       cwd: new URL('..', import.meta.url),
-      env: { ...process.env, PORT: String(port), LATENT_DATA_DIR: dir },
+      env: { ...process.env, PORT: String(port), LATENT_DATA_DIR: dir, LATENT_DB: path.join(dir, 'latent.sqlite'), PREVIEW: '0', LATENT_FIXTURE: fixture ? '1' : '0' },
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     await new Promise((resolve, reject) => {
@@ -75,6 +76,15 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal((await request('/ledger', 'GET', null, { 'X-Latent-Token': 'wrong' })).status, 403);
     assert.equal((await fetch(`http://127.0.0.1:${port}/api/ledger`)).status, 403);
     assert.equal((await request('/nope')).status, 404);
+    assert.equal((await request('/horizon/demo')).status, 404, 'synthetic data cannot reach a real session');
+    const { input } = horizonDemo();
+    const comparison = await request('/horizon/compare', 'POST', {
+      goalId: 'launch', variants: [{ id: 'a', input }, { id: 'b', input }],
+    });
+    assert.equal(comparison.status, 200);
+    assert.equal((await comparison.json()).variants[0].goal.scheduledBeforeDeadlineMinutes, 360);
+    assert.equal((await request('/horizon/compare', 'POST', {})).status, 400);
+    assert.equal((await request('/horizon/compare', 'POST', { goalId: 'launch', variants: [null, null] })).status, 400);
 
     // the app shell loads from the same origin only, and it is the four-screen app
     const shell = await fetch(`http://127.0.0.1:${port}/`);
@@ -155,6 +165,15 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal(ledger.items.find((item) => item.id === 'seed-a').state, 'forgotten');
     assert.equal(ledger.plans[0].state, 'cancelled');
     assert.equal(ledger.receipts.length, receiptsBeforeRestart);
+
+    await stop();
+    await boot(true);
+    token = (await (await fetch(`http://127.0.0.1:${port}/api/session`)).json()).token;
+    const demo = await (await request('/horizon/demo')).json();
+    assert.equal(demo.synthetic, true);
+    assert.equal(demo.preview, true);
+    assert.equal(demo.comparison.variants.find((variant) => variant.id === 'keep').goal.shortfallMinutes, 180);
+    assert.equal(demo.models.jev, 'not_run');
   } finally {
     if (proc && !proc.killed) await stop();
     rmSync(dir, { recursive: true, force: true });

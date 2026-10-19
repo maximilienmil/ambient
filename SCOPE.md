@@ -1,5 +1,63 @@
 # SCOPE — Latent for the Bee Hackathon
 
+## Direction confirmed October 19
+
+This section records the owner's design interview and takes precedence over
+conflicting product priorities and milestone sequencing below. The original
+plan remains for its evidence rules and unfulfilled acceptance targets.
+
+**Latent is ambient intelligence that turns everyday context into room to act.**
+It reduces overwhelm through actionable interpretation, handles low effort
+work within granted permissions, and helps people explore alternative futures.
+Do not explicitly market it toward executive dysfunction; make it useful through
+low cognitive load, one relevant intervention, and manageable defaults. Rest,
+deferral, and dropping work can be successful outcomes. The user defines goals;
+observed behavior supports correctable interpretations, never a verdict about
+what the user really wants.
+
+Friday's main story: an independent builder wants a first release out Friday.
+A new spoken promise to help with a presentation by Thursday consumes three of
+the six hours the release needs. Compare protecting the launch by asking to move
+the favor to Monday with keeping the favor and moving the launch to Monday.
+Offer a smaller first release as a third path. Review the message and calendar
+blocks; approved actions execute against a dedicated demo account, with actual
+connector receipts. A sent renegotiation request is not the recipient's agreement.
+
+- Horizon forks and resulting action lead; Reconcile is a short trust beat,
+  replacing the original 60/40 demo split. Grow connects history, editable goals,
+  and future planning.
+- Week: detailed capacity, forks, and actions. Month: milestone and capacity
+  estimates with editable assumptions. Year: observed patterns and tentative
+  directions; further estimates require supporting data.
+- Concrete available hours lead; advisor interpretation follows. No numerical
+  likelihoods without validation. Model action probabilities are not completion
+  probabilities.
+- Jev and System One assess evidence, commitment identity, reconciliation,
+  proposed paths, and whether an action can and should be delegated. Calendar
+  arithmetic establishes feasibility. Missing model endpoints stay explicit.
+- Latent owns the context, tradeoff, recommendation, approval and result record.
+  Bee's agent, other agents through MCP, or direct connectors can execute.
+  One approved action must not run independently through multiple executors.
+- Target Bee live speech with attributed owner events; captured event replay
+  is the labeled backup. Unknown speaker attribution on this account is a known
+  issue, not evidence of a universal Bee limitation. Do not guess ownership.
+- Use a coherent synthetic person and calendar for the demo, labeled as such.
+  Use the same data contracts and calculations as real-account mode. Prepared
+  synthetic inputs are allowed; fabricated model outputs and success receipts
+  presented as real are not.
+- Desktop web first, usable mobile. Midnight canvas, luminous branching paths,
+  calm companion tone. Borrow Bee's readable details and rounded surfaces;
+  use Oura's interpretation-first hierarchy, Gentler Streak's contextual capacity,
+  and Apple's restrained glass controls. Visual design review precedes the
+  production UI rebuild. Figma is requested for editable review and annotation.
+
+The isolated design draft lives on branch `design/horizon-review`; its entry is
+`app/public/horizon-prototype.html`. The shared capacity engine and read-only
+comparison API can be implemented while that design is reviewed. Neither is a
+claim that the original M1/M2 evidence acceptance targets have passed.
+
+## Original milestone plan
+
 **Deadline: Friday Oct 23, 2026, 12:00 pm PDT.** Today is Sunday Oct 18, 2026.
 Schedule: M1 Sun night → M2 Mon → M2.5 Mon → M3 Tue → M4 Wed (feature freeze
 Wed night) → video Thu → submit Thu night. Friday is buffer only — nothing is

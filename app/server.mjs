@@ -16,6 +16,8 @@ import * as L from './ledger.mjs';
 import { previewLedger } from './preview-data.mjs';
 import { generateChangeset } from './reconcile.mjs';
 import { demoStream } from './stream-handler.mjs';
+import { comparePlans } from './horizon.mjs';
+import { horizonDemo } from './fixtures/horizon-scenario.mjs';
 
 /**
  * Preview mode serves a synthetic ledger instead of the real one, so the
@@ -192,6 +194,14 @@ const server = http.createServer(async (req, res) => {
     if (method === 'GET' && route === '/api/evaluation') {
       const file = path.join(root, 'evaluation-results.json');
       return send(res, 200, existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { status: 'not_run' });
+    }
+    if (method === 'GET' && route === '/api/horizon/demo') {
+      if (!FIXTURE && !PREVIEW) fail('The synthetic scenario is available in demo mode only.', 404);
+      return send(res, 200, horizonDemo());
+    }
+    if (method === 'POST' && route === '/api/horizon/compare') {
+      // Calculation only: no source records, approvals, or calendar events change.
+      return send(res, 200, comparePlans(await readBody(req)));
     }
     if (method === 'GET' && route === '/api/reconcile') {
       if (PREVIEW) return send(res, 200, { preview: true, summary: { todosToRetire: 0, factsKeptPendingEvidence: 0 }, operations: [] });
