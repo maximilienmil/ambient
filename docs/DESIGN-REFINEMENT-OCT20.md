@@ -14,6 +14,10 @@ in the running app rather than creating another disconnected prototype.
   updates the actual proposed work blocks; after-deadline blocks are labeled.
 - Replaced abstract curve interpretation with concrete weekday/time blocks.
   The hours meter measures allocated work, not a personal probability.
+- Added a selectable A/B week timeline. It places release and presentation
+  focus blocks against dates, makes work after Friday visible, and updates the
+  selected plan when a path is chosen. The responsive phone layout is web; a
+  native iOS app remains unbuilt.
 - Replaced raw availability JSON and timestamp strings with labeled date/time
   inputs and add/remove availability rows.
 - Reduced review to one explicit save/send control after reviewing the actual

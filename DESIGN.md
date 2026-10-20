@@ -20,6 +20,10 @@ the choice without knowing what a digital twin, model distribution or fork is.
   or help by Thursday and finish release work Monday.
 - Keep the smaller-release option secondary, with its scope consequence visible.
 - Selecting a choice updates concrete focus times and the proposed next action.
+- The phone view places the A/B paths on one weekday timeline, with labeled
+  release/presentation blocks. Selecting a path there selects the same choice
+  as the cards above and updates the plan below. C stays available as a
+  secondary choice.
 - The dark olive panel shows hours and actual proposed blocks. Do not replace
   those facts with an unlabeled curve, abstract multiverse or personal score.
 - The lilac panel explains the recommendation and offers review of the message
@@ -48,6 +52,9 @@ remain explicit at the point where they affect a decision.
 Grow is a quiet editable goal list with supporting observations and source
 details. Reconcile compares possible duplicate records inline and offers a
 reversible local merge. Neither needs another dashboard hero.
+
+The mobile page is responsive web. There is no native Swift/iOS app yet; the
+older `/legacy` screen is a preserved web prototype, not a native implementation.
 
 ## Research applied
 
