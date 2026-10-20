@@ -87,6 +87,13 @@ function send(res, status, value, type = 'application/json') {
 // Every file the app ships, with its content type. Nothing is served from
 // outside this map, so a path in a request can never reach the filesystem.
 const STATIC = new Map([
+  ['/assets/horizon-atmosphere.svg', ['assets/horizon-atmosphere.svg', 'image/svg+xml']],
+  ['/assets/horizon-grain.svg', ['assets/horizon-grain.svg', 'image/svg+xml']],
+  ['/icons/house.svg', ['icons/house.svg', 'image/svg+xml']],
+  ['/icons/brain.svg', ['icons/brain.svg', 'image/svg+xml']],
+  ['/icons/check-square.svg', ['icons/check-square.svg', 'image/svg+xml']],
+  ['/icons/sparkle.svg', ['icons/sparkle.svg', 'image/svg+xml']],
+  ['/icons/arrow-right.svg', ['icons/arrow-right.svg', 'image/svg+xml']],
   ['/workspace.js', ['workspace.js', 'text/javascript']],
   ['/workspace.css', ['workspace.css', 'text/css']],
   ['/', ['workspace.html', 'text/html']],

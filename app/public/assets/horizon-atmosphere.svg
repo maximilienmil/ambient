@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" fill="none">
+  <defs>
+    <linearGradient id="land" x1="860" y1="80" x2="430" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#d3b7f4"/><stop offset=".48" stop-color="#e8d7ed"/><stop offset="1" stop-color="#f8e59d"/></linearGradient>
+    <radialGradient id="sun"><stop stop-color="#fffbe3"/><stop offset=".6" stop-color="#ffe99a"/><stop offset="1" stop-color="#edc25c"/></radialGradient>
+    <linearGradient id="rim"><stop stop-color="#fffdf2" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="15"/></filter>
+    <filter id="surface"><feTurbulence type="fractalNoise" baseFrequency=".48" numOctaves="3" stitchTiles="stitch" result="noise"/><feColorMatrix in="noise" type="saturate" values="0"/><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+  </defs>
+  <ellipse cx="963" cy="360" rx="220" ry="65" fill="#a68cbd" opacity=".14" filter="url(#soft)"/>
+  <circle cx="948" cy="206" r="118" fill="url(#sun)"/>
+  <path d="M435 620C566 465 642 332 817 329c153-3 237 67 383-68v359Z" fill="url(#land)"/>
+  <path d="M435 620C566 465 642 332 817 329c153-3 237 67 383-68" stroke="url(#rim)" stroke-width="2"/>
+  <path d="M717 620c69-158 107-266 234-270 94-3 151 33 249-25v295Z" fill="#d8c4e7" opacity=".34"/>
+  <path d="M717 620c69-158 107-266 234-270 94-3 151 33 249-25" stroke="#fff8ef" stroke-opacity=".5"/>
+  <path d="M839 620c72-84 116-148 230-138 56 5 97-8 131-35v173Z" fill="#f5dfb1" opacity=".35"/>
+</svg>
