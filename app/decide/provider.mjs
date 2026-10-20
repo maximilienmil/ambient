@@ -25,7 +25,7 @@
 // `chatJson` throws `NotConfiguredError`. Cost is reported only when both
 // `<ROLE>_PRICE_IN` and `<ROLE>_PRICE_OUT` were supplied (`null` otherwise).
 
-export const ROLES = ['jev', 'd1', 'extract'];
+export const ROLES = ['jev', 'd1', 'extract', 'judge'];
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 

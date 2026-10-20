@@ -19,6 +19,10 @@ export function timeSplitCommitments(dbPath, splitPoint) {
   const db = openDb(dbPath);
 
   const all = db.prepare('SELECT * FROM commitments').all();
+  if (db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='outcome_labels'").get()) {
+    const labels = new Map(db.prepare('SELECT commitment_id,verdict FROM outcome_labels').all().map(r=>[r.commitment_id,r.verdict]));
+    for (const row of all) if (labels.has(row.id)) row.outcomeLabel=labels.get(row.id);
+  }
 
   const train = [];
   const test = [];

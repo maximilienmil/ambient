@@ -85,16 +85,29 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal((await comparison.json()).variants[0].goal.scheduledBeforeDeadlineMinutes, 360);
     assert.equal((await request('/horizon/compare', 'POST', {})).status, 400);
     assert.equal((await request('/horizon/compare', 'POST', { goalId: 'launch', variants: [null, null] })).status, 400);
+    const workspace = await (await request('/workspace')).json();
+    assert.equal(workspace.synthetic, false);
+    assert.equal(workspace.models.d1.state, 'idle');
+    const goal = await (await request('/grow', 'POST', { kind:'goal',title:'Ship Friday',minutes:360,due_at:'2026-10-23T17:00:00-04:00' })).json();
+    assert.equal(goal.version, 1);
+    assert.equal((await (await request('/workspace')).json()).grow[0].title,'Ship Friday');
+    const bundle = await (await request('/actions', 'POST', {executor:'sandbox',goal:'Ship Friday',message:{to:'test@example.com',subject:'Demo timing',body:'Could we move this to Monday?'},blocks:[{start:'2026-10-22T13:00:00Z',end:'2026-10-22T16:00:00Z'}]})).json();
+    assert.equal((await request(`/actions/${bundle.id}/execute`, 'POST', {})).status,409);
+    assert.equal((await request(`/actions/${bundle.id}/approve`, 'POST', {hash:bundle.hash})).status,200);
+    const executed=await (await request(`/actions/${bundle.id}/execute`, 'POST', {})).json();
+    assert.equal(executed.state,'complete');
+    assert.equal(executed.results.find(r=>r.step==='message').receipt.sent,false);
+    assert.equal((await (await request('/actions')).json()).length,1);
 
     // the app shell loads from the same origin only, and it is the four-screen app
     const shell = await fetch(`http://127.0.0.1:${port}/`);
     assert.equal(shell.status, 200);
     const html = await shell.text();
-    assert.match(html, /id="twin-screen"/);
-    assert.match(html, /id="commitment-list"/);
-    assert.match(html, /id="plan-form"/);
-    assert.match(html, /id="receipt-list"/);
-    assert.match(html, /href="\/tokens\.css"/);
+    assert.match(html, /data-view="horizon"/);
+    assert.match(html, /data-view="grow"/);
+    assert.match(html, /data-view="reconcile"/);
+    assert.match(html, /workspace\.js/);
+    assert.match(html, /href="\/workspace\.css"/);
 
     // projection
     let ledger = await (await request('/ledger')).json();
@@ -107,13 +120,13 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal(ask.person, null);
     assert.equal(ask.scored, false, 'no model score is invented');
     assert.equal(ask.confidence, null);
-    assert.equal(ledger.receipts.length, 0);
+    assert.equal(ledger.receipts.length, 2);
 
     // an approval of an ask authorises drafting only
     let result = await (await request('/commitments/seed-b/approve', 'POST')).json();
     assert.equal(result.item.decision, 'draft');
     assert.equal(result.item.state, 'live');
-    assert.equal(result.ledger.receipts.length, 1);
+    assert.equal(result.ledger.receipts.length, 3);
 
     // dismiss, then clear retired rows
     result = await (await request('/commitments/seed-a/dismiss', 'POST')).json();
@@ -165,6 +178,8 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal(ledger.items.find((item) => item.id === 'seed-a').state, 'forgotten');
     assert.equal(ledger.plans[0].state, 'cancelled');
     assert.equal(ledger.receipts.length, receiptsBeforeRestart);
+    assert.equal((await (await request('/workspace')).json()).grow[0].title,'Ship Friday');
+    assert.equal((await (await request(`/actions/${bundle.id}`)).json()).state,'complete');
 
     await stop();
     await boot(true);

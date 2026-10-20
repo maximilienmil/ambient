@@ -1,5 +1,57 @@
 # Latent
 
+## October 20 working build
+
+The canonical `/` entry now serves the capacity-first Horizon, editable Grow, and
+Reconcile workspace. The earlier interface remains at `/legacy`; the saved iOS
+prototype remains a visual reference. Use `npm run demo` for explicitly synthetic
+inputs, or `npm start` for the real local ledger and imported calendars.
+
+- Grow goals and correctable topic interpretations persist in SQLite, preserve
+  their provenance, and reject stale edits. Goals can be explored in Horizon.
+- Calendar imports use `ical.js`, embedded timezones, recurrence exceptions,
+  cancellations, and a bounded 2025–2026 expansion. Put `.ics` files in ignored
+  `app/data/calendars/`. The four owner-uploaded files have been recovered there.
+- `npm run acceptance` runs the offline suite and real-data evidence gates, writes
+  private results to `data/acceptance-results.json`, and exits nonzero when gates
+  fail. Unknown outcomes remain unknown. This is not a passing predictor eval.
+- The judge role can consume later owner-attributed evidence when configured;
+  support IDs, dates and verbatim quotes are checked. d1 is idle.
+- The app loads the ignored root `.env` at startup; configuration does not imply
+  a working endpoint. No model request occurs on startup.
+- Action bundles bind approval to the exact payload hash. Each completed step
+  has a durable receipt. Partial/uncertain remote outcomes stop automatic retries.
+  Sandbox messages are prepared, never labeled sent. Google execution uses the
+  installed `gog` CLI and is disabled until the demo account is connected.
+
+### Dedicated Google demo account
+
+Authenticate locally when ready (this opens the provider login):
+
+```bash
+gog auth add <demo-email> --services gmail,calendar --gmail-scope send
+```
+
+Then set the ignored root `.env` and restart the server:
+
+```dotenv
+LATENT_DEMO_ACCOUNT=<demo-email>
+LATENT_DEMO_CALENDAR=primary
+LATENT_EXTERNAL_ACTIONS=1
+```
+
+The actual demo identity is saved locally with external actions disabled.
+Every external bundle still requires explicit in-app review, approval and
+execution. Availability is rechecked before creating private timed holds; no
+invites are sent. Gmail receipts contain provider IDs. A request being sent does
+not mean the recipient agreed. Authenticate only the dedicated account.
+
+**Remaining gates:** independent labels/precision audit and real-provider/live
+Bee rehearsals are still outstanding. A labeler must never equate a nearby event
+with completed work; only unique scheduling-intent matches qualify automatically.
+
+---
+
 Latent turns Bee's record into a week-ahead scenario, then shows which record
 changes have evidence. Bee data stays in a local SQLite ledger.
 

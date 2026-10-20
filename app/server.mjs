@@ -18,6 +18,14 @@ import { generateChangeset } from './reconcile.mjs';
 import { demoStream } from './stream-handler.mjs';
 import { comparePlans } from './horizon.mjs';
 import { horizonDemo } from './fixtures/horizon-scenario.mjs';
+import { loadCalendars } from './calendar.mjs';
+import { growSchema, listGrow, saveGrow, growObservations, suggestGrow } from './grow.mjs';
+import { actionSchema, connectorStatus, prepareBundle, getBundle, approveBundle, executeBundle } from './actions.mjs';
+import { describeRole } from './decide/provider.mjs';
+
+// Local configuration is ignored by git. Loading it never invokes a model.
+const envFile = fileURLToPath(new URL('../.env', import.meta.url));
+if (existsSync(envFile)) process.loadEnvFile(envFile);
 
 /**
  * Preview mode serves a synthetic ledger instead of the real one, so the
@@ -47,6 +55,8 @@ if (!PREVIEW || !dbPresent) {
   db.exec('PRAGMA journal_mode=WAL');
   migrate(db);
   chmodSync(dbPath, 0o600);
+  growSchema(db);
+  actionSchema(db);
 }
 
 const token = randomBytes(32).toString('hex');
@@ -77,8 +87,11 @@ function send(res, status, value, type = 'application/json') {
 // Every file the app ships, with its content type. Nothing is served from
 // outside this map, so a path in a request can never reach the filesystem.
 const STATIC = new Map([
-  ['/', ['index.html', 'text/html']],
-  ['/index.html', ['index.html', 'text/html']],
+  ['/workspace.js', ['workspace.js', 'text/javascript']],
+  ['/workspace.css', ['workspace.css', 'text/css']],
+  ['/', ['workspace.html', 'text/html']],
+  ['/index.html', ['workspace.html', 'text/html']],
+  ['/legacy', ['index.html', 'text/html']],
   ['/tokens.css', ['tokens.css', 'text/css']],
   ['/style.css', ['style.css', 'text/css']],
   ['/app.js', ['app.js', 'text/javascript']],
@@ -182,6 +195,32 @@ const server = http.createServer(async (req, res) => {
     }
     if (route.startsWith('/api/') && req.headers['x-latent-token'] !== token) {
       fail('Session expired. Reload this page.', 403);
+    }
+    if (method === 'GET' && route === '/api/workspace') {
+      const calendar = FIXTURE || PREVIEW ? { events: horizonDemo().input.events, files: 0, synthetic: true } : await loadCalendars(path.join(dataDir, 'calendars'));
+      return send(res, 200, { synthetic: FIXTURE || PREVIEW, grow: PREVIEW ? [] : listGrow(db), suggestions: PREVIEW ? [] : suggestGrow(db), observations: PREVIEW ? { daily: [] } : growObservations(db), calendar, connectors: connectorStatus(), models: { d1: { ...describeRole('d1'), state: 'idle', connectivity: 'not_tested' }, jev: { ...describeRole('jev'), state: 'not_run' } } });
+    }
+    if (method === 'POST' && route === '/api/grow') {
+      if (PREVIEW) refuseWrite();
+      return send(res, 200, saveGrow(db, await readBody(req)));
+    }
+    if (method === 'POST' && route === '/api/actions') {
+      if (PREVIEW) refuseWrite();
+      const payload = await readBody(req);
+      if (FIXTURE && payload.executor === 'google' && !connectorStatus().configured) fail('Connect the dedicated demo account before choosing Google.', 409);
+      return send(res, 200, prepareBundle(db, payload));
+    }
+    if (method === 'GET' && route === '/api/actions') {
+      return send(res, 200, PREVIEW ? [] : db.prepare('SELECT id FROM action_bundles ORDER BY created_at DESC LIMIT 20').all().map(row => getBundle(db,row.id)));
+    }
+    const actionMatch = route.match(/^\/api\/actions\/([a-zA-Z0-9-]+)(?:\/(approve|execute))?$/);
+    if (actionMatch) {
+      if (method === 'GET' && !actionMatch[2]) return send(res, 200, getBundle(db, actionMatch[1]));
+      if (method === 'POST') {
+        if (PREVIEW) refuseWrite();
+        if (actionMatch[2] === 'approve') return send(res, 200, approveBundle(db, actionMatch[1], (await readBody(req)).hash));
+        if (actionMatch[2] === 'execute') return send(res, 200, await executeBundle(db, actionMatch[1]));
+      }
     }
 
     // Every source of the ledger goes through one function, so a preview build

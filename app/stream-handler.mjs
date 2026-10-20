@@ -105,7 +105,7 @@ export async function consumeStream(options = {}) {
   try {
     while (!controller.signal.aborted) {
       attempt += 1;
-      const child = spawn(beeBin, ['stream', '--json', '--types', 'new-utterance'], { stdio: ['ignore', 'pipe', 'pipe'] });
+      const child = (options.spawnImpl || spawn)(beeBin, ['stream', '--json', '--types', 'new-utterance'], { stdio: ['ignore', 'pipe', 'pipe'] });
       let buffer = '';
       let pending = Promise.resolve();
       const consumeLine = (line) => {
@@ -137,7 +137,7 @@ export async function consumeStream(options = {}) {
       if (controller.signal.aborted) break;
       console.error(`Latent · Bee stream disconnected (${code ?? 'signal'}); catching up.`);
       try {
-        await runIncrementalCatchup(dbPath);
+        await (options.catchup || runIncrementalCatchup)(dbPath);
       } catch (error) {
         console.error(`Latent · catch-up failed · ${error.message}`);
       }
