@@ -273,7 +273,7 @@ function ring(){
  const segs=['done','need','wait','later'].map(k=>{const len=Math.max(0,c[k]/tot*C-gap);const s=`<circle cx="75" cy="75" r="${R}" fill="none" stroke="${COL[k]}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${len} ${C}" stroke-dashoffset="${-off}"/>`;off+=c[k]/tot*C;return s}).join('');
  return `<div class="ringcard glass"><div class="ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="${R}" fill="none" stroke="#ffffff70" stroke-width="14"/>${segs}</svg>
   <div class="ctr"><div><b>${c.need}</b><span>need${c.need==1?'s':''} you</span></div></div></div>
-  <div class="legend">${['done','need','wait','later'].map(k=>`<button class="lg" data-filter="${k}" aria-pressed="${S.filter==k}"><i style="background:${COL[k]}"></i>${LBL[k]}<b>${c[k]}</b></button>`).join('')}
+  <div class="legend">${['done','need','wait','later'].map(k=>`<button class="lg" data-filter="${k}" aria-pressed="${S.filter==k}"><i style="background:${COL[k]}"></i>${{done:"Done",need:"Needs you",wait:"Waiting",later:"Later"}[k]}<b>${c[k]}</b></button>`).join('')}
   <div class="more" style="padding:2px 10px">${tot} things from Bee overnight</div></div></div>`}
 function sync(){return `<div class="sync glass"><span class="band"></span><span class="live"></span>Bee synced 6:58 am</div>`}
 function feed(){
