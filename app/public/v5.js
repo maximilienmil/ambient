@@ -1,3 +1,6 @@
+/* Product name in one place. The wordmark reads “ambient” with “bee” in the middle. */
+const BRAND = 'Ambeent';
+const WORDMARK = '<span class="mark"></span><span class="wm">am<i>·</i><b>bee</b><i>·</i>nt</span>';
 
 const S={mode:'demo',settings:false,heard:false,listen:0,goals:[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']],sugg:true,mood:null,tags:{},tab:'horizon',path:'A',sheet:false,run:null,sent:false,filter:'done',receipt:null,merged:{},facts:{},split:null,range:'week',toast:null};
 const I={
@@ -12,24 +15,24 @@ const COL={done:'var(--done)',need:'var(--need)',wait:'var(--wait)',later:'var(-
 const LBL={done:'Done by the hive',need:'Needs you',wait:'Waiting on others',later:'Remembered for later'};
 /* overnight items. who: me = you said it, them = someone told you, sys = from a record */
 const ITEMS=[
- {id:'merge',via:'Latent, on this device',k:'done',t:'Merged 4 copies of “Send Jordan the outline”',who:['sys','Bee to-dos'],src:'Tue 10:14 am, Thu 4:02 pm',
+ {id:'merge',via:'Ambeent, on this device',k:'done',t:'Merged 4 copies of “Send Jordan the outline”',who:['sys','Bee to-dos'],src:'Tue 10:14 am, Thu 4:02 pm',
   did:'Kept one to-do, retired three copies. Undo stays available for 30 days.',ev:'Same person, same file, same wording within two days.',q:null,jev:'Merge',d1:'Merge'},
- {id:'dentist',via:'Latent, checked against Google Calendar',k:'done',t:'Closed “Book a dentist cleaning”',who:['me','You said it'],src:'Bee conversation, Oct 6',
-  q:'I need to book a cleaning before the end of the month.',did:'Marked done in Latent. Your Bee to-do is untouched.',ev:'Your calendar shows “Dentist, Oct 17, 9:00 am”, after the conversation.',jev:'Close',d1:'Close'},
- {id:'fact',via:'Bee agent, checked by Latent',k:'done',t:'Confirmed a Bee fact: your sister lives in Boston',who:['me','You said it'],src:'2 later conversations, 1 calendar trip',
+ {id:'dentist',via:'Ambeent, checked against Google Calendar',k:'done',t:'Closed “Book a dentist cleaning”',who:['me','You said it'],src:'Bee conversation, Oct 6',
+  q:'I need to book a cleaning before the end of the month.',did:'Marked done in Ambeent. Your Bee to-do is untouched.',ev:'Your calendar shows “Dentist, Oct 17, 9:00 am”, after the conversation.',jev:'Close',d1:'Close'},
+ {id:'fact',via:'Bee agent, checked by Ambeent',k:'done',t:'Confirmed a Bee fact: your sister lives in Boston',who:['me','You said it'],src:'2 later conversations, 1 calendar trip',
   q:'My sister just moved to Boston, I’m visiting her in November.',did:'Moved the fact from “to confirm” to confirmed.',ev:'“Boston, visit Ana” on your calendar Nov 8 to 10.',jev:'Confirm',d1:'Confirm'},
  {id:'hold',via:'Google Calendar connector · demo account',k:'done',t:'Held time for “Client call Wednesday at 2”',who:['me','You said it'],src:'Bee conversation, yesterday 5:40 pm',
   q:'Let’s do the client call Wednesday at two.',did:'Private hold on your demo calendar. No invite was sent to anyone.',ev:'The slot was free and the call was your own plan.',jev:'Hold time',d1:'Hold time'},
- {id:'expense',k:'done',via:'Claude, through the Latent MCP server',t:'Filed your Lisbon train receipt',who:['me','You said it'],src:'Bee conversation, Sunday 6:20 pm',
-  q:'Remind me to file the train receipt.',did:'Another agent picked this up through Latent’s MCP tools and filed it in your expenses folder.',ev:'The receipt PDF was in your downloads from Sunday.',jev:'Delegate',d1:'Delegate'},
+ {id:'expense',k:'done',via:'Claude, through the Ambeent MCP server',t:'Filed your Lisbon train receipt',who:['me','You said it'],src:'Bee conversation, Sunday 6:20 pm',
+  q:'Remind me to file the train receipt.',did:'Another agent picked this up through Ambeent’s MCP tools and filed it in your expenses folder.',ev:'The receipt PDF was in your downloads from Sunday.',jev:'Delegate',d1:'Delegate'},
  {id:'fork',via:'Not yet',k:'need',t:'Release Friday, or help Jordan by Thursday?',who:['me','You said it'],src:'Bee conversation, yesterday 4:12 pm',
   q:'Sure, I’ll help with the deck by Thursday.',did:'Nothing yet. Three paths are ready in Fork the week.',ev:'The release needs 6 hours. This week has 6 open. The favor takes 3.',jev:'Ask to move the favor',d1:'Ask to move the favor'},
  {id:'priya',via:'Not yet',k:'need',t:'The models disagree on “Send Priya the budget”',who:['me','You said it'],src:'Bee conversation, Monday 11:05 am',
   q:'I’ll send you the budget once it’s final.',did:'Nothing yet. Waiting for your call in Reconcile.',ev:'The budget file was edited Sunday. It may not be final.',jev:'Draft it now',d1:'Ask first'},
  {id:'slides',via:'Nobody. Not your promise',k:'wait',t:'Priya said she’d send the slides by Monday',who:['them','Priya said it'],src:'Bee conversation, Monday 11:07 am',
-  q:'I’ll get you the slides by Monday.',did:'Remembered only. Latent never acts on someone else’s promise.',ev:'Speaker attribution: Priya, not you.',jev:'Remember',d1:'Remember'},
+  q:'I’ll get you the slides by Monday.',did:'Remembered only. Ambeent never acts on someone else’s promise.',ev:'Speaker attribution: Priya, not you.',jev:'Remember',d1:'Remember'},
  {id:'venue',via:'Nobody. Not your promise',k:'wait',t:'Sam owes you a reply about the venue',who:['them','Sam said it'],src:'Bee conversation, Sunday',
-  q:'Let me check with the venue and get back to you.',did:'Remembered. If nothing arrives by Friday, Latent will ask whether to nudge.',ev:'Speaker attribution: Sam.',jev:'Remember',d1:'Remember'},
+  q:'Let me check with the venue and get back to you.',did:'Remembered. If nothing arrives by Friday, Ambeent will ask whether to nudge.',ev:'Speaker attribution: Sam.',jev:'Remember',d1:'Remember'},
  {id:'rust',via:'Nobody yet',k:'later',t:'“Learn Rust someday”',who:['me','You said it'],src:'Bee conversation, Sep 30',
   q:'I really want to learn Rust someday.',did:'Remembered, not scheduled. No date or next step was agreed.',ev:'An aspiration with no time attached.',jev:'Remember',d1:'Remember'}
 ];
@@ -46,7 +49,7 @@ function ringDemo(){
   <div class="more" style="padding:2px 10px">${tot} things from Bee overnight</div></div></div>`}
 function feedDemo(){
  const list=items().filter(i=>i.k==S.filter);
- return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'While you slept':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Latent remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
+ return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'While you slept':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Ambeent remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
  ${list.map(i=>`<button class="item" data-receipt="${i.id}"><span class="sd" style="background:${COL[i.k]}"></span><div style="min-width:0"><div class="t">${i.t}</div><div class="s"><span class="who ${i.who[0]}">${i.who[1]}</span>${i.src}</div>${i.k=='done'?`<div class="via">via ${i.via}</div>`:''}</div><span class="go2">Receipt ›</span></button>`).join('')}
  ${S.filter=='done'?`<p class="more">and 18 more like these: duplicates merged, done items closed.</p>`:''}</div>`}
 const P={
@@ -134,7 +137,7 @@ function wave(){const v=[2,3,1,0,2,3,3,1,0,0,2,3,2,1,0,0,3,3,2,2,1],w=300,h=80,p
 function compassDemo(){
  const R={week:`<div class="blk o">${lbl("ink","Focus time this week")}<div class="big" style="margin-top:8px">6<small>hours open</small></div><p>Tuesday and Thursday mornings. The release needs all of it.</p></div>`,
   month:`<div class="blk o">${lbl("ink","Focus time left in October")}<div class="big" style="margin-top:8px">~22<small>hours</small></div>${wave()}<p>If two mornings a week stay clear. That’s an assumption you can change.</p><div class="act"><button class="chip">2 mornings a week</button><button class="chip">Edit</button></div></div>`,
-  year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Latent shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
+  year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Ambeent shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
  const g=S.goals;
  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week','month','year'].map(k=>`<button aria-pressed="${S.range==k}" data-range="${k}">${k[0].toUpperCase()+k.slice(1)}</button>`).join('')}</div></section>
@@ -142,15 +145,15 @@ function compassDemo(){
   <div class="blk y">${lbl('need','Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
   <div class="faces">${FACES.map(([n,c,m],i)=>`<button class="face" aria-pressed="${S.mood==i}" data-mood="${i}" aria-label="${n}" style="background:radial-gradient(circle at 35% 30%,${c.split(',')[0]},${c.split(',')[1]})"><svg viewBox="0 0 24 24"><path d="${m}"/></svg></button>`).join('')}</div>
   <div class="tagrow">${['Busy','Scattered','Focused','Social','Rested','Rushed'].map(t=>`<button class="tg2" aria-pressed="${!!S.tags[t]}" data-tag2="${t}">${t}</button>`).join('')}</div>
-  <p class="fine">${S.mood==null?'One tap. Latent uses it to size tomorrow, never to grade you.':S.mood<2?'Got it. Latent will keep tomorrow lighter and hold one morning free.':'Got it. Tomorrow keeps its current plan.'}</p></div>
-  <div class="blk l">${lbl('wait','Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename. Latent suggests; you decide.</p>
+  <p class="fine">${S.mood==null?'One tap. Ambeent uses it to size tomorrow, never to grade you.':S.mood<2?'Got it. Ambeent will keep tomorrow lighter and hold one morning free.':'Got it. Tomorrow keeps its current plan.'}</p></div>
+  <div class="blk l">${lbl('wait','Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename. Ambeent suggests; you decide.</p>
   ${g.map(([a,b,pc,c])=>`<div class="goal"><div class="ring" style="width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:conic-gradient(var(--pur) ${pc*3.6}deg,${c} 0)"><span style="background:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center">${pc}%</span></div><div style="flex:1;min-width:0"><input value="${a}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${b}</div></div></div>`).join('')}
-  ${S.sugg?`<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Latent noticed</div><b>You’ve spent most Sunday mornings on guitar for two months.</b><div style="font-size:14px;color:var(--mut);margin-top:2px">You never set it as a goal. Want to?</div><div class="act" style="margin-top:10px"><button class="chip on" data-sugg="add">Add “Play guitar”</button><button class="chip" data-sugg="no">Not a goal</button></div></div>`:''}
+  ${S.sugg?`<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Ambeent noticed</div><b>You’ve spent most Sunday mornings on guitar for two months.</b><div style="font-size:14px;color:var(--mut);margin-top:2px">You never set it as a goal. Want to?</div><div class="act" style="margin-top:10px"><button class="chip on" data-sugg="add">Add “Play guitar”</button><button class="chip" data-sugg="no">Not a goal</button></div></div>`:''}
   <div class="act"><button class="chip">${I.plus}Add a goal</button></div></div>
 </div>
  <div class="col sticky">${R}
   <div class="blk w">${lbl('later','Observed')}<h2>A pattern, maybe.</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">In weeks you said yes to two favors, your own work moved. Is that the trade you want?</p><div class="act"><button class="chip">That’s not right</button><button class="chip">Ask a follow-up</button></div></div></div>
- <div class="span"><div class="blk w">${lbl('done','The hive')}<h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week. The more Bee heard, the fuller the cell, and the firmer Latent’s read on that week.</p>${hive()}
+ <div class="span"><div class="blk w">${lbl('done','The hive')}<h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week. The more Bee heard, the fuller the cell, and the firmer Ambeent’s read on that week.</p>${hive()}
    <div class="leg" style="justify-content:space-between"><span>Oct 2025</span><span>334 conversations · 41 of 52 weeks with enough to go on</span><span>Oct 2026</span></div></div></div></div>`}
 /* reconcile */
 function recDemo(){
@@ -167,7 +170,7 @@ function recDemo(){
   ${pairs.map(([a,at,b,bt,why],i)=>S.merged[i]?`<div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:10px"><span class="dot"></span><div style="flex:1">Merged into one: <b>${a}</b></div><button class="chip" data-unmerge="${i}">Undo</button></div>`:`<div class="card" style="margin-bottom:10px"><div class="pair"><div class="card" style="background:#f6f3ea">${a}<small>Bee to-do · ${at}</small></div><div class="card" style="background:#f6f3ea">${b}<small>Bee to-do · ${bt}</small></div></div><p class="fine">${why}</p><div class="act" style="margin-top:8px"><button class="chip on" data-merge="${i}">Merge into one</button><button class="chip">Keep both</button></div></div>`).join('')}</div>
   <div class="blk w">${lbl('wait','Proposed · facts')}<h2>Facts to confirm</h2><p class="sub">Bee saved 248 facts it isn’t sure about. The hive checks them against your calendar and later conversations.</p>
   ${facts.map(([f,e],i)=>`<div class="card" style="background:#f6f3ea;margin-bottom:8px">${S.facts[i]?`<span class="dot" style="display:inline-block;margin-right:8px"></span>${S.facts[i]}: `:''}${f}<small>${e}</small>${S.facts[i]?'':`<div class="act" style="margin-top:8px"><button class="chip on" data-fact="${i}" data-v="Confirmed">Confirm</button><button class="chip" data-fact="${i}" data-v="Removed">Not true</button></div>`}</div>`).join('')}</div>
-  <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b><span class="who me">You said it</span>it can act for you.<span class="who them">Someone told you</span>it only remembers. Unsure speaker means Latent asks.</div>
+  <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b><span class="who me">You said it</span>it can act for you.<span class="who them">Someone told you</span>it only remembers. Unsure speaker means Ambeent asks.</div>
  </div>`}
 function receiptDemo(){
  const i=items().concat([JORDAN]).find(x=>x.id==S.receipt);if(!i)return'';
@@ -236,7 +239,7 @@ async function poll() {
     const fresh = D.ledger.items.filter((i) => !before.has(i.id) && i.origin === 'conversation');
     D.known = new Set(D.ledger.items.map((i) => i.id));
     if (fresh.length) hear(fresh.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]);
-    else if (!busyTyping() && !S.settings) render();
+    else if (!busyTyping() && !S.settings) renderQuiet();
   } catch { /* the next poll retries */ }
 }
 
@@ -245,8 +248,8 @@ function hear(item) {
   const q = String(item.quote || item.title);
   const t = setInterval(() => {
     L.live += 3;
-    if (L.live >= q.length) { clearInterval(t); setTimeout(() => { SPEED = 1; L.live = 0; render(); }, 1200); }
-    render();
+    typeTo(q, L.live);
+    if (L.live >= q.length) { clearInterval(t); setTimeout(() => { SPEED = 1; L.live = 0; renderQuiet(); }, 1200); }
   }, 50);
 }
 
@@ -386,7 +389,7 @@ function ringLive() {
 function feedLive() {
   const all = litems().filter((i) => catOf(i) === L.filter).sort(dueSort);
   const list = all.slice(0, 8);
-  const head = { done: ['The hive did', 'Closed or merged', 'Done in Bee or merged by Latent. Tap any one for its receipt.'], need: ['Needs you', 'Still open in Bee', 'Your Bee to-dos, newest deadline first. Open one to fork your week around it.'], wait: ['Shared', 'Said as “we”', 'Joint intentions picked up from conversations. Latent will not act on these alone.'], later: ['Heard', 'Picked up from conversations', 'Phrases the extractor heard. Many are other people talking; check before trusting them.'] }[L.filter];
+  const head = { done: ['The hive did', 'Closed or merged', 'Done in Bee or merged by Ambeent. Tap any one for its receipt.'], need: ['Needs you', 'Still open in Bee', 'Your Bee to-dos, newest deadline first. Open one to fork your week around it.'], wait: ['Shared', 'Said as “we”', 'Joint intentions picked up from conversations. Ambeent will not act on these alone.'], later: ['Heard', 'Picked up from conversations', 'Phrases the extractor heard. Many are other people talking; check before trusting them.'] }[L.filter];
   return `<div class="blk w">${lbl(L.filter, head[0])}<h2>${head[1]}</h2><p class="sub">${head[2]}</p>
   ${list.map((i) => `<button class="item" data-lreceipt="${esc(i.id)}"><span class="sd" style="background:${COL[catOf(i)]}"></span><div style="min-width:0"><div class="t">${esc(i.title)}</div><div class="s"><span class="who ${whoOf(i)[0]}">${whoOf(i)[1]}</span>${esc(i.source)}</div>${catOf(i) === 'need' ? `<div class="via" style="color:#8a4300">${esc(reasonOf(i))}</div>` : ''}</div><span class="go2">Receipt ›</span></button>`).join('') || '<p class="muted">Nothing here.</p>'}
   ${all.length > list.length ? `<p class="more">and ${all.length - list.length} more in the ledger.</p>` : ''}</div>`;
@@ -394,14 +397,14 @@ function feedLive() {
 function listenCard() {
   const h = D.heard, q = h ? String(h.quote || h.title) : '';
   return `<div class="blk o live">${lbl('ink', h && L.live ? 'Hearing something new' : 'Listening through Bee')}
-   ${h ? `<div class="said"><span class="who ${whoOf(h)[0]}">${whoOf(h)[1]}</span><span class="typed">“${esc(q.slice(0, L.live || q.length))}${L.live ? '<b class="caret"></b>' : ''}”</span></div><p>${esc(h.source)}. Speaker attribution is not available on this account, so Latent labels by phrasing.</p>
+   ${h ? `<div class="said"><span class="who ${whoOf(h)[0]}">${whoOf(h)[1]}</span><span class="typed">“${esc(q.slice(0, L.live || q.length))}${L.live ? '<b class="caret"></b>' : ''}”</span></div><p>${esc(h.source)}. Speaker attribution is not available on this account, so Ambeent labels by phrasing.</p>
      <div class="act"><button class="chip" data-focus="${esc(h.id)}">Fork my week around this</button></div>`
    : `<p>New conversations appear here as Bee records them. Keep <b>npm run stream</b> running, or sync now.</p>`}
    <div class="act">${D.busy === 'sync' ? '<span class="chip"><span class="spin"></span>Syncing from Bee</span>' : '<button class="chip" data-sync>Sync from Bee</button>'}</div>
    ${D.sync ? `<div class="${D.sync.ok ? 'okmsg' : 'err'}">${esc(D.sync.text)}</div>` : ''}</div>`;
 }
 function goalForm() {
-  return `<div class="form"><p class="sub" style="color:#4b4825">What are you protecting? Latent compares every new promise against it.</p>
+  return `<div class="form"><p class="sub" style="color:#4b4825">What are you protecting? Ambeent compares every new promise against it.</p>
    <label>Goal</label><input class="fld" data-in="gTitle" value="${esc(L.gTitle)}" placeholder="Ship the first release">
    <label>Focused hours it still needs</label><div class="pick">${[2, 4, 6, 8, 12].map((h) => `<button data-ghours="${h}" aria-pressed="${L.gHours === h}">${h}h</button>`).join('')}</div>
    <label>Due</label><div class="pick">${[1, 2, 3, 4, 7].map((n) => `<button data-gdue="${n}" aria-pressed="${L.gDue === n}">${n === 7 ? 'In a week' : md(at(addDays(Date.now(), n), 17))}</button>`).join('')}</div>
@@ -443,7 +446,7 @@ function weekGrid() {
 }
 function forkCard() {
   const g = goalOf();
-  if (!g) return `<div class="ghost"><div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><p class="sub">Set the goal you’re protecting and Latent will draw three paths.</p></div></div>`;
+  if (!g) return `<div class="ghost"><div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><p class="sub">Set the goal you’re protecting and Ambeent will draw three paths.</p></div></div>`;
   if (D.cmpError) return `<div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><div class="err">${esc(D.cmpError)}</div></div>`;
   if (!D.cmp) return `<div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><p class="sub"><span class="spin"></span>Running the capacity engine on your calendar.</p></div>`;
   const opts = { A: ['Protect your goal', 'Ask to move this promise a week later.'], B: ['Keep every promise', 'Do both on their current dates.'], C: ['Shrink the goal', 'Keep the promise and do half the goal now.'] };
@@ -454,7 +457,7 @@ function forkCard() {
 }
 function hoursCard() {
   const v = variant(L.path), g = goalOf();
-  if (!g) return `<div class="blk o">${lbl('ink', 'What are you protecting?')}<h2 style="color:#f4f0d8">Set a goal for this week.</h2><p>Latent weighs every new promise against it, using your real calendar.</p>${goalForm().replace('<p class="sub" style="color:#4b4825">What are you protecting? Latent compares every new promise against it.</p>', '')}</div>`;
+  if (!g) return `<div class="blk o">${lbl('ink', 'What are you protecting?')}<h2 style="color:#f4f0d8">Set a goal for this week.</h2><p>Ambeent weighs every new promise against it, using your real calendar.</p>${goalForm().replace('<p class="sub" style="color:#4b4825">What are you protecting? Ambeent compares every new promise against it.</p>', '')}</div>`;
   if (!v) return '';
   const need = v.goal.requiredMinutes, got = v.goal.scheduledBeforeDeadlineMinutes, n = Math.min(12, Math.ceil(need / 60));
   return `<div class="blk o">${lbl('ink', `${g.title.slice(0, 40)} · hours before ${wd(Date.parse(g.due_at))}`)}<div class="hrs">${Array.from({ length: n }, (_, i) => `<i class="${i < Math.floor(got / 60) ? 'rel' : ''}"></i>`).join('')}</div><div class="big">${hrs(got).replace('h', '')} of ${hrs(need).replace('h', '')}<small>hours</small></div><p>${v.goal.status === 'fits' ? 'The goal fits before its deadline on this path.' : `Short ${hrs(v.goal.shortfallMinutes)} before the deadline on this path.`} Calendar arithmetic, not a prediction.</p></div>`;
@@ -497,7 +500,7 @@ function actCard() {
     const holds = res.filter((r) => r.step.startsWith('hold') && r.status === 'complete');
     body = `<div class="result"><div class="sec" style="margin-top:0">${b.state === 'complete' ? 'DONE BY THE HIVE' : esc(b.state.replace('_', ' ').toUpperCase())} · ${new Date(b.created_at).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</div>
      <div class="rt">${b.payload.executor === 'google' ? (sent?.kind === 'message_sent' ? 'Message sent and time held.' : 'Time held.') : 'Prepared in the sandbox.'}</div>
-     <div class="kv"><span>Done by</span><div>${b.payload.executor === 'google' ? 'Gmail and Google Calendar · demo account' : 'Latent sandbox. Nothing left this device'}</div><span>Calendar</span><div>${holds.length} ${b.payload.executor === 'google' ? 'private holds' : 'local holds'}</div><span>Message</span><div>${sent ? (sent.kind === 'message_sent' ? `Sent to ${esc(b.payload.message.to)}. A request is not a yes.` : 'Prepared, not sent') : 'Not reached'}</div><span>Receipt</span><div class="small">${esc(b.id.slice(0, 8))} · hash ${esc(b.hash.slice(0, 10))}</div></div>
+     <div class="kv"><span>Done by</span><div>${b.payload.executor === 'google' ? 'Gmail and Google Calendar · demo account' : 'Ambeent sandbox. Nothing left this device'}</div><span>Calendar</span><div>${holds.length} ${b.payload.executor === 'google' ? 'private holds' : 'local holds'}</div><span>Message</span><div>${sent ? (sent.kind === 'message_sent' ? `Sent to ${esc(b.payload.message.to)}. A request is not a yes.` : 'Prepared, not sent') : 'Not reached'}</div><span>Receipt</span><div class="small">${esc(b.id.slice(0, 8))} · hash ${esc(b.hash.slice(0, 10))}</div></div>
      <div class="act"><button class="chip" data-newplan>Plan another</button></div></div>`;
   } else if (L.run != null) {
     body = `<div class="run"><div class="lane">${[0, 1, 2, 3].map((i) => `<span style="animation-delay:${-i * .55}s">\\(◉)/ · ·</span>`).join('')}</div>${['Preparing the exact payload', 'Approving this version', exec === 'google' ? 'Holding time and sending' : 'Running in the sandbox'].map((s, i) => `<div class="step ${i < L.run ? 'ok' : i === L.run ? 'cur' : ''}"><span class="ck">${i < L.run ? '✓' : ''}</span>${s}</div>`).join('')}</div>`;
@@ -569,13 +572,13 @@ function compassLive() {
   <div class="wrap"><div class="col">
    <div class="blk y">${lbl('need', 'Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
    <div class="faces">${FACES.map(([n, c, m], i) => `<button class="face" aria-pressed="${S.mood == i}" data-mood="${i}" aria-label="${n}" style="background:radial-gradient(circle at 35% 30%,${c.split(',')[0]},${c.split(',')[1]})"><svg viewBox="0 0 24 24"><path d="${m}"/></svg></button>`).join('')}</div>
-   <p class="fine">${S.mood == null ? 'One tap. Kept on this device. Latent uses it to size tomorrow, never to grade you.' : 'Saved on this device.'}</p></div>
+   <p class="fine">${S.mood == null ? 'One tap. Kept on this device. Ambeent uses it to size tomorrow, never to grade you.' : 'Saved on this device.'}</p></div>
    <div class="blk l">${lbl('wait', 'Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Edit a title and press Enter. Goals with a due date and hours drive the fork.</p>
-   ${goals.map((g) => `<div class="goal"><div style="flex:1;min-width:0"><input value="${esc(g.title)}" data-goaltitle="${esc(g.id)}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${g.due_at ? `Due ${md(Date.parse(g.due_at))}` : 'No date'}${g.minutes ? ` · ${hrs(g.minutes)} left` : ''}${g.evidence?.source ? ` · ${esc(g.evidence.source === 'user-stated' ? 'you said it' : 'noticed by Latent')}` : ''}</div></div><button class="chip" data-goaldone="${esc(g.id)}">Done</button></div>`).join('') || '<p class="muted">No goals yet.</p>'}
-   ${sugg ? `<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Latent noticed</div><b>${esc(sugg.title)}</b><div style="font-size:14px;color:var(--mut);margin-top:2px">${esc(sugg.detail)}</div><div class="act" style="margin-top:10px"><button class="chip on" data-suggadd="${esc(sugg.id)}">Make it a goal</button><button class="chip" data-sugghide="${esc(sugg.id)}">Not a goal</button></div></div>` : ''}
+   ${goals.map((g) => `<div class="goal"><div style="flex:1;min-width:0"><input value="${esc(g.title)}" data-goaltitle="${esc(g.id)}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${g.due_at ? `Due ${md(Date.parse(g.due_at))}` : 'No date'}${g.minutes ? ` · ${hrs(g.minutes)} left` : ''}${g.evidence?.source ? ` · ${esc(g.evidence.source === 'user-stated' ? 'you said it' : 'noticed by Ambeent')}` : ''}</div></div><button class="chip" data-goaldone="${esc(g.id)}">Done</button></div>`).join('') || '<p class="muted">No goals yet.</p>'}
+   ${sugg ? `<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Ambeent noticed</div><b>${esc(sugg.title)}</b><div style="font-size:14px;color:var(--mut);margin-top:2px">${esc(sugg.detail)}</div><div class="act" style="margin-top:10px"><button class="chip on" data-suggadd="${esc(sugg.id)}">Make it a goal</button><button class="chip" data-sugghide="${esc(sugg.id)}">Not a goal</button></div></div>` : ''}
    ${L.newGoal ? `<div class="sugg">${goalForm()}</div>` : '<div class="act"><button class="chip" data-newgoal>' + I.plus + 'Add a goal</button></div>'}</div></div>
   <div class="col sticky">${rangeLive()}
-   <div class="blk w">${lbl('later', 'Observed')}<h2>From your record</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">Bee recorded ${t.beeTodos || 0} to-dos and marked ${doneTodos} done. ${t.facts || 0} facts are saved about you. Repetition alone does not establish what matters to you, so Latent asks instead of assuming.</p></div></div>
+   <div class="blk w">${lbl('later', 'Observed')}<h2>From your record</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">Bee recorded ${t.beeTodos || 0} to-dos and marked ${doneTodos} done. ${t.facts || 0} facts are saved about you. Repetition alone does not establish what matters to you, so Ambeent asks instead of assuming.</p></div></div>
   <div class="span"><div class="blk w">${lbl('done', 'The hive')}<h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week of your Bee record. Fuller cells mean more conversations, and a firmer read on that week.</p>${hv.svg}
    <div class="leg" style="justify-content:space-between"><span>${new Date(hv.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}</span><span>${hv.total} conversations · ${hv.active} of 52 weeks with something to go on</span><span>Now</span></div></div></div></div>`;
 }
@@ -604,11 +607,11 @@ function recLive() {
    <div class="blk l">${lbl('wait', 'Proposed · duplicates')}<h2>Likely the same task</h2><p class="sub" style="color:#4a3f78">Same wording, recorded more than once. Merging keeps the copy with a due date. You can undo it.</p>
    ${L.undo.map((u, k) => `<div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:10px"><span class="dot"></span><div style="flex:1">Merged ${u.ids.length} copies: <b>${esc(u.text)}</b></div><button class="chip" data-unmerge="${k}">Undo</button></div>`).join('')}
    ${groups.map((g, k) => `<div class="card" style="margin-bottom:10px">${esc(g.text)}<small>${g.count} copies · open ${g.openDays} days</small><div class="act" style="margin-top:8px"><button class="chip on" data-lmerge="${k}">Merge into one</button></div></div>`).join('') || '<p class="muted">No duplicates left.</p>'}</div>
-   <div class="blk w">${lbl('wait', 'Proposed · facts')}<h2>Facts to confirm</h2><p class="sub">${ops.length} facts Bee saved without confirmation. The hive found no independent evidence for these yet, so they wait for you. Your answer stays in Latent; Bee is not changed.</p>
+   <div class="blk w">${lbl('wait', 'Proposed · facts')}<h2>Facts to confirm</h2><p class="sub">${ops.length} facts Bee saved without confirmation. The hive found no independent evidence for these yet, so they wait for you. Your answer stays in Ambeent; Bee is not changed.</p>
    ${D.rec?.error ? `<div class="err">${esc(D.rec.error)}</div>` : !D.rec ? '<p class="sub"><span class="spin"></span>Checking facts</p>' : ''}
    ${facts.map((o) => { const v = reviews[o.targetId]; return `<div class="card" style="background:#f6f3ea;margin-bottom:8px">${v ? `<span class="dot" style="display:inline-block;margin-right:8px"></span><b>${v === 'confirmed' ? 'Confirmed' : 'Not true'}:</b> ` : ''}${esc(o.text)}<small>${esc(o.reason || '')}</small><div class="act" style="margin-top:8px">${v ? `<button class="chip" data-fact2="${esc(o.targetId)}" data-v="undo">Undo</button>` : `<button class="chip on" data-fact2="${esc(o.targetId)}" data-v="confirmed">Confirm</button><button class="chip" data-fact2="${esc(o.targetId)}" data-v="not_true">Not true</button>`}</div></div>`; }).join('')}
    ${ops.length > facts.length ? '<div class="act"><button class="chip" data-morefacts>Show more</button></div>' : ''}</div>
-   <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b> Bee reports the speaker as Unknown on this account, so Latent labels by phrasing (“I’ll”, “we should”) and asks before acting on anything.</div></div>`;
+   <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b> Bee reports the speaker as Unknown on this account, so Ambeent labels by phrasing (“I’ll”, “we should”) and asks before acting on anything.</div></div>`;
 }
 function receiptLive() {
   const i = litems().find((x) => x.id === S.receipt);
@@ -649,8 +652,8 @@ async function runPlan() {
   const payload = { executor: exec, goal: goalOf().title.slice(0, 170), blocks: planBlocks().map((b) => ({ start: b.start, end: b.end })), message: { to: L.to.trim(), subject: (L.subject ?? subj).trim(), body: L.body ?? msg } };
   D.msg = null; L.run = 0; SPEED = 4; render();
   try {
-    const prepared = await api('/api/actions', payload); L.run = 1; render();
-    const approved = await api(`/api/actions/${prepared.id}/approve`, { hash: prepared.hash }); L.run = 2; render();
+    const prepared = await api('/api/actions', payload); L.run = 1; renderQuiet();
+    const approved = await api(`/api/actions/${prepared.id}/approve`, { hash: prepared.hash }); L.run = 2; renderQuiet();
     D.bundle = await api(`/api/actions/${approved.id}/execute`, {});
     toast(D.bundle.state === 'complete' ? 'Done by the hive' : 'Needs reconciliation');
   } catch (e) { D.msg = e.message; L.sheet = true; }
@@ -725,8 +728,8 @@ async function settingsClick(d) {
 /* ---------- shell ---------- */
 const labels = [['horizon', 'Horizon'], ['compass', 'Compass'], ['rec', 'Reconcile']];
 function page() {
-  if (!D.ready) return `<section class="hero"><h1>Latent</h1><p><span class="spin"></span>Opening your hive.</p></section>`;
-  if (D.error && S.mode === 'live') return `<section class="hero">${topBar()}<h1>Latent</h1><div class="err">${esc(D.error)}</div></section>`;
+  if (!D.ready) return `<section class="hero"><h1>Ambeent</h1><p><span class="spin"></span>Opening your hive.</p></section>`;
+  if (D.error && S.mode === 'live') return `<section class="hero">${topBar()}<h1>Ambeent</h1><div class="err">${esc(D.error)}</div></section>`;
   if (S.mode === 'live') return S.tab === 'horizon' ? horizonLive() : S.tab === 'compass' ? compassLive() : recLive();
   return S.tab === 'horizon' ? horizonDemo() : S.tab === 'compass' ? compassDemo() : recDemo();
 }
@@ -737,18 +740,29 @@ function initials() {
 function render() {
   document.querySelectorAll('[data-root]').forEach((r) => {
     const st = r.querySelector('.main')?.scrollTop || 0;
+    const oldCanvas = r.querySelector('canvas[data-swarm]');
     const sheetSt = r.querySelector('.rc')?.scrollTop || 0;
     const name = S.mode === 'live' ? (D.ledger?.owner || 'You').split(/\s+/)[0] : 'Max';
-    r.innerHTML = `<aside class="side"><div class="brand"><span class="mark"></span>Latent</div>${labels.map(([k, l]) => `<button class="nav" ${S.tab == k ? 'aria-current="page"' : ''} data-tab="${k}">${I[k]}${l}</button>`).join('')}<div class="me"><span class="av">${esc(initials())}</span>${esc(name)}</div></aside>
+    r.innerHTML = `<aside class="side"><div class="brand">${WORDMARK}</div>${labels.map(([k, l]) => `<button class="nav" ${S.tab == k ? 'aria-current="page"' : ''} data-tab="${k}">${I[k]}${l}</button>`).join('')}<div class="me"><span class="av">${esc(initials())}</span>${esc(name)}</div></aside>
     <main class="main">${page()}</main>
     <nav class="tabbar glass">${labels.map(([k, l]) => `<button class="tb" ${S.tab == k ? 'aria-current="page"' : ''} data-tab="${k}">${I[k]}${l}</button>`).join('')}</nav>
     ${S.settings ? settings() : S.receipt ? (S.mode === 'live' ? receiptLive() : receiptDemo()) : ''}<div class="toast glass dark ${S.toast ? '' : 'hide'}">${esc(S.toast || '')}</div>`;
     r.querySelector('.main').scrollTop = st;
+    // Keep the live bee canvas across re-renders: a fresh canvas is blank until the next frame.
+    const fresh = r.querySelector('canvas[data-swarm]');
+    if (oldCanvas && fresh && oldCanvas.dataset.tab === S.tab) fresh.replaceWith(oldCanvas);
+    else if (fresh) fresh.dataset.tab = S.tab;
     const rc = r.querySelector('.rc'); if (rc) rc.scrollTop = sheetSt;
   });
   if (S.mode === 'live' && S.tab === 'horizon' && D.ledger && goalOf() && focusItem()) compute();
 }
-function toast(t) { S.toast = t; render(); setTimeout(() => { S.toast = null; render(); }, 2400); }
+/* Typing updates the quote in place, so the page (and the bees) never rebuild mid-sentence. */
+function typeTo(text, n) {
+  document.querySelectorAll('.typed').forEach((el) => { el.innerHTML = `“${esc(text.slice(0, n))}${n < text.length ? '<b class="caret"></b>' : ''}”`; });
+}
+/* Timer-driven renders skip entrance animations so cards don't replay them. */
+function renderQuiet() { document.documentElement.classList.add('quiet'); render(); requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.remove('quiet'))); }
+function toast(t) { S.toast = t; renderQuiet(); setTimeout(() => { S.toast = null; renderQuiet(); }, 2400); }
 function busyTyping() { const a = document.activeElement; return a && /INPUT|TEXTAREA/.test(a.tagName); }
 
 document.addEventListener('input', (e) => {
@@ -781,15 +795,15 @@ document.addEventListener('click', async (e) => {
   demoClick(d);
 });
 let SPEED=1;
-function replay(){S.listen=1;SPEED=3;render();const q=44;const t=setInterval(()=>{S.listen+=2;if(S.listen>=q){clearInterval(t);setTimeout(()=>{S.heard=true;S.listen=0;SPEED=1;render()},1600)}render()},60)}
+function replay(){S.listen=1;SPEED=3;render();const q='Sure, I’ll help with the deck by Thursday.';const t=setInterval(()=>{S.listen+=2;typeTo(q,S.listen);if(S.listen>=q.length){clearInterval(t);setTimeout(()=>{S.heard=true;S.listen=0;SPEED=1;render()},1600)}},60)}
 function go(){const n=P[S.path].steps.length;S.run=0;S.sheet=false;SPEED=4;render();
- const tick=()=>{S.run++;if(S.run>=n){setTimeout(()=>{S.run=null;S.sent=true;SPEED=1;S.filter='done';render();toast('Done by the hive')},650);render();return}render();setTimeout(tick,750)};setTimeout(tick,900)}
+ const tick=()=>{S.run++;if(S.run>=n){setTimeout(()=>{S.run=null;S.sent=true;SPEED=1;S.filter='done';renderQuiet();toast('Done by the hive')},650);renderQuiet();return}renderQuiet();setTimeout(tick,750)};setTimeout(tick,900)}
 function demoClick(d){
  
  if(d.path){if(S.run!=null)return;S.path=d.path;S.sheet=false;S.sent=false}
  else if('replay'in d){replay();return}else if('sheet'in d)S.sheet=!S.sheet;else if('go'in d){go();return}else if('undoRun'in d){S.sent=false}
  else if(d.filter)S.filter=d.filter;else if(d.receipt){if(d.receipt=='fork'){S.receipt=null;S.filter='need'}S.receipt=d.receipt}
- else if(d.sugg){if(d.sugg=='add')S.goals=S.goals.concat([['Play guitar','Sundays · noticed by Latent',100,'#bfeccb']]);S.sugg=false}else if(d.range)S.range=d.range;else if(d.mood!==undefined)S.mood=+d.mood;else if(d.tag2){S.tags[d.tag2]=!S.tags[d.tag2]}else if(d.split){S.split=d.split}else if(d.merge!==undefined)S.merged[d.merge]=1;else if(d.unmerge!==undefined)delete S.merged[d.unmerge];
+ else if(d.sugg){if(d.sugg=='add')S.goals=S.goals.concat([['Play guitar','Sundays · noticed by Ambeent',100,'#bfeccb']]);S.sugg=false}else if(d.range)S.range=d.range;else if(d.mood!==undefined)S.mood=+d.mood;else if(d.tag2){S.tags[d.tag2]=!S.tags[d.tag2]}else if(d.split){S.split=d.split}else if(d.merge!==undefined)S.merged[d.merge]=1;else if(d.unmerge!==undefined)delete S.merged[d.unmerge];
  else if(d.fact!==undefined)S.facts[d.fact]=d.v;else return;render()}
 /* ASCII bees: ten per header, faint, spread out */
 const bees=[[.06,.18],[.30,.10],[.55,.16],[.80,.08],[.94,.30],[.70,.42],[.42,.50],[.16,.62],[.60,.80],[.88,.70]].map(([x,y],i)=>({x,y,s:.6+.1*(i%4),p:i*1.9}));

@@ -1,139 +1,105 @@
-# Latent — demo script
+# Ambeent: demo video script
 
-2:45, recorded on the iPhone in the installed PWA at 390 × 844, light mode.
-Every number below is from the real account: 334 conversations, 381 days,
-159,364 utterances, 162 Bee to-dos, 130 open, 32 done.
+Target length 2:45. Recorded on a laptop (desktop layout) with one phone shot. Voiceover recorded separately and laid over the picture.
 
-Record in one take where possible. Cut only between screens, never mid-gesture.
+The story has two halves. First the scripted **Demo** shows the whole idea in 90 seconds. Then **Your Bee** proves it runs on a real account, and an agent uses it through MCP. Say plainly which half is which; that honesty is part of the pitch.
 
 ---
 
-## 0:00 – 0:12 · The claim
+## 0:00–0:12 · The problem
 
-**Picture.** Today, first frame, nothing tapped. The merge card is visible.
+**Picture.** Black screen, then the Bee wristband (your own footage, or a shot of your wrist). Cut to Reconcile in Your Bee mode, the open to-do count large.
 
-**Say.** "This is a year of my life. Three hundred and thirty-four
-conversations, recorded by a wearable. Bee turned them into one hundred and
-thirty open to-dos."
+**Say.** "Bee remembers everything I say. A year of conversations, 162 to-dos, 421 facts about me. That's the problem. Remembering everything isn't the same as knowing what matters."
 
-**On screen.** No captions. Let the number sit.
+**Edit note.** Hold the number for a full second before the voice says it.
 
-**Note.** Do not open with a logo or a title card. The first frame is the
-product.
+## 0:12–0:20 · The name
 
----
+**Picture.** The sidebar wordmark, am·bee·nt, centered, with the faint ASCII bees drifting. Slow push-in.
 
-## 0:12 – 0:32 · The record
+**Say.** "This is Ambeent. An ambient agent on top of Bee that makes room for what matters."
 
-**Picture.** Tap Record. Hold on "381 days read" and "20".
+## 0:20–0:40 · The hive worked overnight (Demo)
 
-**Say.** "Three hundred and eighty-one days. Twenty of every hundred to-dos get
-closed. That is the honest number, not a promise."
+**Picture.** Horizon in Demo mode, top of page. The "Demo story · synthetic" pill must be visible. Hover the ring, then click **Done** in the legend and scroll the "While you slept" list slowly.
 
-**Action.** Scroll one card, slowly, to "Phrase by phrase".
+**Say.** "Overnight, the hive handled the small things. It merged duplicates, closed what was already done, held time for a call. Each one has a receipt, and you can see who did it: Ambeent itself, a calendar connector, or another agent through MCP."
 
-**Do not say.** "It knows your voice." The record shows one class only.
+**Action.** Open one receipt (the Lisbon train receipt, done by Claude through MCP). Close it.
 
----
+## 0:40–1:00 · A new promise arrives
 
-## 0:32 – 1:00 · The mess, and the first action
+**Picture.** Click **Replay captured promise**. The quote types out: "Sure, I'll help with the deck by Thursday." The conflict card appears: 6h needed, 6h open, minus 3h.
 
-**Picture.** Back to Today. The duplicate card reads "Send notes to Disability
-Services · 3 copies".
+**Say.** "Then I say yes to something. Bee hears it. Ambeent checks it against my week: the release needs six hours, I have six, and this favor takes three."
 
-**Say.** "Ten of these rows are the same task, written three times, because Bee
-writes a to-do again every time a conversation mentions it."
+**Edit note.** Let the typing play in full. It is the moment the product reacts to the real world.
 
-**Action.** Tap **Merge all 10**. The hero count goes 130 → 120. The toast
-appears. The card becomes the next action.
+## 1:00–1:25 · Fork the week
 
-**Say.** "One tap. The count drops, and every merge leaves a receipt."
+**Picture.** Scroll to Fork the week. Click B, then C, then back to A, pausing so the week grid visibly changes each time. End on the recommendation card with "Jev A · System One A · Both agree".
 
-**Privacy.** The card names a real service. Blur that one line in the edit, or
-record with the phone angled so only the count and the button are readable.
-Blur, do not substitute text.
+**Say.** "Instead of another to-do, I get the choice. Protect the launch, keep the favor and ship Monday, or ship something smaller. Each path is real calendar arithmetic, not a guess. Two decision models weigh in, Jev and System One. When they agree, Ambeent recommends. When they don't, it asks me."
 
----
+## 1:25–1:45 · The hive acts
 
-## 1:00 – 1:40 · The agent
+**Picture.** Review message to Jordan → Send and hold time. The bees speed up, the steps tick off, the result card lands. Zoom in on "A request is not a yes."
 
-**Picture.** Cut to the laptop: a terminal running Claude Code, with the Latent
-MCP server connected. The phone stays in frame, propped up, showing Today.
+**Say.** "One tap and the hive does it. The message goes from my demo account, the time is held. And it tells me the truth: Jordan still has to agree."
 
-**Type.** `what should I act on?`
+## 1:45–2:10 · Now with my real Bee
 
-**Agent calls.** `latent_should_act` → "Discussion Leader: To the Lighthouse Day
-2", due 15 April, 236 days open, reason: it carries a due date and that date has
-passed.
+**Picture.** Click **Your Bee** in the top-right toggle. Horizon header with real numbers. Click **Sync from Bee** (do a sync before recording so it's quick). Scroll to the fork built from a real Bee to-do on your real calendar. Click **Review the message and holds → Approve and run** (sandbox). Show the receipt ID.
 
-**Say.** "The agent is not guessing. It reads the same ledger the phone reads,
-through one tool layer."
+**Say.** "That was the story. This is my actual Bee. Real conversations, real to-dos, my real calendar. The same fork, the same approval, a real receipt. By default it runs in a sandbox, so nothing leaves my machine until I connect an account."
 
-**Type.** `close it`
+## 2:10–2:25 · Reconcile
 
-**Agent calls.** `latent_close` → open 119, receipt written.
+**Picture.** Reconcile tab. Merge one duplicate group, watch the count drop, then press Undo. Confirm one harmless fact.
 
-**Picture.** Cut to the phone: the count is 119, and the receipt is on Record.
+**Say.** "Ambeent also cleans up Bee's record. Duplicates merge, and I can undo it. Facts Bee isn't sure about wait for me, and my answer stays in Ambeent. Bee is never changed behind my back."
 
-**Say.** "Same file. Same receipt. The screen and the agent cannot disagree."
+**Privacy.** Several real facts name family members, and one duplicate names a real service. Blur those lines, or scroll past them quickly. Choose the fact you confirm in advance.
 
-**Note.** If the phone and laptop cannot be in one shot, cut phone → laptop →
-phone. Never claim they are side by side if they are not.
+## 2:25–2:40 · Any agent can use it
+
+**Picture.** Terminal with Claude Code. Type: `can I help Jordan with the deck by Thursday? it's about 3 hours`. The agent calls `latent_fork_week` and answers with the three paths.
+
+**Say.** "And it isn't locked in an app. Through MCP and an agent skill, any agent can ask the same question and get the same honest answer."
+
+## 2:40–2:50 · Close
+
+**Picture.** Back to Horizon (Demo), header with bees. Fade the wordmark in.
+
+**Say.** "Bee remembers. Ambeent makes room. am·bee·nt."
 
 ---
 
-## 1:40 – 2:05 · The cut
+## Before you record
 
-**Picture.** Trust. Hold on "1,939 conversation-derived rows, not counted" and
-"162 commitments".
+1. `cd app && npm run ingest` for fresh conversations, then `npm start`.
+2. In Compass, Your Bee mode, set one goal with a due date this week and 6 hours.
+3. Export your calendar again to `app/data/calendars/` if this week looks empty. With an empty calendar every path "fits", which is true but less dramatic.
+4. In Settings, connect Jev and System One if you have working endpoints, then test both. If not, the app says "not connected", which is fine to show.
+5. Clear the demo state with a reload of `/?mode=demo`.
+6. Browser: hide bookmarks bar and extensions, zoom 100%, window 1440×900. Turn on Do Not Disturb.
+7. For the phone shot, open the app over Tailscale (`LATENT_BIND=0.0.0.0 LATENT_HOSTS=<ip> npm start`) and use iOS screen recording.
 
-**Say.** "We also tried to turn conversation into commitments. Nineteen hundred
-rows came out. About one in five held up. So we cut the lane and kept the
-number, rather than shipping a guess."
+## How to record and edit
 
-**On screen.** Nothing. This is the line judges remember; do not decorate it.
+- **Screen:** macOS `Cmd+Shift+5` → Record Selected Portion around the browser window, or Screen Studio if you have it (it adds smooth zooms on clicks automatically).
+- **Voice:** record the voiceover separately, in a quiet room, from this script. Read it twice and keep the better take of each line.
+- **Editor:** iMovie or CapCut is enough. DaVinci Resolve if you want finer control.
+- **Cuts:** cut between sections, never in the middle of a click or the typing moment. Trim dead time while pages load.
+- **Zooms:** zoom in on three things only: the typed promise, the fork changing, and "A request is not a yes."
+- **Captions:** burn in captions. Judges often watch muted.
+- **Music:** one quiet, royalty-free track under the voice (YouTube Audio Library or Pixabay). No copyrighted music.
+- **Labels:** keep "Demo story · synthetic" visible during Demo shots. Add a small "Real Bee account" caption at the start of the Your Bee section.
+- **Length:** if you run long, cut the Reconcile section to merge only, and drop the phone shot.
 
----
+## Lines to avoid
 
-## 2:05 – 2:25 · The twin
-
-**Picture.** Twin. 130 beads, the "3+ weeks" chip selected. Pan once across the
-field.
-
-**Say.** "One hundred and thirty open. Every one of them was written more than
-three weeks ago. This is not a backlog that arrived yesterday."
-
----
-
-## 2:25 – 2:38 · The limit
-
-**Picture.** Trust, top counts.
-
-**Say.** "Zero bystander words were stored. But Bee labelled all three hundred
-and thirty-four conversations as one speaker, so that is a limit, not a boast."
-
----
-
-## 2:38 – 2:45 · Close
-
-**Picture.** Today, 120 open, clean.
-
-**Say.** "Bee remembers everything. Latent decides what deserves you."
-
-**On screen.** `github.com/maximilienmil/latent`
-
----
-
-## Recording checklist
-
-- Installed PWA, standalone, light mode, 390 × 844.
-- Notifications off, Low Power Mode off, battery above 40%.
-- Load the app once before recording so the ledger is warm.
-- Agent beat: `npm run mcp` must be registered before the take; test
-  `latent_should_act` once off camera.
-- Merge beat is destructive. If a take fails after the tap, restore the demo
-  copy first: `cp data/latent.sqlite data/demo-reset.sqlite` before recording,
-  and copy it back between takes.
-- Blur: the duplicate line at 0:40, any personal names in to-do text.
-- No Bee wordmark or logo anywhere in frame. Say "Bee" as a product name only.
-- Music: none, or one low bed under 12 dB. The voice carries this.
+- "It knows my voice." Bee reports the speaker as Unknown on this account.
+- Any success probability or "it predicts." The fork is calendar arithmetic.
+- "It sent the email" during sandbox runs. Say "prepared".

@@ -1,4 +1,6 @@
-# Latent MCP server
+# Ambeent MCP server
+
+Ambeent was called Latent during development; tool names keep the `latent_` prefix so existing agent setups keep working.
 
 Latent ships one tool layer over the ledger the app reads. An agent and the
 screen cannot disagree about how many rows are open, because they read the same
@@ -41,6 +43,8 @@ Any MCP client that speaks stdio:
 
 | Tool | Kind | What it returns |
 | --- | --- | --- |
+| `latent_goals` | read | The goals set in Compass, with due dates and remaining focused minutes |
+| `latent_fork_week` | read | Three paths for a new promise against a goal on the real calendar: hours that fit, shortfalls, focus blocks, a recommended path. Calendar arithmetic, no probability |
 | `latent_reconcile` | read | Reversible proposals for exact duplicate todos and a hold receipt for each unsupported fact; never applies them |
 | `latent_slip_risk` | read | A review queue with explicit reasons; no probability while independently labeled outcomes are missing |
 | `latent_record` | read | Conversations, days of record, open and done Bee todos, duplicate rows, and Bee's recorded completion-flag rate |
@@ -53,6 +57,10 @@ Any MCP client that speaks stdio:
 Writes are visible to the app immediately, because both processes use the same
 file. `latent_close` takes a single id and refuses anything that is already
 closed.
+
+## Agent skill
+
+[`skills/ambeent/SKILL.md`](../skills/ambeent/SKILL.md) tells an agent when to use these tools, the three workflows (what to act on, can I take this on, clean up Bee) and the rules: never act on someone else's promise, ask before writes, and name states exactly.
 
 ## Why it is not a wrapper around the Bee API
 

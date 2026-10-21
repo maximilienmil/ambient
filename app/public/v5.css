@@ -239,3 +239,6 @@ textarea.fld{min-height:110px;resize:vertical;line-height:1.4}
 .rows .card{margin-bottom:8px;background:#f6f3ea}
 @container (max-width:760px){.top{position:relative;top:auto;right:auto;margin-bottom:12px;flex-wrap:wrap}}
 .goal input{width:100%}
+
+.quiet .ev,.quiet .pop,.quiet .pop2,.quiet .cellin,.quiet .sheet,.quiet .result,.quiet .rc,.quiet .scrim{animation:none!important}
+.wm{font:400 30px/1 var(--serif);letter-spacing:-.01em}.wm i{font-style:normal;color:#b8ab6a;margin:0 1px}.wm b{font-weight:400;background:linear-gradient(90deg,#c99a06,#8a6ad8);-webkit-background-clip:text;background-clip:text;color:transparent}

@@ -15,6 +15,9 @@ import { existsSync } from 'node:fs';
 import { openDb } from './db.mjs';
 import * as L from './ledger.mjs';
 import { generateChangeset } from './reconcile.mjs';
+import { growSchema, listGrow } from './grow.mjs';
+import { loadCalendars } from './calendar.mjs';
+import { forkWeek } from './fork.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dbPath = process.env.LATENT_DB || path.join(root, 'data', 'latent.sqlite');
@@ -25,6 +28,8 @@ if (!existsSync(dbPath)) {
   process.exit(1);
 }
 const db = openDb(dbPath);
+growSchema(db);
+const dataDir = process.env.LATENT_DATA_DIR || path.join(root, 'data');
 
 const money = (value) => (Number.isFinite(value) ? Math.round(value * 1000) / 10 : null);
 
@@ -60,6 +65,24 @@ function summary() {
 }
 
 const TOOLS = [
+  {
+    name: 'latent_goals',
+    description: 'List the goals the person set in Latent (Compass), with due dates and remaining focused minutes. Goals are what the fork protects.',
+    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+  },
+  {
+    name: 'latent_fork_week',
+    description: 'Fork the week: compare three paths for a new promise against a goal (protect the goal, keep every promise, shrink the goal) using the person\'s real calendar. Returns hours that fit, shortfalls, proposed focus blocks and a recommended path. Calendar arithmetic only; nothing is written or sent.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        promise: { type: 'object', description: 'The new commitment.', properties: { title: { type: 'string' }, minutes: { type: 'number' }, dueAt: { type: 'string', description: 'ISO timestamp' } }, required: ['title', 'minutes', 'dueAt'] },
+        goal: { type: 'object', description: 'What to protect. Defaults to the first active Compass goal with a due date and minutes.', properties: { title: { type: 'string' }, minutes: { type: 'number' }, dueAt: { type: 'string' } } },
+      },
+      required: ['promise'],
+      additionalProperties: false,
+    },
+  },
   {
     name: 'latent_reconcile',
     description:
@@ -155,6 +178,24 @@ function whyOf(item) {
 }
 
 const HANDLERS = {
+  latent_goals() {
+    return listGrow(db).filter((g) => g.kind === 'goal' && g.state === 'active').map((g) => ({ id: g.id, title: g.title, dueAt: g.due_at, minutes: g.minutes }));
+  },
+
+  async latent_fork_week(args = {}) {
+    let goal = args.goal;
+    if (!goal?.title) {
+      const g = listGrow(db).find((x) => x.kind === 'goal' && x.state === 'active' && x.due_at && x.minutes);
+      if (!g) {
+        const error = new Error('No goal to protect. Pass goal {title, minutes, dueAt}, or set one in Compass.');
+        error.code = -32602;
+        throw error;
+      }
+      goal = { title: g.title, minutes: g.minutes, dueAt: g.due_at };
+    }
+    const calendar = await loadCalendars(path.join(dataDir, 'calendars'));
+    return { goal, ...forkWeek({ promise: args.promise, goal, events: calendar.events }) };
+  },
   async latent_reconcile() {
     return generateChangeset(dbPath);
   },
