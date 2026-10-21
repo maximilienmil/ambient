@@ -103,7 +103,7 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
 
 :root{--done:#2fa66a;--need:#f0892a;--wait:#9b7fe6;--later:#cdc6b2}
 /* faded, slowly drifting photography for depth */
-.hero .bg{position:absolute;inset:0;background:url(assets/bee-macro.jpg) 70% 55%/cover;opacity:.22;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(100deg,transparent 30%,#000 75%);mask-image:linear-gradient(100deg,transparent 30%,#000 75%);animation:drift 38s ease-in-out infinite alternate;pointer-events:none}
+.hero .bg{display:none;position:absolute;inset:0;background:url(assets/bee-macro.jpg) 70% 55%/cover;opacity:.22;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(100deg,transparent 30%,#000 75%);mask-image:linear-gradient(100deg,transparent 30%,#000 75%);animation:drift 38s ease-in-out infinite alternate;pointer-events:none}
 @keyframes drift{from{transform:scale(1.02) translate(0,0)}to{transform:scale(1.12) translate(-2%,1.5%)}}
 .hero .row{position:relative;display:flex;gap:28px;align-items:center;justify-content:space-between}
 .hero .txt{min-width:0;flex:1}
@@ -214,6 +214,14 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
  .rule{grid-template-columns:1fr}.note{font-size:14px}
  .typed{font-size:24px}
 }
+
+.ringcard{margin-top:18px;padding:8px 14px 8px 8px;border-radius:99px;gap:14px;display:inline-flex;flex-wrap:wrap;max-width:100%}
+.ring{width:54px;height:54px}.ring .ctr b{font-size:26px}.ring .ctr span{display:none}
+.legend{display:flex;flex-wrap:wrap;gap:2px 4px;min-width:0;align-items:center}
+.lg{width:auto;padding:5px 10px;gap:7px;font-size:13px}.lg b{font-size:17px;margin-left:2px}
+.legend .more{display:none}
+@container (max-width:760px){.ringcard{border-radius:26px;display:flex;padding:10px 12px;margin-top:14px}.legend{flex:1}.lg{min-height:36px}}
+@container (max-width:760px){.legend{display:grid;grid-template-columns:1fr 1fr;gap:0}.lg{font-size:12.5px;padding:4px 6px;min-height:32px;white-space:nowrap}.lg b{font-size:16px}.ring{width:50px;height:50px}.ringcard{gap:8px}}
 </style>
 </head>
 <body>
@@ -312,7 +320,7 @@ function forkM(){
 function live(){
  const q='Sure, I’ll help with the deck by Thursday.',n=S.listen?Math.min(q.length,Math.floor(S.listen)):0;
  return `<div class="blk o live">${lbl('ink',S.listen?'Hearing a new promise':'Listening through Bee')}
-  <div class="wavebars">${Array.from({length:28},(_,i)=>`<i style="animation-delay:${-(i*97%900)}ms"></i>`).join('')}</div>
+  
   ${S.listen?`<div class="said"><span class="who me">You said it</span><span class="typed">“${q.slice(0,n)}<b class="caret"></b>”</span></div><p>Speaker matched to your voice. Checking it against your calendar.</p>`
   :`<p>Nothing new yet. For the demo, replay the promise Bee captured yesterday at 4:12 pm.</p><div class="act"><button class="chip" data-replay>${I.mic||''}Replay captured promise</button></div>`}</div>`}
 function decide(){
@@ -326,9 +334,9 @@ function decide(){
   ${S.sheet?`<div class="sheet">${p.sh.map(([a,b])=>`<label>${a}</label><div class="f">${b}</div>`).join('')}<button class="go" data-go>${p.go}</button><p class="fine">${S.path=='A'?'Jordan still has to agree. ':''}The hive does this through ${S.path=='A'?'Gmail and Google Calendar':'Google Calendar'} on your demo account, and you can undo it.</p></div>`:''}`}
 function horizon(){
  const p=P[S.path],m=S.path=='A';
- return `<section class="hero"><div class="bg"></div><canvas data-swarm></canvas>${sync()}
+ return `<section class="hero"><canvas data-swarm></canvas>${sync()}
   <div class="row"><div class="txt"><h1>The hive is working<br>through your week.</h1>
-  <p>Overnight the hive <span class="ii">${ico.merge}merged 4 duplicates</span>, <span class="ii">${ico.check}closed 2 done to-dos</span>, <span class="ii">${ico.fact}confirmed a fact</span> and <span class="ii">${ico.cal}held time for a call</span>. ${counts().need==1?'One decision is':counts().need+' decisions are'} yours.</p></div>${ring()}</div></section>
+  <p>Overnight the hive <span class="ii">${ico.merge}merged 4 duplicates</span>, <span class="ii">${ico.check}closed 2 done to-dos</span>, <span class="ii">${ico.fact}confirmed a fact</span> and <span class="ii">${ico.cal}held time for a call</span>. ${counts().need==1?'One decision is':counts().need+' decisions are'} yours.</p>${ring()}</div></div></section>
  <div class="wrap"><div class="col">
   ${!S.heard?live():S.sent?'':`<div class="blk y pop">${lbl('need','Needs you')}<h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
    <div class="stats"><div class="stat"><b>6h</b><span>the release still needs</span></div><div class="stat"><b>6h</b><span>open focus time</span></div><div class="stat neg"><b>−3h</b><span>Jordan’s favor takes</span></div></div></div>`}
@@ -360,7 +368,7 @@ function compass(){
   month:`<div class="blk o">${lbl("ink","Focus time left in October")}<div class="big" style="margin-top:8px">~22<small>hours</small></div>${wave()}<p>If two mornings a week stay clear. That’s an assumption you can change.</p><div class="act"><button class="chip">2 mornings a week</button><button class="chip">Edit</button></div></div>`,
   year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Latent shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
  const g=S.goals;
- return `<section class="hero" style="min-height:220px"><div class="bg"></div><canvas data-swarm></canvas>${sync()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
+ return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${sync()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week','month','year'].map(k=>`<button aria-pressed="${S.range==k}" data-range="${k}">${k[0].toUpperCase()+k.slice(1)}</button>`).join('')}</div></section>
  <div class="wrap"><div class="col">
   <div class="blk y">${lbl('need','Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
@@ -381,7 +389,7 @@ function rec(){
  const pairs=[['Send Jordan the project outline','Tue 10:14 am','Send outline to Jordan','Thu 4:02 pm','Same person, same file, two days apart.'],['Book dentist','Mon 9:30 am','Call dentist to book','Wed 12:10 pm','Both mention the cleaning.']];
  const facts=[['Your sister lives in Boston','2 later conversations and a Boston trip on your calendar'],['You run on Tuesdays','4 of the last 6 Tuesdays have a run on your calendar']];
  const open=130-Object.keys(S.merged).length;
- return `<section class="hero" style="min-height:220px"><div class="bg"></div><canvas data-swarm></canvas>${sync()}<h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
+ return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${sync()}<h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
   <div class="count">${open<130?"<s>130</s>":""}${open}<span style="font:600 14px Geist;margin-left:10px;color:#4b4825">open to-dos</span></div></section>
  <div class="wrap">
   ${S.split?'':`<div class="blk y span" style="border:2px solid var(--need)">${lbl('need','Needs you')}<h2>The models disagree.</h2><p class="sub" style="color:#4b4825">“Send Priya the budget.” You said it, so the hive could act. But should it?</p>
