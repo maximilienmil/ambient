@@ -184,6 +184,36 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
  .hero .row{flex-direction:column;align-items:stretch;gap:0}.ringcard{margin-top:16px;padding:14px}.ring{width:122px;height:122px}.ring .ctr b{font-size:38px}.legend{min-width:0;flex:1}
  .sync{position:relative;top:auto;right:auto;margin-bottom:12px}.rule{grid-template-columns:1fr}.count{font-size:48px}
 }
+
+.live .wavebars{display:flex;gap:3px;align-items:center;height:34px;margin:6px 0 10px}
+.live .wavebars i{flex:1;background:var(--yel);border-radius:3px;height:30%;opacity:.8;animation:wv 1.1s ease-in-out infinite}
+@keyframes wv{0%,100%{height:18%}50%{height:95%}}
+.said{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.typed{font:400 26px/1.2 var(--serif);color:#fff}
+.caret{display:inline-block;width:2px;height:22px;background:var(--yel);margin-left:2px;vertical-align:-3px;animation:blink 1s steps(1) infinite}@keyframes blink{50%{opacity:0}}
+.ghost{opacity:.35;filter:grayscale(.6);pointer-events:none}
+.pop{animation:pop .5s both}.pop2{animation:pop .5s .15s both}
+.via{font-size:12px;color:#17714a;font-weight:600;margin-top:3px}
+.sugg{background:#fffdf7;border:1.5px dashed #00000025;border-radius:18px;padding:14px;margin-top:4px}
+.fkm{display:none}
+@container (max-width:760px){
+ .wrap{padding:16px 16px 140px;gap:16px}.col{gap:16px}
+ .blk{padding:18px 16px;border-radius:24px}
+ .hero{padding:62px 20px 22px}.hero h1{font-size:40px;line-height:1}.hero p{font-size:16px;line-height:1.45}
+ h2{font-size:28px}.sub{font-size:15px}.fine{font-size:13px}
+ .lg{min-height:40px;font-size:14px}
+ .chip{min-height:44px;padding:10px 16px;font-size:15px}.go{min-height:50px;width:100%;text-align:center;font-size:16px}
+ .opt{padding:14px 12px;border-radius:18px}.opt b{font-size:17px}.opt span{font-size:15px}
+ .blk .blk.w{margin-left:-6px;margin-right:-6px;padding:14px 12px!important}
+ .week{grid-template-columns:1fr!important;gap:6px}.hide-m{display:flex!important}
+ .day{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 12px}.day b{width:72px;flex:none;text-align:left;margin:0;font-size:13px}
+ .ev{margin:0;font-size:14px;padding:7px 10px}.day .ev+.ev{margin-left:0}
+ .fkd{display:none}.fkm{display:block}
+ .stat{padding:12px 10px}.stat span{font-size:12.5px}
+ .item{min-height:56px}.item .t{font-size:15px}
+ .scrim{align-items:flex-end;padding:0}.rc{width:100%;max-height:90%;border-radius:28px 28px 0 0;padding:14px 20px 40px}.rc:before{content:"";display:block;width:38px;height:5px;border-radius:9px;background:#0002;margin:0 auto 14px}
+ .rule{grid-template-columns:1fr}.note{font-size:14px}
+ .typed{font-size:24px}
+}
 </style>
 </head>
 <body>
@@ -192,11 +222,12 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
   <div class="phone"><div class="scr"><div class="app" data-root></div></div></div>
 </div>
 <script>
-const S={mood:null,tags:{},tab:'horizon',path:'A',sheet:false,run:null,sent:false,filter:'done',receipt:null,merged:{},facts:{},split:null,range:'week',toast:null};
+const S={heard:false,listen:0,goals:[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']],sugg:true,mood:null,tags:{},tab:'horizon',path:'A',sheet:false,run:null,sent:false,filter:'done',receipt:null,merged:{},facts:{},split:null,range:'week',toast:null};
 const I={
  horizon:'<svg viewBox="0 0 24 24"><path d="M3 17h18M6 17a6 6 0 0 1 12 0M12 5v2M5.5 8.5l1.4 1.4M18.5 8.5l-1.4 1.4"/></svg>',
  compass:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>',
  rec:'<svg viewBox="0 0 24 24"><path d="M7 4v6a5 5 0 0 0 5 5h5M17 15l-3-3M17 15l-3 3"/><circle cx="7" cy="4" r="1.5"/></svg>',
+ mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
  mail:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>',
  clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
  plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>'};
@@ -204,28 +235,30 @@ const COL={done:'var(--done)',need:'var(--need)',wait:'var(--wait)',later:'var(-
 const LBL={done:'Done by the hive',need:'Needs you',wait:'Waiting on others',later:'Remembered for later'};
 /* overnight items. who: me = you said it, them = someone told you, sys = from a record */
 const ITEMS=[
- {id:'merge',k:'done',t:'Merged 4 copies of “Send Jordan the outline”',who:['sys','Bee to-dos'],src:'Tue 10:14 am, Thu 4:02 pm',
+ {id:'merge',via:'Latent, on this device',k:'done',t:'Merged 4 copies of “Send Jordan the outline”',who:['sys','Bee to-dos'],src:'Tue 10:14 am, Thu 4:02 pm',
   did:'Kept one to-do, retired three copies. Undo stays available for 30 days.',ev:'Same person, same file, same wording within two days.',q:null,jev:'Merge',d1:'Merge'},
- {id:'dentist',k:'done',t:'Closed “Book a dentist cleaning”',who:['me','You said it'],src:'Bee conversation, Oct 6',
+ {id:'dentist',via:'Latent, checked against Google Calendar',k:'done',t:'Closed “Book a dentist cleaning”',who:['me','You said it'],src:'Bee conversation, Oct 6',
   q:'I need to book a cleaning before the end of the month.',did:'Marked done in Latent. Your Bee to-do is untouched.',ev:'Your calendar shows “Dentist, Oct 17, 9:00 am”, after the conversation.',jev:'Close',d1:'Close'},
- {id:'fact',k:'done',t:'Confirmed a Bee fact: your sister lives in Boston',who:['me','You said it'],src:'2 later conversations, 1 calendar trip',
+ {id:'fact',via:'Bee agent, checked by Latent',k:'done',t:'Confirmed a Bee fact: your sister lives in Boston',who:['me','You said it'],src:'2 later conversations, 1 calendar trip',
   q:'My sister just moved to Boston, I’m visiting her in November.',did:'Moved the fact from “to confirm” to confirmed.',ev:'“Boston, visit Ana” on your calendar Nov 8 to 10.',jev:'Confirm',d1:'Confirm'},
- {id:'hold',k:'done',t:'Held time for “Client call Wednesday at 2”',who:['me','You said it'],src:'Bee conversation, yesterday 5:40 pm',
+ {id:'hold',via:'Google Calendar connector · demo account',k:'done',t:'Held time for “Client call Wednesday at 2”',who:['me','You said it'],src:'Bee conversation, yesterday 5:40 pm',
   q:'Let’s do the client call Wednesday at two.',did:'Private hold on your demo calendar. No invite was sent to anyone.',ev:'The slot was free and the call was your own plan.',jev:'Hold time',d1:'Hold time'},
- {id:'fork',k:'need',t:'Release Friday, or help Jordan by Thursday?',who:['me','You said it'],src:'Bee conversation, yesterday 4:12 pm',
+ {id:'expense',k:'done',via:'Claude, through the Latent MCP server',t:'Filed your Lisbon train receipt',who:['me','You said it'],src:'Bee conversation, Sunday 6:20 pm',
+  q:'Remind me to file the train receipt.',did:'Another agent picked this up through Latent’s MCP tools and filed it in your expenses folder.',ev:'The receipt PDF was in your downloads from Sunday.',jev:'Delegate',d1:'Delegate'},
+ {id:'fork',via:'Not yet',k:'need',t:'Release Friday, or help Jordan by Thursday?',who:['me','You said it'],src:'Bee conversation, yesterday 4:12 pm',
   q:'Sure, I’ll help with the deck by Thursday.',did:'Nothing yet. Three paths are ready in Fork the week.',ev:'The release needs 6 hours. This week has 6 open. The favor takes 3.',jev:'Ask to move the favor',d1:'Ask to move the favor'},
- {id:'priya',k:'need',t:'The models disagree on “Send Priya the budget”',who:['me','You said it'],src:'Bee conversation, Monday 11:05 am',
+ {id:'priya',via:'Not yet',k:'need',t:'The models disagree on “Send Priya the budget”',who:['me','You said it'],src:'Bee conversation, Monday 11:05 am',
   q:'I’ll send you the budget once it’s final.',did:'Nothing yet. Waiting for your call in Reconcile.',ev:'The budget file was edited Sunday. It may not be final.',jev:'Draft it now',d1:'Ask first'},
- {id:'slides',k:'wait',t:'Priya said she’d send the slides by Monday',who:['them','Priya said it'],src:'Bee conversation, Monday 11:07 am',
+ {id:'slides',via:'Nobody. Not your promise',k:'wait',t:'Priya said she’d send the slides by Monday',who:['them','Priya said it'],src:'Bee conversation, Monday 11:07 am',
   q:'I’ll get you the slides by Monday.',did:'Remembered only. Latent never acts on someone else’s promise.',ev:'Speaker attribution: Priya, not you.',jev:'Remember',d1:'Remember'},
- {id:'venue',k:'wait',t:'Sam owes you a reply about the venue',who:['them','Sam said it'],src:'Bee conversation, Sunday',
+ {id:'venue',via:'Nobody. Not your promise',k:'wait',t:'Sam owes you a reply about the venue',who:['them','Sam said it'],src:'Bee conversation, Sunday',
   q:'Let me check with the venue and get back to you.',did:'Remembered. If nothing arrives by Friday, Latent will ask whether to nudge.',ev:'Speaker attribution: Sam.',jev:'Remember',d1:'Remember'},
- {id:'rust',k:'later',t:'“Learn Rust someday”',who:['me','You said it'],src:'Bee conversation, Sep 30',
+ {id:'rust',via:'Nobody yet',k:'later',t:'“Learn Rust someday”',who:['me','You said it'],src:'Bee conversation, Sep 30',
   q:'I really want to learn Rust someday.',did:'Remembered, not scheduled. No date or next step was agreed.',ev:'An aspiration with no time attached.',jev:'Remember',d1:'Remember'}
 ];
-const JORDAN={id:'jordan',k:'wait',t:'Jordan: reply about moving the deck to Monday',who:['them','Waiting on Jordan'],src:'Sent from your demo account, 7:02 am',
+const JORDAN={id:'jordan',via:'Gmail and Google Calendar connectors · demo account',k:'wait',t:'Jordan: reply about moving the deck to Monday',who:['them','Waiting on Jordan'],src:'Sent from your demo account, 7:02 am',
  q:null,did:'Asked Jordan to move the deck help to Monday. Jordan has not agreed yet.',ev:'Message delivered. 2 holds on your demo calendar.',jev:'Ask to move the favor',d1:'Ask to move the favor'};
-function counts(){const c={done:18,need:0,wait:1,later:3};items().forEach(i=>c[i.k]++);return c}
+function counts(){const c={done:17,need:0,wait:1,later:3};items().forEach(i=>c[i.k]++);return c}
 function items(){return ITEMS.map(i=>i.id=='fork'&&S.sent?null:i.id=='priya'&&S.split?{...i,k:'done',t:'Drafted “Send Priya the budget”',did:'You chose: '+S.split+'.'}:i).filter(Boolean).concat(S.sent?[JORDAN]:[])}
 function ring(){
  const c=counts(),tot=Object.values(c).reduce((a,b)=>a+b,0),R=62,C=2*Math.PI*R,gap=4;let off=0;
@@ -237,8 +270,8 @@ function ring(){
 function sync(){return `<div class="sync glass"><span class="band"></span><span class="live"></span>Bee synced 6:58 am</div>`}
 function feed(){
  const list=items().filter(i=>i.k==S.filter);
- return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'What the hive did':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Latent remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
- ${list.map(i=>`<button class="item" data-receipt="${i.id}"><span class="sd" style="background:${COL[i.k]}"></span><div style="min-width:0"><div class="t">${i.t}</div><div class="s"><span class="who ${i.who[0]}">${i.who[1]}</span>${i.src}</div></div><span class="go2">Receipt ›</span></button>`).join('')}
+ return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'While you slept':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Latent remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
+ ${list.map(i=>`<button class="item" data-receipt="${i.id}"><span class="sd" style="background:${COL[i.k]}"></span><div style="min-width:0"><div class="t">${i.t}</div><div class="s"><span class="who ${i.who[0]}">${i.who[1]}</span>${i.src}</div>${i.k=='done'?`<div class="via">via ${i.via}</div>`:''}</div><span class="go2">Receipt ›</span></button>`).join('')}
  ${S.filter=='done'?`<p class="more">and 18 more like these: duplicates merged, done items closed.</p>`:''}</div>`}
 const P={
  A:{n:'Protect the launch',s:'Ask Jordan to move the favor to Monday. Release ships Friday.',tag:'Release stays Friday',
@@ -246,7 +279,7 @@ const P={
   h:['rel','rel','rel','rel','rel','rel'],big:'6 of 6',fit:'All release hours fit before Friday. Jordan’s deck moves to Monday, if Jordan agrees.',
   why:'Ask to move the favor, not drop it.',body:'You set Friday for yourself and the release needs every open hour. Monday still lands two days before Jordan’s Wednesday pitch.',
   act:'Review message to Jordan',sh:[['From','Your demo account'],['To','Jordan'],['Message','Hi Jordan, I want to do the deck properly, but I’m shipping a release Friday. Could I give you Monday morning instead? That’s still well before your Wednesday pitch.'],['Time held','Tue 9 to 12 and Thu 9 to 12 for release work']],
-  go:'Send and hold time',steps:['Writing from your demo account','Sent to Jordan','Held Tuesday 9 to 12','Held Thursday 9 to 12']},
+  go:'Send and hold time',via:'Gmail and Google Calendar connectors',steps:['Writing from your demo account','Sent to Jordan','Held Tuesday 9 to 12','Held Thursday 9 to 12']},
  B:{n:'Keep the favor',s:'Help Jordan Tuesday. Release moves to next Monday.',tag:'Release slips to Monday',
   d:{Mon:[['mtg','Standup']],Tue:[['jor','Jordan deck 9 to 12']],Wed:[['mtg','Client call']],Thu:[['rel','Release 9 to 12']],Fri:[['mtg','Not ready']],N:[['rel','Release 9 to 12'],['due','Ships']]},
   h:['rel','rel','rel','jor','jor','jor'],big:'3 of 6',fit:'Only 3 release hours fit this week. The other 3 move to Monday, and so does shipping.',
@@ -271,30 +304,41 @@ function fork(){
  return `<svg viewBox="0 0 520 156" style="width:100%;display:block;margin:0 0 12px" role="img" aria-label="Three paths from today">
   ${Object.entries(E).map(([k,[y,t]])=>{const on=S.path==k;return `<g data-path="${k}" style="cursor:pointer"><path d="M44 78C150 78 190 ${y} 300 ${y}" fill="none" stroke="${on?'#6a3fe6':'#ffffff'}" stroke-width="${on?5:3}" stroke-linecap="round" opacity="${on?1:.75}"/><circle cx="300" cy="${y}" r="${on?9:6}" fill="${on?'#6a3fe6':'#fff'}"/><text x="316" y="${y+4}" font-size="19" font-family="Geist" font-weight="${on?700:500}" fill="#17160a">${k} · ${t}</text></g>`}).join('')}
   <circle cx="44" cy="78" r="12" fill="#17160a"/><text x="44" y="122" font-size="16" font-family="Geist" font-weight="600" text-anchor="middle" fill="#17160a">Today</text></svg>`}
+function forkM(){
+ const E={A:[28,'Ships Friday'],B:[78,'Ships Monday'],C:[128,'Smaller, Friday']};
+ return `<svg viewBox="0 0 330 156" style="width:100%;display:block;margin:0 0 12px" role="img" aria-label="Three paths from today">
+  ${Object.entries(E).map(([k,[y,t]])=>{const on=S.path==k;return `<g data-path="${k}" style="cursor:pointer"><path d="M30 78C100 78 120 ${y} 170 ${y}" fill="none" stroke="${on?'#6a3fe6':'#ffffff'}" stroke-width="${on?5:3}" stroke-linecap="round" opacity="${on?1:.75}"/><circle cx="170" cy="${y}" r="${on?9:6}" fill="${on?'#6a3fe6':'#fff'}"/><text x="184" y="${y+4}" font-size="17" font-family="Geist" font-weight="${on?700:500}" fill="#17160a">${k} · ${t}</text></g>`}).join('')}
+  <circle cx="30" cy="78" r="12" fill="#17160a"/><text x="30" y="122" font-size="14" font-family="Geist" font-weight="600" text-anchor="middle" fill="#17160a">Today</text></svg>`}
+function live(){
+ const q='Sure, I’ll help with the deck by Thursday.',n=S.listen?Math.min(q.length,Math.floor(S.listen)):0;
+ return `<div class="blk o live">${lbl('ink',S.listen?'Hearing a new promise':'Listening through Bee')}
+  <div class="wavebars">${Array.from({length:28},(_,i)=>`<i style="animation-delay:${-(i*97%900)}ms"></i>`).join('')}</div>
+  ${S.listen?`<div class="said"><span class="who me">You said it</span><span class="typed">“${q.slice(0,n)}<b class="caret"></b>”</span></div><p>Speaker matched to your voice. Checking it against your calendar.</p>`
+  :`<p>Nothing new yet. For the demo, replay the promise Bee captured yesterday at 4:12 pm.</p><div class="act"><button class="chip" data-replay>${I.mic||''}Replay captured promise</button></div>`}</div>`}
 function decide(){
  const p=P[S.path];
  if(S.sent)return `<div class="result"><div class="sec" style="margin-top:0">DONE BY THE HIVE · 7:02 AM</div><div class="rt">${S.path=='A'?'Asked Jordan to move the deck to Monday.':S.path=='B'?'Your week now keeps the favor.':'The smaller release is set.'}</div>
-  <div class="kv">${S.path=='A'?'<span>Message</span><div>Delivered from your demo account</div>':''}<span>Calendar</span><div>${p.steps.filter(x=>x.startsWith("Held")).length} holds on your demo calendar</div><span>Status</span><div>${S.path=='A'?'Waiting on Jordan. A request is not a yes.':'Done. You can undo the holds.'}</div></div>
+  <div class="kv">${S.path=='A'?'<span>Message</span><div>Delivered from your demo account</div>':''}<span>Done by</span><div>${p.via||'Google Calendar connector'}</div><span>Calendar</span><div>${p.steps.filter(x=>x.startsWith("Held")).length} holds on your demo calendar</div><span>Status</span><div>${S.path=='A'?'Waiting on Jordan. A request is not a yes.':'Done. You can undo the holds.'}</div></div>
   <div class="act"><button class="chip" data-receipt="jordan">Receipt</button><button class="chip" data-undo-run>Undo</button></div></div>`;
  if(S.run!=null)return `<div class="run"><div class="lane">${[0,1,2,3].map(i=>`<span style="animation-delay:${-i*.55}s">\\(◉)/ · ·</span>`).join('')}</div>
   ${p.steps.map((s,i)=>`<div class="step ${i<S.run?'ok':i==S.run?'cur':''}"><span class="ck">${i<S.run?'✓':''}</span>${s}</div>`).join('')}</div>`;
  return `<div class="act"><button class="chip ${S.sheet?'on':''}" data-sheet>${S.path=='A'?I.mail:I.clock}${p.act}</button></div>
-  ${S.sheet?`<div class="sheet">${p.sh.map(([a,b])=>`<label>${a}</label><div class="f">${b}</div>`).join('')}<button class="go" data-go>${p.go}</button><p class="fine">${S.path=='A'?'Jordan still has to agree. ':''}The hive does this on your demo account, and you can undo it.</p></div>`:''}`}
+  ${S.sheet?`<div class="sheet">${p.sh.map(([a,b])=>`<label>${a}</label><div class="f">${b}</div>`).join('')}<button class="go" data-go>${p.go}</button><p class="fine">${S.path=='A'?'Jordan still has to agree. ':''}The hive does this through ${S.path=='A'?'Gmail and Google Calendar':'Google Calendar'} on your demo account, and you can undo it.</p></div>`:''}`}
 function horizon(){
  const p=P[S.path],m=S.path=='A';
  return `<section class="hero"><div class="bg"></div><canvas data-swarm></canvas>${sync()}
   <div class="row"><div class="txt"><h1>The hive is working<br>through your week.</h1>
   <p>Overnight the hive <span class="ii">${ico.merge}merged 4 duplicates</span>, <span class="ii">${ico.check}closed 2 done to-dos</span>, <span class="ii">${ico.fact}confirmed a fact</span> and <span class="ii">${ico.cal}held time for a call</span>. ${counts().need==1?'One decision is':counts().need+' decisions are'} yours.</p></div>${ring()}</div></section>
  <div class="wrap"><div class="col">
-  ${S.sent?'':`<div class="blk y">${lbl('need','Needs you')}<h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
+  ${!S.heard?live():S.sent?'':`<div class="blk y pop">${lbl('need','Needs you')}<h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
    <div class="stats"><div class="stat"><b>6h</b><span>the release still needs</span></div><div class="stat"><b>6h</b><span>open focus time</span></div><div class="stat neg"><b>−3h</b><span>Jordan’s favor takes</span></div></div></div>`}
-  <div class="blk l">${lbl('wait','Your choice')}<h2>Fork the week</h2><p class="sub">Three ways this week can go. Pick one to see the plan.</p>
-   ${fork()}
+  ${S.heard?'':'<div class="ghost">'}<div class="blk l ${S.heard?'pop2':''}">${lbl('wait','Your choice')}<h2>Fork the week</h2><p class="sub">Three ways this week can go. Pick one to see the plan.</p>
+   <div class="fkd">${fork()}</div><div class="fkm">${forkM()}</div>
    ${Object.entries(P).map(([k,x])=>`<button class="opt ${k=='C'?'c':''}" aria-pressed="${S.path==k}" data-path="${k}"><span class="rad">${k}</span><div><b>${x.n}</b><span>${x.s}</span><em class="tag" style="font-style:normal">${x.tag}</em></div></button>`).join('')}
    <div class="blk w" style="margin-top:14px;padding:16px"><div style="font-weight:600;margin-bottom:10px">Your week with ${S.path}</div>
    <div class="week">${['Mon','Tue','Wed','Thu','Fri','N'].map(d=>`<div class="day ${d=='N'?'hide-m':''}"><b>${d=='N'?'Next Mon':d}</b>${ev(p.d[d]||[])}</div>`).join('')}</div>
-   <div class="leg"><span><i style="background:var(--yel)"></i>Release</span><span><i style="background:var(--lil)"></i>Jordan’s deck</span><span><i style="background:#e5e1d4"></i>Meetings</span></div></div></div>
- </div><div class="col sticky">
+   <div class="leg"><span><i style="background:var(--yel)"></i>Release</span><span><i style="background:var(--lil)"></i>Jordan’s deck</span><span><i style="background:#e5e1d4"></i>Meetings</span></div></div></div>${S.heard?'':'</div>'}
+ </div><div class="col sticky ${S.heard?'':'ghost'}">
   <div class="blk o">${lbl('ink','Release hours this week')}<div class="hrs">${p.h.map(x=>`<i class="${x}"></i>`).join('')}</div><div class="big">${p.big}<small>hours</small></div><p>${p.fit}</p></div>
   <div class="blk ${S.sent?'w':'y'}">${S.sent?lbl('done','The hive did'):lbl('need','Recommended')}<h2>${p.why}</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">${p.body}</p>
    <div class="models"><span class="mdl">Jev <b>A</b></span><span class="mdl">System One <b>A</b></span><span class="mdl ${m?'agree':'split'}">${m?'Both agree':'You picked '+S.path+'. Your call.'}</span></div>
@@ -315,7 +359,7 @@ function compass(){
  const R={week:`<div class="blk o">${lbl("ink","Focus time this week")}<div class="big" style="margin-top:8px">6<small>hours open</small></div><p>Tuesday and Thursday mornings. The release needs all of it.</p></div>`,
   month:`<div class="blk o">${lbl("ink","Focus time left in October")}<div class="big" style="margin-top:8px">~22<small>hours</small></div>${wave()}<p>If two mornings a week stay clear. That’s an assumption you can change.</p><div class="act"><button class="chip">2 mornings a week</button><button class="chip">Edit</button></div></div>`,
   year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Latent shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
- const g=[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']];
+ const g=S.goals;
  return `<section class="hero" style="min-height:220px"><div class="bg"></div><canvas data-swarm></canvas>${sync()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week','month','year'].map(k=>`<button aria-pressed="${S.range==k}" data-range="${k}">${k[0].toUpperCase()+k.slice(1)}</button>`).join('')}</div></section>
  <div class="wrap"><div class="col">
@@ -325,6 +369,7 @@ function compass(){
   <p class="fine">${S.mood==null?'One tap. Latent uses it to size tomorrow, never to grade you.':S.mood<2?'Got it. Latent will keep tomorrow lighter and hold one morning free.':'Got it. Tomorrow keeps its current plan.'}</p></div>
   <div class="blk l">${lbl('wait','Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename. Latent suggests; you decide.</p>
   ${g.map(([a,b,pc,c])=>`<div class="goal"><div class="ring" style="width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:conic-gradient(var(--pur) ${pc*3.6}deg,${c} 0)"><span style="background:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center">${pc}%</span></div><div style="flex:1;min-width:0"><input value="${a}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${b}</div></div></div>`).join('')}
+  ${S.sugg?`<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Latent noticed</div><b>You’ve spent most Sunday mornings on guitar for two months.</b><div style="font-size:14px;color:var(--mut);margin-top:2px">You never set it as a goal. Want to?</div><div class="act" style="margin-top:10px"><button class="chip on" data-sugg="add">Add “Play guitar”</button><button class="chip" data-sugg="no">Not a goal</button></div></div>`:''}
   <div class="act"><button class="chip">${I.plus}Add a goal</button></div></div>
 </div>
  <div class="col sticky">${R}
@@ -354,7 +399,7 @@ function receipt(){
  return `<div class="scrim" data-close><div class="rc" role="dialog" aria-label="Receipt"><button class="x" data-close aria-label="Close">✕</button>
   <span class="who ${i.who[0]}">${i.who[1]}</span><h3>${i.t}</h3>
   ${i.q?`<div class="quote ${i.who[0]=='them'?'them':''}">“${i.q}”</div>`:''}
-  <div class="kv"><span>Source</span><div>${i.src}</div><span>Evidence</span><div>${i.ev}</div><span>What happened</span><div>${i.did}</div></div>
+  <div class="kv"><span>Source</span><div>${i.src}</div><span>Evidence</span><div>${i.ev}</div><span>What happened</span><div>${i.did}</div><span>Done by</span><div><b>${i.via}</b></div></div>
   <div class="sec">DECISION MODELS</div><div class="models" style="margin-top:0"><span class="mdl" style="background:#f1eee4">Jev <b>${i.jev}</b></span><span class="mdl" style="background:#f1eee4">System One <b>${i.d1}</b></span><span class="mdl ${agree?'agree':'split'}">${agree?'Agree':'Split, so you decide'}</span></div>
   ${i.k=='done'?'<div class="act"><button class="chip" data-close>Undo</button></div>':''}</div></div>`}
 const labels=[['horizon','Horizon'],['compass','Compass'],['rec','Reconcile']];
@@ -369,14 +414,15 @@ function render(){
 }
 function toast(t){S.toast=t;render();setTimeout(()=>{S.toast=null;render()},2200)}
 let SPEED=1;
+function replay(){S.listen=1;SPEED=3;render();const q=44;const t=setInterval(()=>{S.listen+=2;if(S.listen>=q){clearInterval(t);setTimeout(()=>{S.heard=true;S.listen=0;SPEED=1;render()},1600)}render()},60)}
 function go(){const n=P[S.path].steps.length;S.run=0;S.sheet=false;SPEED=4;render();
  const tick=()=>{S.run++;if(S.run>=n){setTimeout(()=>{S.run=null;S.sent=true;SPEED=1;S.filter='done';render();toast('Done by the hive')},650);render();return}render();setTimeout(tick,750)};setTimeout(tick,900)}
 document.addEventListener('click',e=>{const t=e.target.closest('button,[data-path],[data-close]');if(!t)return;const d=t.dataset;
  if('close'in d){if(e.target.closest('.rc')&&!e.target.closest('button'))return;S.receipt=null}
  else if(d.tab){S.tab=d.tab;S.sheet=false}else if(d.path){if(S.run!=null)return;S.path=d.path;S.sheet=false;S.sent=false}
- else if('sheet'in d)S.sheet=!S.sheet;else if('go'in d){go();return}else if('undoRun'in d){S.sent=false}
+ else if('replay'in d){replay();return}else if('sheet'in d)S.sheet=!S.sheet;else if('go'in d){go();return}else if('undoRun'in d){S.sent=false}
  else if(d.filter)S.filter=d.filter;else if(d.receipt){if(d.receipt=='fork'){S.receipt=null;S.filter='need'}S.receipt=d.receipt}
- else if(d.range)S.range=d.range;else if(d.mood!==undefined)S.mood=+d.mood;else if(d.tag2){S.tags[d.tag2]=!S.tags[d.tag2]}else if(d.split){S.split=d.split}else if(d.merge!==undefined)S.merged[d.merge]=1;else if(d.unmerge!==undefined)delete S.merged[d.unmerge];
+ else if(d.sugg){if(d.sugg=='add')S.goals=S.goals.concat([['Play guitar','Sundays · noticed by Latent',100,'#bfeccb']]);S.sugg=false}else if(d.range)S.range=d.range;else if(d.mood!==undefined)S.mood=+d.mood;else if(d.tag2){S.tags[d.tag2]=!S.tags[d.tag2]}else if(d.split){S.split=d.split}else if(d.merge!==undefined)S.merged[d.merge]=1;else if(d.unmerge!==undefined)delete S.merged[d.unmerge];
  else if(d.fact!==undefined)S.facts[d.fact]=d.v;else return;render()});
 /* ASCII bees: ten per header, faint, spread out */
 const bees=[[.06,.18],[.30,.10],[.55,.16],[.80,.08],[.94,.30],[.70,.42],[.42,.50],[.16,.62],[.60,.80],[.88,.70]].map(([x,y],i)=>({x,y,s:.6+.1*(i%4),p:i*1.9}));
