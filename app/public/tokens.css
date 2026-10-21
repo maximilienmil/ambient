@@ -23,64 +23,47 @@
    glass that sits on it keeps its light values in both themes too. */
 
 /* ---- the typeface ---------------------------------------------------------
-   Fonetika carries the display type: the greeting, every section heading, the
-   dock labels and the big numerals. It is a display cut with only 133 glyphs —
-   the letters, the digits, and " !&,-.?@" — so any string set in it must avoid
-   a percent sign, a colon, a parenthesis and a curly quote. Where one of those
-   is needed, the string stays in the text face. `verify.mjs` checks the
-   rendered page for a Fonetika string containing a character the font lacks,
-   because the browser would substitute that one glyph from the fallback face
-   and the line would read as two typefaces.
-
-   The text face is the system face, which is what Bee's own app renders in and
-   what keeps the app legible offline. Fonetika Mono is used only for machine
-   output, where a column has to line up.
-
-   Both files are the trial cut and are Personal Use Only. See
-   public/fonts/LICENSE.txt before distributing this app. */
+   Geist carries display type and Instrument Serif the callouts. Both are
+   SIL Open Font License 1.1 (see public/fonts/OFL-*.txt), so the app can ship. */
 
 @font-face {
-  font-family: "Fonetika";
-  src: url("fonts/fonetika-400.woff2") format("woff2");
+  font-family: "Geist";
+  src: url("fonts/geist-latin-400-normal.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fonetika";
-  src: url("fonts/fonetika-500.woff2") format("woff2");
+  font-family: "Geist";
+  src: url("fonts/geist-latin-500-normal.woff2") format("woff2");
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fonetika";
-  src: url("fonts/fonetika-600.woff2") format("woff2");
+  font-family: "Geist";
+  src: url("fonts/geist-latin-600-normal.woff2") format("woff2");
   font-weight: 600;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fonetika";
-  src: url("fonts/fonetika-700.woff2") format("woff2");
+  font-family: "Geist";
+  src: url("fonts/geist-latin-700-normal.woff2") format("woff2");
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fonetika";
-  src: url("fonts/fonetika-800.woff2") format("woff2");
-  font-weight: 800;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Fonetika Mono";
-  src: url("fonts/fonetika-mono-400.woff2") format("woff2");
+  font-family: "Instrument Serif";
+  src: url("fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fonetika Mono";
-  src: url("fonts/fonetika-mono-500.woff2") format("woff2");
-  font-weight: 500;
+  font-family: "Instrument Serif";
+  src: url("fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
   font-display: swap;
 }
+
 
 :root {
   color-scheme: light;
@@ -160,8 +143,8 @@
      machine output. See the note above the @font-face block. */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font: var(--font-sans);
-  --font-display: "Fonetika", var(--font-sans);
-  --font-mono: "Fonetika Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Geist", var(--font-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --numerals: tabular-nums;
 
   --text-display: 84px;   /* one number, on a story card */
