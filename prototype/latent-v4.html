@@ -69,8 +69,8 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
 .o p{margin:8px 0 0;color:#d9d5b6;font-size:14px}
 /* chips as in Bee */
 .act{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #00000014;border-radius:99px;padding:9px 14px;font-weight:600;font-size:14px;box-shadow:0 1px 2px #0001}
-.chip svg{width:18px;height:18px;stroke:var(--pur);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}.chip.on svg{stroke:#fff}
+.chip{color:var(--ink);display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #00000014;border-radius:99px;padding:9px 14px;font-weight:600;font-size:14px;box-shadow:0 1px 2px #0001}
+.chip svg{width:18px;height:18px;stroke:var(--pur);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.chip.on{background:var(--ink);color:#fff!important;border-color:var(--ink)}.chip.on svg{stroke:#fff}
 .sheet{margin-top:14px;background:#fff;border-radius:18px;padding:16px;animation:pop .3s both}
 .sheet label{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:10px 0 4px}.sheet .f{background:#f6f3ea;border-radius:12px;padding:10px 12px;font-size:14.5px}
 .go{display:inline-block;margin-top:14px;padding:12px 20px;border-radius:99px;background:var(--ink);color:#fff;font-weight:600}
@@ -110,7 +110,7 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
 const S={tab:'week',path:'A',sheet:null,merged:{},toast:null};
 const I={
  week:'<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
- grow:'<svg viewBox="0 0 24 24"><path d="M12 21v-9M12 12c0-4-3-6-7-6 0 4 3 6 7 6zM12 14c0-3 2.5-5 6-5 0 3-2.5 5-6 5z"/></svg>',
+ grow:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>',
  rec:'<svg viewBox="0 0 24 24"><path d="M7 4v6a5 5 0 0 0 5 5h5M17 15l-3-3M17 15l-3 3M7 4h0"/><circle cx="7" cy="4" r="1.5"/></svg>',
  mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
  scale:'<svg viewBox="0 0 24 24"><path d="M12 4v16M6 20h12M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></svg>',
@@ -174,7 +174,7 @@ function week(){
  </div></div>`;}
 function grow(){
  const g=[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']];
- return `<section class="hero" style="min-height:190px"><canvas data-swarm></canvas><h1>What you’re<br>growing toward.</h1><p>Your goals, in your words. Latent suggests; you decide.</p></section>
+ return `<section class="hero" style="min-height:190px"><canvas data-swarm></canvas><h1>What you’re<br>working toward.</h1><p>Your goals, in your words. Latent suggests; you decide.</p></section>
  <div class="wrap"><div class="col"><div class="blk l"><h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename.</p>
   ${g.map(([a,b,pc,c])=>`<div class="goal"><div class="ring" style="background:conic-gradient(var(--pur) ${pc*3.6}deg,${c} 0)"><span style="background:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center">${pc}%</span></div><div style="flex:1;min-width:0"><input value="${a}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${b}</div></div></div>`).join('')}
   <div class="act"><button class="chip">${I.plus}Add a goal</button></div></div></div>
@@ -186,7 +186,7 @@ function rec(){
  <div class="wrap" style="grid-template-columns:minmax(0,1fr)"><div class="blk l" style="max-width:760px"><h2>Likely the same task</h2><p class="sub" style="color:#4a3f78">Merging is local and you can undo it.</p>
  ${pairs.map(([a,at,b,bt,why],i)=>S.merged[i]?`<div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:10px"><span class="dot"></span><div style="flex:1">Merged into one: <b>${a}</b></div><button class="chip" data-undo="${i}">Undo</button></div>`:`<div class="card" style="margin-bottom:10px"><div class="pair"><div class="card" style="background:#f6f3ea">${a}<small>Bee to-do · ${at}</small></div><div class="card" style="background:#f6f3ea">${b}<small>Bee to-do · ${bt}</small></div></div><p class="fine">${why}</p><div class="act" style="margin-top:8px"><button class="chip on" data-merge="${i}">Merge into one</button><button class="chip">Keep both</button></div></div>`).join('')}
  <p class="fine" style="color:#4a3f78">2 more possible duplicates below.</p></div></div>`;}
-const labels=[['week','Week'],['grow','Grow'],['rec','Reconcile']];
+const labels=[['week','Week'],['grow','Goals'],['rec','Reconcile']];
 function render(){
  document.querySelectorAll('[data-root]').forEach(r=>{
   const st=r.querySelector('.main')?.scrollTop||0;
@@ -202,7 +202,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button,[data-pat
  else if('save'in d){toast('Saved on this device · nothing sent');return}
  else if(d.merge!==undefined){S.merged[d.merge]=true}else if(d.undo!==undefined){delete S.merged[d.undo]}else return;render()});
 /* ASCII bees */
-const bees=[...Array(7)].map((_,i)=>({x:.1+.13*i,y:.25+((i*37)%50)/100,rx:.05+.02*(i%3),ry:.08+.02*(i%2),s:.7+.15*(i%4),p:i*1.9}));
+const bees=[...Array(8)].map((_,i)=>({x:.1+.13*i,y:.25+((i*37)%50)/100,rx:.05+.02*(i%3),ry:.08+.02*(i%2),s:.7+.15*(i%4),p:i*1.9}));
 function swarm(t){
  document.querySelectorAll('canvas[data-swarm]').forEach(c=>{
   const r=c.getBoundingClientRect();if(!r.width)return;const dpr=Math.min(devicePixelRatio||1,2),w=r.width,h=r.height;
@@ -211,11 +211,11 @@ function swarm(t){
   g.font='600 13px ui-monospace,Menlo,monospace';g.textBaseline='middle';g.textAlign='center';
   // hex honeycomb as dots
   g.fillStyle='#4b3f0f14';for(let y=0,row=0;y<h;y+=17,row++)for(let x=(row%2)*10;x<w;x+=20)g.fillText('·',x,y);
-  const N=w<500;bees.forEach((b,i)=>{if(i>(N?1:2))return;const X=aa=>N?w*(.66+b.x*.2)+Math.sin(aa)*w*.05:w*(.5+b.x*.42)+Math.sin(aa)*w*b.rx*1.2,Y=aa=>N?h*(.8+b.y*.1)+Math.cos(aa*1.3)*h*.03:h*(.18+b.y*.7)+Math.cos(aa*1.3)*h*b.ry*.8;const a=t/900*b.s+b.p,x=X(a),y=Y(a);
+  const N=w<500;bees.forEach((b,i)=>{if(i>(N?4:7))return;const X=aa=>N?w*(.1+b.x*.8)+Math.sin(aa)*w*.05:w*(.08+b.x*.82)+Math.sin(aa)*w*b.rx*1.2,Y=aa=>N?h*(.12+b.y*.76)+Math.cos(aa*1.3)*h*.04:h*(.18+b.y*.7)+Math.cos(aa*1.3)*h*b.ry*.8;const a=t/900*b.s+b.p,x=X(a),y=Y(a);
    const flap=Math.floor(t/110+i)%2;
    // trail
    for(let k=1;k<=4;k++){const aa=a-k*.18;g.fillStyle=`rgba(75,63,15,${.16-k*.03})`;g.fillText('·',X(aa),Y(aa))}
-   g.fillStyle='#2a24062e';g.font='500 12px ui-monospace,Menlo,monospace';
+   g.fillStyle='#2a240680';g.font='600 14px ui-monospace,Menlo,monospace';
    g.fillText(flap?'\\(◉)/':'/(◉)\\',x,y)});
  });
 }
