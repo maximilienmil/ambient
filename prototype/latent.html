@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Latent</title>
+<style>
+  :root {
+    --paper: #f4f1e9;
+    --paper-2: #faf8f2;
+    --ink: #25271e;
+    --ink-2: #4a4c43;
+    --muted: #797a70;
+    --line: #e6e1d6;
+    --line-2: #dcd8ce;
+    --olive: #416c51;
+    --olive-soft: #edf1df;
+    --olive-deep: #344e3c;
+    --lilac: #c7b4dd;
+    --lilac-soft: #eee7f3;
+    --lilac-deep: #8b78a3;
+    --gold: #efcf69;
+    --gold-soft: #f7ebbf;
+    --gold-deep: #aa8835;
+    --rose: #c69a8e;
+    --rose-soft: #f1e1dc;
+    --dark: #20271f;
+    --radius: 18px;
+    --radius-lg: 24px;
+    --shadow-card: 0 2px 14px rgba(40,32,16,.06), 0 1px 3px rgba(40,32,16,.04);
+    --shadow-card-lg: 0 18px 60px rgba(40,32,16,.10), 0 2px 6px rgba(40,32,16,.04);
+    --serif: "New York", "Iowan Old Style", "Charter", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+  .phone {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px 12px;
+    background: rgba(250,248,242,.78);
+    backdrop-filter: saturate(1.6) blur(20px);
+    -webkit-backdrop-filter: saturate(1.6) blur(20px);
+    border-bottom: 1px solid rgba(230,225,214,.6);
+  }
+  .mark {
+    width: 30px; height: 30px; border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 28%, #fffbe5 0 6%, transparent 11%),
+      radial-gradient(circle at 50% 50%, #d4a574 0 18%, #8b6f3a 22%, #5c4928 38%, transparent 42%),
+      radial-gradient(circle at 65% 65%, #c89a3e 0 10%, transparent 14%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.4), 0 1px 4px rgba(0,0,0,.12);
+    position: relative;
+  }
+  .mark::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: linear-gradient(140deg, transparent 50%, rgba(0,0,0,.12) 100%);
+  }
+  .nav-brand { font-weight: 600; letter-spacing: -.015em; font-size: 16px; padding-left: 9px; }
+  .nav-tabs { display: flex; gap: 2px; padding: 3px; background: rgba(0,0,0,.04); border-radius: 100px; }
+  .nav-tab { padding: 6px 12px; border-radius: 100px; font-size: 13px; color: var(--muted); font-weight: 500; transition: all .18s ease; }
+  .nav-tab.active { background: var(--ink); color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .sync-pill { display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 7px; border-radius: 100px; background: rgba(255,255,255,.7); border: 1px solid var(--line); font-size: 11px; color: var(--ink-2); }
+  .sync-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #67b789; box-shadow: 0 0 0 3px rgba(103,183,137,.18); }
+
+  /* ============ SCREEN ============ */
+  .screen { display: none; padding: 6px 18px 110px; }
+  .screen.active { display: block; }
+
+  /* ============ HERO (faded bee photo background) ============ */
+  .hero {
+    position: relative;
+    margin: 16px 0 18px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    padding: 22px 22px 24px;
+    background: linear-gradient(125deg, #f5e6c8 0%, #ecdfd0 48%, #e3d4e3 100%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 12px 36px rgba(80,60,30,.10);
+    isolation: isolate;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: url("assets/bee-macro.jpg") right center / cover no-repeat;
+    opacity: 0.10;
+    filter: blur(2px) saturate(.8);
+    z-index: 0;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 30%, transparent 0, rgba(245,230,200,.4) 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    opacity: .14;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2);
+    font-weight: 600;
+  }
+  .hero-eyebrow .pip { width: 5px; height: 5px; border-radius: 50%; background: var(--olive); box-shadow: 0 0 0 2px rgba(65,108,81,.2); }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.02;
+    letter-spacing: -.025em;
+    margin: 14px 0 10px;
+    max-width: 78%;
+    color: var(--ink);
+  }
+  .hero-lede {
+    font-size: 14px;
+    color: var(--ink-2);
+    max-width: 78%;
+    margin: 0 0 14px;
+  }
+  .hero-stat {
+    display: flex; align-items: baseline; gap: 6px;
+    margin-top: 10px;
+  }
+  .hero-stat strong {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 400;
+    letter-spacing: -.03em;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .hero-stat span { font-size: 14px; color: var(--ink-2); }
+  .hero-meta {
+    display: flex; gap: 16px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .hero-meta b { color: var(--ink); font-weight: 600; }
+
+  /* ============ SECTION ============ */
+  .section { margin: 22px 0 4px; }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 0 2px 10px;
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: -.02em;
+    margin: 0;
+  }
+  .section-head .meta { font-size: 12px; color: var(--muted); }
+
+  /* ============ COMPARISON (Horizon A/B/C) ============ */
+  .compare { display: grid; gap: 10px; }
+  .path {
+    position: relative;
+    padding: 16px 16px 14px;
+    border-radius: var(--radius);
+    background: rgba(255,255,255,.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-card);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .path:active { transform: scale(.985); }
+  .path.selected {
+    background: linear-gradient(140deg, rgba(237,241,223,.85), rgba(238,231,243,.85));
+    border-color: var(--olive);
+    box-shadow: 0 8px 28px rgba(65,108,81,.16), 0 0 0 1px var(--olive);
+  }
+  .path-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: 100px;
+    font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    background: rgba(0,0,0,.06); color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .path.alt .path-tag { background: var(--lilac-soft); color: var(--lilac-deep); }
+  .path.alt.selected .path-tag { background: var(--lilac); color: #fff; }
+  .path.protect .path-tag { background: var(--olive-soft); color: var(--olive-deep); }
+  .path.protect.selected .path-tag { background: var(--olive); color: #fff; }
+  .path h3 {
+    font-family: var(--serif);
+    font-size: 19px; font-weight: 400; line-height: 1.18;
+    letter-spacing: -.015em;
+    margin: 0 0 6px;
+  }
+  .path p {
+    font-size: 13px; color: var(--ink-2); margin: 0 0 12px; line-height: 1.45;
+  }
+  .path-stat {
+    display: flex; gap: 18px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .path-stat b { color: var(--ink); font-weight: 600; }
+  .path-stat .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 100px;
+    background: var(--rose-soft); color: #8a4836; font-size: 11px; font-weight: 600;
+    margin-left: 4px;
+  }
+
+  /* ============ TIMELINE ============ */
+  .timeline {
+    position: relative;
+    background: rgba(255,255,255,.6);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 14px 18px;
+    margin-top: 12px;
+  }
+  .tl-row { display: grid; grid-template-columns: 48px 1fr; gap: 10px; align-items: center; margin-bottom: 9px; }
+  .tl-day { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .tl-track { position: relative; height: 26px; background: rgba(0,0,0,.04); border-radius: 6px; overflow: hidden; }
+  .tl-block {
+    position: absolute; top: 3px; bottom: 3px; border-radius: 5px;
+    background: var(--olive-soft); border: 1px solid var(--olive);
+    display: flex; align-items: center; padding: 0 8px;
+    font-size: 10px; color: var(--olive-deep); font-weight: 600;
+    overflow: hidden; white-space: nowrap;
+  }
+  .tl-block.alt { background: var(--lilac-soft); border-color: var(--lilac); color: var(--lilac-deep); }
+  .tl-block.over { background: var(--rose-soft); border-color: var(--rose); color: #8a4836; }
+  .tl-axis {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+    margin: 4px 0 0 58px;
+    font-size: 10px; color: var(--muted);
+  }
+  .tl-axis span { text-align: right; }
+  .tl-axis span:first-child { text-align: left; }
+
+  /* ============ ROWS ============ */
+  .row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: 0; }
+  .row-left { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+  .row-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--olive-soft);
+    display: grid; place-items: center;
+    font-size: 14px; color: var(--olive-deep);
+    flex: none;
+  }
+  .row-icon.warn { background: var(--rose-soft); color: #8a4836; }
+  .row-icon.done { background: var(--lilac-soft); color: var(--lilac-deep); }
+  .row-main { min-width: 0; }
+  .row-main strong { display: block; font-size: 14px; font-weight: 600; letter-spacing: -.005em; }
+  .row-main small { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .row-tag {
+    font-size: 11px; padding: 3px 8px; border-radius: 100px;
+    background: rgba(0,0,0,.05); color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .row-tag.retired { background: var(--olive-soft); color: var(--olive-deep); }
+  .row-tag.pending { background: var(--lilac-soft); color: var(--lilac-deep); }
+
+  /* ============ ONE QUESTION ============ */
+  .one {
+    margin: 22px 0 0;
+    padding: 18px 18px 16px;
+    border-radius: var(--radius);
+    background: linear-gradient(140deg, var(--olive), var(--olive-deep));
+    color: #f4f2e5;
+    box-shadow: 0 12px 32px rgba(65,108,81,.18);
+  }
+  .one-eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .8; font-weight: 600; }
+  .one h3 { font-family: var(--serif); font-size: 22px; font-weight: 400; line-height: 1.18; margin: 8px 0 12px; letter-spacing: -.02em; }
+  .one p { font-size: 13px; opacity: .82; margin: 0 0 14px; }
+  .one-actions { display: flex; gap: 10px; }
+  .one-actions button {
+    flex: 1; padding: 11px 14px; border-radius: 100px;
+    background: rgba(255,255,255,.12); color: #fff;
+    font-weight: 600; font-size: 13px;
+    backdrop-filter: blur(8px);
+  }
+  .one-actions button.primary { background: #fff; color: var(--olive-deep); }
+  .one-actions button:active { transform: scale(.97); }
+
+  /* ============ GROW — YEAR ============ */
+  .year {
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px;
+    margin-top: 10px;
+  }
+  .mo {
+    aspect-ratio: 1 / 1.2; border-radius: 6px;
+    background: rgba(0,0,0,.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .mo::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, var(--olive), transparent 60%);
+    opacity: var(--m, 0);
+  }
+  .mo-label {
+    position: absolute; bottom: 3px; left: 4px; right: 4px;
+    font-size: 9px; color: var(--muted); letter-spacing: .04em;
+  }
+  .goal {
+    background: rgba(255,255,255,.65); backdrop-filter: blur(14px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .goal-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+  .goal-head strong { font-size: 14px; font-weight: 600; }
+  .goal-head .edit { font-size: 11px; color: var(--olive); font-weight: 600; }
+  .goal p { font-size: 13px; color: var(--ink-2); margin: 0 0 10px; }
+  .goal-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; }
+  .goal-meta b { color: var(--ink); font-weight: 600; }
+
+  .notice {
+    background: var(--lilac-soft); border: 1px solid rgba(199,180,221,.4);
+    border-radius: var(--radius); padding: 13px 16px; margin-top: 12px;
+  }
+  .notice-eyebrow { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--lilac-deep); font-weight: 700; margin-bottom: 4px; }
+  .notice p { font-size: 13px; color: var(--ink); margin: 0 0 8px; line-height: 1.4; }
+  .notice .src { font-size: 11px; color: var(--lilac-deep); }
+  .notice .actions { display: flex; gap: 10px; margin-top: 10px; }
+  .notice .actions button {
+    font-size: 12px; padding: 5px 11px; border-radius: 100px;
+    background: rgba(255,255,255,.7); color: var(--ink); font-weight: 500;
+  }
+  .notice .actions button.confirm { background: var(--lilac); color: #fff; }
+
+  /* ============ RECONCILE ============ */
+  .pile {
+    display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px;
+  }
+  .pile strong { font-family: var(--serif); font-size: 32px; font-weight: 400; letter-spacing: -.025em; line-height: 1; }
+  .pile .rest { font-size: 13px; color: var(--muted); }
+
+  .evidence {
+    background: rgba(255,255,255,.6); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px; margin-top: 10px;
+  }
+  .evidence-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .evidence-head .pin { width: 16px; height: 16px; border-radius: 50%; background: var(--olive-soft); display: grid; place-items: center; font-size: 9px; color: var(--olive-deep); }
+  .evidence-head .tag { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--olive-deep); font-weight: 700; }
+  .evidence-quote {
+    font-family: var(--serif); font-style: italic; font-size: 15px; line-height: 1.4;
+    color: var(--ink); margin: 0 0 10px;
+    padding-left: 10px; border-left: 2px solid var(--olive-soft);
+  }
+  .evidence-meta { font-size: 11px; color: var(--muted); display: flex; gap: 14px; }
+  .evidence-meta b { color: var(--ink-2); font-weight: 600; }
+
+  .filter-row { display: flex; gap: 8px; margin: 14px 0 4px; }
+  .filter-row button {
+    flex: 1; padding: 7px 0; font-size: 12px;
+    border-radius: 100px; background: rgba(0,0,0,.05); color: var(--ink-2); font-weight: 500;
+  }
+  .filter-row button.active { background: var(--ink); color: #fff; }
+
+  /* ============ KEYBOARD ============ */
+  :focus-visible { outline: 2px solid var(--lilac-deep); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ============== NAV ============== -->
+  <nav class="nav">
+    <div style="display:flex;align-items:center;">
+      <div class="mark"></div>
+      <div class="nav-brand">Latent</div>
+    </div>
+    <div class="nav-tabs" role="tablist">
+      <button class="nav-tab active" data-tab="horizon">Horizon</button>
+      <button class="nav-tab" data-tab="grow">Grow</button>
+      <button class="nav-tab" data-tab="reconcile">Reconcile</button>
+    </div>
+    <div class="nav-right">
+      <div class="sync-pill"><span class="dot"></span>Bee</div>
+    </div>
+  </nav>
+
+  <!-- ============== HORIZON ============== -->
+  <section class="screen active" id="horizon">
+    <div class="hero">
+      <div class="hero-eyebrow"><span class="pip"></span> Friday Oct 24 · 3 days</div>
+      <h1>Ship the launch on time, or finish the deck by Thursday.</h1>
+      <p class="hero-lede">Both fit if you keep Friday afternoon clear. One of them has to give.</p>
+      <div class="hero-stat"><strong>4.5h</strong><span>available before Friday EOD</span></div>
+      <div class="hero-meta">
+        <span><b>2</b> open promises</span>
+        <span><b>0</b> after Friday</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>Pick a path</h2>
+        <span class="meta">Both fit. Choose one.</span>
+      </div>
+
+      <div class="compare">
+        <button class="path protect selected" data-path="protect">
+          <span class="path-tag">Protect the launch</span>
+          <h3>Move the deck to next week</h3>
+          <p>Ask Alex to push the presentation to Monday. You keep Friday afternoon free for the launch push.</p>
+          <div class="path-stat">
+            <span><b>Alex</b> needs to agree</span>
+            <span>Reversible</span>
+          </div>
+        </button>
+
+        <button class="path alt" data-path="keep">
+          <span class="path-tag">Keep every promise</span>
+          <h3>Finish the deck Thursday</h3>
+          <p>Both go. You'll be working Thursday afternoon and need Friday morning quiet to recover.</p>
+          <div class="path-stat">
+            <span><b>4h</b> Thursday <span class="pill">after 6pm</span></span>
+            <span>No buffer</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>The week, if you choose</h2>
+        <span class="meta" id="week-tag">Protect the launch</span>
+      </div>
+      <div class="timeline">
+        <div class="tl-row"><div class="tl-day">Mon</div><div class="tl-track"><div class="tl-block" style="left:0;width:55%">Work · 5h</div></div></div>
+        <div class="tl-row"><div class="tl-day">Tue</div><div class="tl-track"><div class="tl-block" style="left:0;width:42%">Work · 4h</div></div></div>
+        <div class="tl-row"><div class="tl-day">Wed</div><div class="tl-track"><div class="tl-block" style="left:0;width:60%">Work · 6h</div></div></div>
+        <div class="tl-row"><div class="tl-day">Thu</div><div class="tl-track"><div class="tl-block alt" style="left:8%;width:48%">Deck · 4h</div></div></div>
+        <div class="tl-row"><div class="tl-day">Fri</div><div class="tl-track"><div class="tl-block" style="left:0;width:30%">Launch · 3h</div></div></div>
+        <div class="tl-axis"><span>9a</span><span>1p</span><span>6p</span><span>9p</span></div>
+      </div>
+    </div>
+
+    <div class="one">
+      <div class="one-eyebrow">One thing to ask today</div>
+      <h3>"Alex, can the deck move to Monday?"</h3>
+      <p>Draft is ready. Tap to review the message and proposed times before sending.</p>
+      <div class="one-actions">
+        <button>Edit</button>
+        <button class="primary">Review and send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== GROW ============== -->
+  <section class="screen" id="grow">
+    <div class="hero">
+      <div class="hero-eyebrow"><span class="pip"></span> Past 12 months</div>
+      <h1>What I've been working toward, in your words.</h1>
+      <p class="hero-lede">You said these things. Edit if they no longer fit, or pause if you're not ready.</p>
+      <div class="hero-stat"><strong>4</strong><span>goals · 2 paused</span></div>
+      <div class="hero-meta">
+        <span><b>421</b> facts captured</span>
+        <span><b>248</b> need your confirmation</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>Your year at a glance</h2>
+        <span class="meta">Darker = more said it mattered</span>
+      </div>
+      <div class="year">
+        <div class="mo" style="--m:.15"><div class="mo-label">Nov</div></div>
+        <div class="mo" style="--m:.25"><div class="mo-label">Dec</div></div>
+        <div class="mo" style="--m:.45"><div class="mo-label">Jan</div></div>
+        <div class="mo" style="--m:.55"><div class="mo-label">Feb</div></div>
+        <div class="mo" style="--m:.65"><div class="mo-label">Mar</div></div>
+        <div class="mo" style="--m:.75"><div class="mo-label">Apr</div></div>
+        <div class="mo" style="--m:.7"><div class="mo-label">May</div></div>
+        <div class="mo" style="--m:.6"><div class="mo-label">Jun</div></div>
+        <div class="mo" style="--m:.55"><div class="mo-label">Jul</div></div>
+        <div class="mo" style="--m:.7"><div class="mo-label">Aug</div></div>
+        <div class="mo" style="--m:.85"><div class="mo-label">Sep</div></div>
+        <div class="mo" style="--m:.95"><div class="mo-label">Oct</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>What you said mattered</h2>
+        <span class="meta">Stated from your conversations</span>
+      </div>
+
+      <div class="goal">
+        <div class="goal-head">
+          <strong>Build a real product, not a slide deck</strong>
+          <button class="edit">Edit</button>
+        </div>
+        <p>You said this twelve times between June and October. Most recently after the hackathon spec.</p>
+        <div class="goal-meta">
+          <span><b>12</b> mentions</span>
+          <span>Last: <b>Oct 14</b></span>
+        </div>
+      </div>
+
+      <div class="goal">
+        <div class="goal-head">
+          <strong>Move only backwards</strong>
+          <button class="edit">Edit</button>
+        </div>
+        <p>You said this once on Sept 10. Paused — you haven't returned to it.</p>
+        <div class="goal-meta">
+          <span><b>1</b> mention</span>
+          <span>Last: <b>Sept 10</b></span>
+          <span style="color:var(--lilac-deep);font-weight:600;">Paused</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>Something I noticed</h2>
+        <span class="meta">Confirm, edit, or reject</span>
+      </div>
+
+      <div class="notice">
+        <div class="notice-eyebrow">Pattern · 8 conversations</div>
+        <p>You say "I'll send the file" the most to <b>Alex</b>, then to <b>Priya</b>. Both are about reviews. Neither one has closed a loop since August.</p>
+        <div class="src">Source: 8 Bee conversations · Aug 4 – Oct 16</div>
+        <div class="actions">
+          <button>Edit</button>
+          <button>Reject</button>
+          <button class="confirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== RECONCILE ============== -->
+  <section class="screen" id="reconcile">
+    <div class="hero">
+      <div class="hero-eyebrow"><span class="pip"></span> 130 open · 7 months old</div>
+      <h1>10 retired, 120 still pending.</h1>
+      <p class="hero-lede">Each retirement is a receipt. Nothing closes on its own.</p>
+      <div class="hero-stat"><strong>10</strong><span>confidently retired · 7.7%</span></div>
+      <div class="hero-meta">
+        <span><b>248</b> facts pending evidence</span>
+        <span><b>0</b> closed without receipt</span>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <button class="active">All 130</button>
+      <button>Retired 10</button>
+      <button>Pending 120</button>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>Retired · 10</h2>
+        <span class="meta">All exact duplicates</span>
+      </div>
+
+      <div class="evidence">
+        <div class="evidence-head">
+          <div class="pin">✓</div>
+          <div class="tag">Retired · duplicate</div>
+        </div>
+        <p class="evidence-quote">"Public Voice Fellowship"</p>
+        <div class="evidence-meta">
+          <span>Kept: <b>id 26606965</b></span>
+          <span>Match: <b>exact text</b></span>
+          <span>Confidence: <b>0.99</b></span>
+        </div>
+      </div>
+
+      <div class="evidence">
+        <div class="evidence-head">
+          <div class="pin">✓</div>
+          <div class="tag">Retired · duplicate</div>
+        </div>
+        <p class="evidence-quote">"Send notes to Disability Services"</p>
+        <div class="evidence-meta">
+          <span>Kept: <b>id 26606964</b></span>
+          <span>Match: <b>exact text</b></span>
+          <span>Confidence: <b>0.99</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>Pending · 120</h2>
+        <span class="meta">Held without evidence</span>
+      </div>
+
+      <div class="row">
+        <div class="row-left">
+          <div class="row-icon warn">·</div>
+          <div class="row-main">
+            <strong>Bring to DC: purple NYU baseball cap…</strong>
+            <small>Created Mar 7 · no completion evidence</small>
+          </div>
+        </div>
+        <div class="row-tag pending">Pending</div>
+      </div>
+
+      <div class="row">
+        <div class="row-left">
+          <div class="row-icon warn">·</div>
+          <div class="row-main">
+            <strong>Incorporate cross-functional comms planning…</strong>
+            <small>Created Feb 28 · no completion evidence</small>
+          </div>
+        </div>
+        <div class="row-tag pending">Pending</div>
+      </div>
+
+      <div class="row">
+        <div class="row-left">
+          <div class="row-icon warn">·</div>
+          <div class="row-main">
+            <strong>Consider neuroscience research studies…</strong>
+            <small>Created Feb 27 · no completion evidence</small>
+          </div>
+        </div>
+        <div class="row-tag pending">Pending</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2>One thing to check</h2>
+        <span class="meta">Reverse any retirement</span>
+      </div>
+
+      <div class="evidence">
+        <div class="evidence-head">
+          <div class="pin">?</div>
+          <div class="tag">Confirm or undo</div>
+        </div>
+        <p class="evidence-quote">All 10 retirements are exact text duplicates. If any feel wrong, undo restores the row.</p>
+        <div class="one-actions" style="margin-top:10px;">
+          <button>Undo last</button>
+          <button class="primary" style="background:var(--olive);color:#fff;">Accept all 10</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.nav-tab');
+  const screens = document.querySelectorAll('.screen');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    screens.forEach(s => s.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.tab).classList.add('active');
+  }));
+
+  // Path selection on Horizon
+  const paths = document.querySelectorAll('.path');
+  const weekTag = document.getElementById('week-tag');
+  paths.forEach(p => p.addEventListener('click', () => {
+    paths.forEach(x => x.classList.remove('selected'));
+    p.classList.add('selected');
+    weekTag.textContent = p.dataset.path === 'protect' ? 'Protect the launch' : 'Keep every promise';
+  }));
+
+  // Reconcile filter row
+  const filters = document.querySelectorAll('.filter-row button');
+  filters.forEach(f => f.addEventListener('click', () => {
+    filters.forEach(x => x.classList.remove('active'));
+    f.classList.add('active');
+  }));
+</script>
+</body>
+</html>
