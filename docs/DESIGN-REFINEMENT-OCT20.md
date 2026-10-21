@@ -37,7 +37,7 @@ server; the final preview loads the landscape and navigation SVGs successfully.
 Primary guidance reviewed: [Impeccable](https://github.com/pbakaus/impeccable),
 [Humanizer](https://github.com/blader/humanizer), and
 [unslop](https://github.com/mshumer/unslop). The applied rules are documented in
-[DESIGN.md](../DESIGN.md). No Impeccable detector or Unslop generation run is
+[DESIGN.md](DESIGN.md). No Impeccable detector or Unslop generation run is
 claimed, and no global skill configuration was installed.
 
 Browser inspection covered desktop and 390px mobile, option changes, normal

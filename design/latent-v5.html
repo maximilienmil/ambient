@@ -321,7 +321,7 @@ function live(){
  const q='Sure, I’ll help with the deck by Thursday.',n=S.listen?Math.min(q.length,Math.floor(S.listen)):0;
  return `<div class="blk o live">${lbl('ink',S.listen?'Hearing a new promise':'Listening through Bee')}
   
-  ${S.listen?`<div class="said"><span class="who me">You said it</span><span class="typed">“${q.slice(0,n)}<b class="caret"></b>”</span></div><p>Speaker matched to your voice. Checking it against your calendar.</p>`
+  ${S.listen?`<div class="said"><span class="who me">You said it</span><span class="typed">“${q.slice(0,n)}<b class="caret"></b>”</span></div><p>Attributed to you in the captured event. Checking it against your calendar.</p>`
   :`<p>Nothing new yet. For the demo, replay the promise Bee captured yesterday at 4:12 pm.</p><div class="act"><button class="chip" data-replay>${I.mic||''}Replay captured promise</button></div>`}</div>`}
 function decide(){
  const p=P[S.path];

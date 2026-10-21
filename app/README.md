@@ -102,7 +102,7 @@ npm run icons                # regenerate the PWA icons
 
 ## Horizon capacity API
 
-The October 19 design direction is recorded in [SCOPE.md](../SCOPE.md).
+The October 19 design direction is recorded in [SCOPE.md](../docs/SCOPE.md).
 The production UI is awaiting design review. Its new backend is available now:
 
 - `GET /api/horizon/demo`: computed synthetic launch scenario, available only

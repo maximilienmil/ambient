@@ -24,3 +24,6 @@ app/public/fonts/fonetika-*.woff2
 dist/
 __pycache__/
 .venv/
+
+# Bee check-ins quote real transcripts; regenerate with npm run audit-sample.
+app/audit-sample.json
