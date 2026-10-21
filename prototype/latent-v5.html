@@ -163,13 +163,6 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
 .rule{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.rule>div{border-radius:16px;padding:14px;font-size:14px}.rule b{display:block;margin-bottom:4px;font-size:15px}
 .count{font:400 64px/1 var(--serif);position:relative}.count s{opacity:.35;font-size:40px;margin-right:10px}
 
-/* Gentler-style range bar */
-.rbar{position:relative;height:66px;margin:26px 2px 4px}
-.rbar .tr{position:absolute;left:0;right:0;top:22px;height:24px;background:linear-gradient(90deg,#d7ebf8,#86b9e6 18%,#f3d66d 42%,#f0892a 62%,#d4423a 78%,#c6b3f3);clip-path:polygon(0 38%,100% 0,100% 100%,0 62%)}
-.rbar .us{position:absolute;top:12px;height:44px;left:22%;width:30%;background:repeating-linear-gradient(135deg,#0000 0 5px,#3b2f0a26 5px 6px);border-inline:1px dashed #3b2f0a40}
-.rbar .mk{position:absolute;top:19px;width:30px;height:30px;border-radius:50%;border:5px solid #fff;background:#0000;box-shadow:0 2px 10px #0004,inset 0 0 0 1px #0002;transform:translateX(-50%);transition:left .7s cubic-bezier(.2,.8,.2,1)}
-.rbar .tg{position:absolute;top:-10px;transform:translateX(-50%);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:4px 9px;border-radius:99px;white-space:nowrap;transition:left .7s cubic-bezier(.2,.8,.2,1)}
-.rbar .ul{position:absolute;top:58px;left:22%;width:30%;text-align:center;font-size:10px;letter-spacing:.08em;color:#6a6650;font-weight:600}
 /* inline-icon sentence */
 .ii{display:inline-flex;align-items:center;gap:4px;font-weight:600;color:var(--ink);white-space:nowrap}.ii svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* daily question faces */
@@ -262,7 +255,6 @@ const P={
   go:'Save scope and hold time',steps:['Saving the smaller scope','Held Tuesday 9 to 12 for Jordan','Held Thursday 9 to 12']}
 };
 
-function rbar(pos,label,ok){return `<div class="rbar"><div class="tr"></div><div class="us"></div><div class="mk" style="left:${pos}%"></div><div class="tg" style="left:${pos}%;background:${ok?'#2fa66a':'#c8372b'}">${label}</div><div class="ul">YOUR USUAL WEEK</div></div>`}
 const ico={merge:'<svg viewBox="0 0 24 24"><path d="M7 4v6a5 5 0 0 0 5 5h5M17 15l-3-3M17 15l-3 3"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>',cal:'<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',fact:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5M12 16v.5"/></svg>'};
 const FACES=[['Drained','#f6a58a,#ef7b62','M8 16c2-2 6-2 8 0'],['Stretched','#d9c8f7,#b39be8','M8 15.5c2-1.2 6-1.2 8 0'],['Steady','#b9d4f6,#7fa9ea','M8 15h8'],['Good','#fbe58a,#f2c94a','M8 14c2 2 6 2 8 0'],['Light','#bfeccb,#6fcf8f','M7.5 13.5c2 3 7 3 9 0']];
 const ev=l=>l.map(([c,t])=>`<div class="ev ${c}">${t}</div>`).join('');
@@ -287,11 +279,11 @@ function horizon(){
   <p>Overnight the hive <span class="ii">${ico.merge}merged 4 duplicates</span>, <span class="ii">${ico.check}closed 2 done to-dos</span>, <span class="ii">${ico.fact}confirmed a fact</span> and <span class="ii">${ico.cal}held time for a call</span>. ${counts().need==1?'One decision is':counts().need+' decisions are'} yours.</p></div>${ring()}</div></section>
  <div class="wrap"><div class="col">
   ${S.sent?'':`<div class="blk y"><h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
-   <div class="stats"><div class="stat"><b>6h</b><span>the release still needs</span></div><div class="stat"><b>6h</b><span>open focus time</span></div><div class="stat neg"><b>−3h</b><span>Jordan’s favor takes</span></div></div>${rbar(80,"ABOVE YOUR USUAL RANGE",0)}<p class="fine" style="color:#4b4825;margin-top:4px">9 hours of work for 6 open. Your usual week carries 4 to 6.</p></div>`}
+   <div class="stats"><div class="stat"><b>6h</b><span>the release still needs</span></div><div class="stat"><b>6h</b><span>open focus time</span></div><div class="stat neg"><b>−3h</b><span>Jordan’s favor takes</span></div></div></div>`}
   <div class="blk l"><h2>Fork the week</h2><p class="sub" style="color:#4a3f78">Three ways this week can go. Pick one to see the plan.</p>
    ${fork()}
    ${Object.entries(P).map(([k,x])=>`<button class="opt ${k=='C'?'c':''}" aria-pressed="${S.path==k}" data-path="${k}"><span class="rad">${k}</span><div><b>${x.n}</b><span>${x.s}</span><em class="tag" style="font-style:normal">${x.tag}</em></div></button>`).join('')}
-   <div class="blk w" style="margin-top:14px;padding:16px"><div style="font-weight:600;margin-bottom:10px">Your week with ${S.path}</div>${S.path=="B"?rbar(48,"BACK IN RANGE, SHIPS MONDAY",1):rbar(44,"BACK IN YOUR USUAL RANGE",1)}<div style="height:10px"></div>
+   <div class="blk w" style="margin-top:14px;padding:16px"><div style="font-weight:600;margin-bottom:10px">Your week with ${S.path}</div>
    <div class="week">${['Mon','Tue','Wed','Thu','Fri','N'].map(d=>`<div class="day ${d=='N'?'hide-m':''}"><b>${d=='N'?'Next Mon':d}</b>${ev(p.d[d]||[])}</div>`).join('')}</div>
    <div class="leg"><span><i style="background:var(--yel)"></i>Release</span><span><i style="background:var(--lil)"></i>Jordan’s deck</span><span><i style="background:#e5e1d4"></i>Meetings</span></div></div></div>
  </div><div class="col">
