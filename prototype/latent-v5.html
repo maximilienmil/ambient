@@ -174,7 +174,13 @@ h2{font:400 32px/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
 /* finance-style dark toggle + wave */
 .seg2 button[aria-pressed=true]{background:var(--ink)!important;color:#fff}
 .wave{width:100%;display:block;margin-top:12px}
-@container (max-width:760px){
+
+/* section labels + layout */
+.lbl{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.09em;color:#5a5640;margin-bottom:8px;text-transform:uppercase}.lbl i{width:8px;height:8px;border-radius:50%;flex:none}
+.o .lbl{color:#cbc7a8}.l .lbl{color:#4a3f78}
+.span{grid-column:1/-1}.sticky{position:sticky;top:18px}
+.note{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mut);padding:4px 2px}
+@container (max-width:760px){.sticky{position:static}
  .hero .row{flex-direction:column;align-items:stretch;gap:0}.ringcard{margin-top:16px;padding:14px}.ring{width:122px;height:122px}.ring .ctr b{font-size:38px}.legend{min-width:0;flex:1}
  .sync{position:relative;top:auto;right:auto;margin-bottom:12px}.rule{grid-template-columns:1fr}.count{font-size:48px}
 }
@@ -231,7 +237,7 @@ function ring(){
 function sync(){return `<div class="sync glass"><span class="band"></span><span class="live"></span>Bee synced 6:58 am</div>`}
 function feed(){
  const list=items().filter(i=>i.k==S.filter);
- return `<div class="blk w" id="feed"><h2>${S.filter=='done'?'What the hive did':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Latent remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
+ return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'What the hive did':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Latent remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
  ${list.map(i=>`<button class="item" data-receipt="${i.id}"><span class="sd" style="background:${COL[i.k]}"></span><div style="min-width:0"><div class="t">${i.t}</div><div class="s"><span class="who ${i.who[0]}">${i.who[1]}</span>${i.src}</div></div><span class="go2">Receipt ›</span></button>`).join('')}
  ${S.filter=='done'?`<p class="more">and 18 more like these: duplicates merged, done items closed.</p>`:''}</div>`}
 const P={
@@ -257,6 +263,8 @@ const P={
 
 const ico={merge:'<svg viewBox="0 0 24 24"><path d="M7 4v6a5 5 0 0 0 5 5h5M17 15l-3-3M17 15l-3 3"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>',cal:'<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',fact:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5M12 16v.5"/></svg>'};
 const FACES=[['Drained','#f6a58a,#ef7b62','M8 16c2-2 6-2 8 0'],['Stretched','#d9c8f7,#b39be8','M8 15.5c2-1.2 6-1.2 8 0'],['Steady','#b9d4f6,#7fa9ea','M8 15h8'],['Good','#fbe58a,#f2c94a','M8 14c2 2 6 2 8 0'],['Light','#bfeccb,#6fcf8f','M7.5 13.5c2 3 7 3 9 0']];
+const LC={need:'var(--need)',done:'var(--done)',wait:'var(--wait)',later:'var(--later)',ink:'#fadb4a'};
+const lbl=(k,t)=>`<div class="lbl"><i style="background:${LC[k]}"></i>${t}</div>`;
 const ev=l=>l.map(([c,t])=>`<div class="ev ${c}">${t}</div>`).join('');
 function fork(){
  const E={A:[28,'Ships Friday'],B:[78,'Ships Monday'],C:[128,'Smaller, Friday']};
@@ -278,21 +286,20 @@ function horizon(){
   <div class="row"><div class="txt"><h1>The hive is working<br>through your week.</h1>
   <p>Overnight the hive <span class="ii">${ico.merge}merged 4 duplicates</span>, <span class="ii">${ico.check}closed 2 done to-dos</span>, <span class="ii">${ico.fact}confirmed a fact</span> and <span class="ii">${ico.cal}held time for a call</span>. ${counts().need==1?'One decision is':counts().need+' decisions are'} yours.</p></div>${ring()}</div></section>
  <div class="wrap"><div class="col">
-  ${S.sent?'':`<div class="blk y"><h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
+  ${S.sent?'':`<div class="blk y">${lbl('need','Needs you')}<h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
    <div class="stats"><div class="stat"><b>6h</b><span>the release still needs</span></div><div class="stat"><b>6h</b><span>open focus time</span></div><div class="stat neg"><b>−3h</b><span>Jordan’s favor takes</span></div></div></div>`}
-  <div class="blk l"><h2>Fork the week</h2><p class="sub" style="color:#4a3f78">Three ways this week can go. Pick one to see the plan.</p>
+  <div class="blk l">${lbl('wait','Your choice')}<h2>Fork the week</h2><p class="sub">Three ways this week can go. Pick one to see the plan.</p>
    ${fork()}
    ${Object.entries(P).map(([k,x])=>`<button class="opt ${k=='C'?'c':''}" aria-pressed="${S.path==k}" data-path="${k}"><span class="rad">${k}</span><div><b>${x.n}</b><span>${x.s}</span><em class="tag" style="font-style:normal">${x.tag}</em></div></button>`).join('')}
    <div class="blk w" style="margin-top:14px;padding:16px"><div style="font-weight:600;margin-bottom:10px">Your week with ${S.path}</div>
    <div class="week">${['Mon','Tue','Wed','Thu','Fri','N'].map(d=>`<div class="day ${d=='N'?'hide-m':''}"><b>${d=='N'?'Next Mon':d}</b>${ev(p.d[d]||[])}</div>`).join('')}</div>
    <div class="leg"><span><i style="background:var(--yel)"></i>Release</span><span><i style="background:var(--lil)"></i>Jordan’s deck</span><span><i style="background:#e5e1d4"></i>Meetings</span></div></div></div>
- </div><div class="col">
-  <div class="blk o"><div style="font-size:13px;color:#cbc7a8;font-weight:600">Release hours this week</div><div class="hrs">${p.h.map(x=>`<i class="${x}"></i>`).join('')}</div><div class="big">${p.big}<small>hours</small></div><p>${p.fit}</p></div>
-  <div class="blk y"><h2>${p.why}</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">${p.body}</p>
+ </div><div class="col sticky">
+  <div class="blk o">${lbl('ink','Release hours this week')}<div class="hrs">${p.h.map(x=>`<i class="${x}"></i>`).join('')}</div><div class="big">${p.big}<small>hours</small></div><p>${p.fit}</p></div>
+  <div class="blk ${S.sent?'w':'y'}">${S.sent?lbl('done','The hive did'):lbl('need','Recommended')}<h2>${p.why}</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">${p.body}</p>
    <div class="models"><span class="mdl">Jev <b>A</b></span><span class="mdl">System One <b>A</b></span><span class="mdl ${m?'agree':'split'}">${m?'Both agree':'You picked '+S.path+'. Your call.'}</span></div>
    ${decide()}</div>
-  ${feed()}
- </div></div>`}
+ </div><div class="span">${feed()}</div></div>`}
 /* compass */
 function hive(){
  const cols=13,rows=4,r=17,w=r*Math.sqrt(3);let out='',n=0;
@@ -305,23 +312,25 @@ function wave(){const v=[2,3,1,0,2,3,3,1,0,0,2,3,2,1,0,0,3,3,2,2,1],w=300,h=80,p
  let d=`M${pts[0]}`;for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i],cx=(x0+x1)/2;d+=` C${cx},${y0} ${cx},${y1} ${x1},${y1}`}
  const t=pts[4];return `<svg class="wave" viewBox="-6 -24 312 120"><defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fadb4a" stop-opacity=".55"/><stop offset="1" stop-color="#fadb4a" stop-opacity="0"/></linearGradient></defs><path d="${d} L300,${h} L0,${h}Z" fill="url(#wg)"/><path d="${d}" fill="none" stroke="#fadb4a" stroke-width="2.2"/><line x1="${t[0]}" y1="${t[1]}" x2="${t[0]}" y2="${h}" stroke="#fadb4a" stroke-dasharray="3 3"/><circle cx="${t[0]}" cy="${t[1]}" r="5" fill="#1d1c0b" stroke="#fadb4a" stroke-width="2.5"/><rect x="${t[0]-26}" y="${t[1]-28}" width="52" height="20" rx="10" fill="#fadb4a"/><text x="${t[0]}" y="${t[1]-14}" text-anchor="middle" font-size="11" font-weight="700" font-family="Geist" fill="#1d1c0b">Today</text><text x="0" y="${h+14}" font-size="10" fill="#cbc7a8" font-family="Geist">Oct 17</text><text x="300" y="${h+14}" font-size="10" fill="#cbc7a8" font-family="Geist" text-anchor="end">Oct 31</text></svg>`}
 function compass(){
- const R={week:`<div class="blk o"><div style="font-size:13px;color:#cbc7a8;font-weight:600">Focus time this week</div><div class="big" style="margin-top:8px">6<small>hours open</small></div><p>Tuesday and Thursday mornings. The release needs all of it.</p></div>`,
-  month:`<div class="blk o"><div style="font-size:13px;color:#cbc7a8;font-weight:600">Focus time left in October</div><div class="big" style="margin-top:8px">~22<small>hours</small></div>${wave()}<p>If two mornings a week stay clear. That’s an assumption you can change.</p><div class="act"><button class="chip">2 mornings a week</button><button class="chip">Edit</button></div></div>`,
-  year:`<div class="blk o"><div style="font-size:13px;color:#cbc7a8;font-weight:600">Patterns across the year</div><div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Latent shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
+ const R={week:`<div class="blk o">${lbl("ink","Focus time this week")}<div class="big" style="margin-top:8px">6<small>hours open</small></div><p>Tuesday and Thursday mornings. The release needs all of it.</p></div>`,
+  month:`<div class="blk o">${lbl("ink","Focus time left in October")}<div class="big" style="margin-top:8px">~22<small>hours</small></div>${wave()}<p>If two mornings a week stay clear. That’s an assumption you can change.</p><div class="act"><button class="chip">2 mornings a week</button><button class="chip">Edit</button></div></div>`,
+  year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Latent shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
  const g=[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']];
  return `<section class="hero" style="min-height:220px"><div class="bg"></div><canvas data-swarm></canvas>${sync()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week','month','year'].map(k=>`<button aria-pressed="${S.range==k}" data-range="${k}">${k[0].toUpperCase()+k.slice(1)}</button>`).join('')}</div></section>
- <div class="wrap"><div class="col"><div class="blk l"><h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename. Latent suggests; you decide.</p>
-  ${g.map(([a,b,pc,c])=>`<div class="goal"><div class="ring" style="width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:conic-gradient(var(--pur) ${pc*3.6}deg,${c} 0)"><span style="background:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center">${pc}%</span></div><div style="flex:1;min-width:0"><input value="${a}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${b}</div></div></div>`).join('')}
-  <div class="act"><button class="chip">${I.plus}Add a goal</button></div></div>
-  <div class="blk w"><div class="sec" style="margin:0">ONE QUESTION A DAY</div><h2>How did yesterday feel?</h2>
+ <div class="wrap"><div class="col">
+  <div class="blk y">${lbl('need','Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
   <div class="faces">${FACES.map(([n,c,m],i)=>`<button class="face" aria-pressed="${S.mood==i}" data-mood="${i}" aria-label="${n}" style="background:radial-gradient(circle at 35% 30%,${c.split(',')[0]},${c.split(',')[1]})"><svg viewBox="0 0 24 24"><path d="${m}"/></svg></button>`).join('')}</div>
   <div class="tagrow">${['Busy','Scattered','Focused','Social','Rested','Rushed'].map(t=>`<button class="tg2" aria-pressed="${!!S.tags[t]}" data-tag2="${t}">${t}</button>`).join('')}</div>
   <p class="fine">${S.mood==null?'One tap. Latent uses it to size tomorrow, never to grade you.':S.mood<2?'Got it. Latent will keep tomorrow lighter and hold one morning free.':'Got it. Tomorrow keeps its current plan.'}</p></div>
-  <div class="blk w"><h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week. The more Bee heard, the fuller the cell, and the firmer Latent’s read on that week.</p>${hive()}
-   <div class="leg" style="justify-content:space-between"><span>Oct 2025</span><span>334 conversations · 41 of 52 weeks with enough to go on</span><span>Oct 2026</span></div></div></div>
- <div class="col">${R}
-  <div class="blk y"><h2>A pattern, maybe.</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">In weeks you said yes to two favors, your own work moved. Is that the trade you want?</p><div class="act"><button class="chip">That’s not right</button><button class="chip">Ask a follow-up</button></div></div></div></div>`}
+  <div class="blk l">${lbl('wait','Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename. Latent suggests; you decide.</p>
+  ${g.map(([a,b,pc,c])=>`<div class="goal"><div class="ring" style="width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:conic-gradient(var(--pur) ${pc*3.6}deg,${c} 0)"><span style="background:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center">${pc}%</span></div><div style="flex:1;min-width:0"><input value="${a}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${b}</div></div></div>`).join('')}
+  <div class="act"><button class="chip">${I.plus}Add a goal</button></div></div>
+</div>
+ <div class="col sticky">${R}
+  <div class="blk w">${lbl('later','Observed')}<h2>A pattern, maybe.</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">In weeks you said yes to two favors, your own work moved. Is that the trade you want?</p><div class="act"><button class="chip">That’s not right</button><button class="chip">Ask a follow-up</button></div></div></div>
+ <div class="span"><div class="blk w">${lbl('done','The hive')}<h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week. The more Bee heard, the fuller the cell, and the firmer Latent’s read on that week.</p>${hive()}
+   <div class="leg" style="justify-content:space-between"><span>Oct 2025</span><span>334 conversations · 41 of 52 weeks with enough to go on</span><span>Oct 2026</span></div></div></div></div>`}
 /* reconcile */
 function rec(){
  const pairs=[['Send Jordan the project outline','Tue 10:14 am','Send outline to Jordan','Thu 4:02 pm','Same person, same file, two days apart.'],['Book dentist','Mon 9:30 am','Call dentist to book','Wed 12:10 pm','Both mention the cleaning.']];
@@ -329,17 +338,16 @@ function rec(){
  const open=130-Object.keys(S.merged).length;
  return `<section class="hero" style="min-height:220px"><div class="bg"></div><canvas data-swarm></canvas>${sync()}<h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
   <div class="count">${open<130?"<s>130</s>":""}${open}<span style="font:600 14px Geist;margin-left:10px;color:#4b4825">open to-dos</span></div></section>
- <div class="wrap"><div class="col">
-  ${S.split?'':`<div class="blk y" style="border:2px solid var(--need)"><h2>The models disagree.</h2><p class="sub" style="color:#4b4825">“Send Priya the budget.” You said it, so the hive could act. But should it?</p>
+ <div class="wrap">
+  ${S.split?'':`<div class="blk y span" style="border:2px solid var(--need)">${lbl('need','Needs you')}<h2>The models disagree.</h2><p class="sub" style="color:#4b4825">“Send Priya the budget.” You said it, so the hive could act. But should it?</p>
    <div class="models" style="margin-top:0"><span class="mdl">Jev <b>Draft it now</b></span><span class="mdl">System One <b>Ask first, the file may not be final</b></span><span class="mdl split">Split</span></div>
    <div class="act"><button class="chip on" data-split="let the hive draft it">Let the hive draft it</button><button class="chip" data-split="you’ll do it yourself">I’ll do it</button></div></div>`}
-  <div class="blk l"><h2>Likely the same task</h2><p class="sub" style="color:#4a3f78">Merging is local and you can undo it.</p>
+  <div class="blk l">${lbl('wait','Proposed · duplicates')}<h2>Likely the same task</h2><p class="sub" style="color:#4a3f78">Merging is local and you can undo it.</p>
   ${pairs.map(([a,at,b,bt,why],i)=>S.merged[i]?`<div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:10px"><span class="dot"></span><div style="flex:1">Merged into one: <b>${a}</b></div><button class="chip" data-unmerge="${i}">Undo</button></div>`:`<div class="card" style="margin-bottom:10px"><div class="pair"><div class="card" style="background:#f6f3ea">${a}<small>Bee to-do · ${at}</small></div><div class="card" style="background:#f6f3ea">${b}<small>Bee to-do · ${bt}</small></div></div><p class="fine">${why}</p><div class="act" style="margin-top:8px"><button class="chip on" data-merge="${i}">Merge into one</button><button class="chip">Keep both</button></div></div>`).join('')}</div>
- </div><div class="col">
-  <div class="blk w"><h2>Facts to confirm</h2><p class="sub">Bee saved 248 facts it isn’t sure about. The hive checks them against your calendar and later conversations.</p>
+  <div class="blk w">${lbl('wait','Proposed · facts')}<h2>Facts to confirm</h2><p class="sub">Bee saved 248 facts it isn’t sure about. The hive checks them against your calendar and later conversations.</p>
   ${facts.map(([f,e],i)=>`<div class="card" style="background:#f6f3ea;margin-bottom:8px">${S.facts[i]?`<span class="dot" style="display:inline-block;margin-right:8px"></span>${S.facts[i]}: `:''}${f}<small>${e}</small>${S.facts[i]?'':`<div class="act" style="margin-top:8px"><button class="chip on" data-fact="${i}" data-v="Confirmed">Confirm</button><button class="chip" data-fact="${i}" data-v="Removed">Not true</button></div>`}</div>`).join('')}</div>
-  <div class="blk o"><h2 style="color:#f4f0d8">Who said it matters.</h2><div class="rule"><div style="background:var(--yel);color:var(--ink)"><b>You said it</b>The hive can draft, hold time, and follow through for you.</div><div style="background:var(--lil);color:var(--ink)"><b>Someone told you</b>The hive remembers and waits. It never acts on someone else’s promise.</div></div><p>Bee’s voice detection decides which is which. When it isn’t sure, Latent asks.</p></div>
- </div></div>`}
+  <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b><span class="who me">You said it</span>it can act for you.<span class="who them">Someone told you</span>it only remembers. Unsure speaker means Latent asks.</div>
+ </div>`}
 function receipt(){
  const i=items().concat([JORDAN]).find(x=>x.id==S.receipt);if(!i)return'';
  const agree=i.jev==i.d1;
