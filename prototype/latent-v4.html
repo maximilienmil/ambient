@@ -140,10 +140,10 @@ const P={
 };
 const ev=(l)=>l.map(([c,t])=>`<div class="ev ${c}">${t}</div>`).join('');
 function fork(){
- const E={A:[28,'Ships Fri · Jordan on Monday'],B:[78,'Ships Mon · Jordan Tuesday'],C:[128,'Small ship Fri · Jordan Tuesday']};
+ const E={A:[28,'Ships Friday'],B:[78,'Ships Monday'],C:[128,'Smaller, Friday']};
  return `<svg viewBox="0 0 520 156" style="width:100%;display:block;margin:0 0 12px" role="img" aria-label="Three paths from today">
-  ${Object.entries(E).map(([k,[y,t]])=>{const on=S.path==k;return `<g data-path="${k}" style="cursor:pointer"><path d="M44 78C150 78 190 ${y} 300 ${y}" fill="none" stroke="${on?'#6a3fe6':'#ffffff'}" stroke-width="${on?5:3}" stroke-linecap="round" opacity="${on?1:.75}"/><circle cx="300" cy="${y}" r="${on?9:6}" fill="${on?'#6a3fe6':'#fff'}"/><text x="316" y="${y+4}" font-size="13" font-family="Geist" font-weight="${on?700:500}" fill="#17160a">${k} · ${t}</text></g>`}).join('')}
-  <circle cx="44" cy="78" r="12" fill="#17160a"/><text x="44" y="116" font-size="12" font-family="Geist" font-weight="600" text-anchor="middle" fill="#17160a">Today</text></svg>`}
+  ${Object.entries(E).map(([k,[y,t]])=>{const on=S.path==k;return `<g data-path="${k}" style="cursor:pointer"><path d="M44 78C150 78 190 ${y} 300 ${y}" fill="none" stroke="${on?'#6a3fe6':'#ffffff'}" stroke-width="${on?5:3}" stroke-linecap="round" opacity="${on?1:.75}"/><circle cx="300" cy="${y}" r="${on?9:6}" fill="${on?'#6a3fe6':'#fff'}"/><text x="316" y="${y+4}" font-size="19" font-family="Geist" font-weight="${on?700:500}" fill="#17160a">${k} · ${t}</text></g>`}).join('')}
+  <circle cx="44" cy="78" r="12" fill="#17160a"/><text x="44" y="122" font-size="16" font-family="Geist" font-weight="600" text-anchor="middle" fill="#17160a">Today</text></svg>`}
 function week(){
  const p=P[S.path];
  return `
