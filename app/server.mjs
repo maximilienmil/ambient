@@ -7,7 +7,7 @@
 import http from 'node:http';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes } from 'node:crypto';
-import { readFileSync, mkdirSync, existsSync, chmodSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, chmodSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -21,10 +21,11 @@ import { horizonDemo } from './fixtures/horizon-scenario.mjs';
 import { loadCalendars } from './calendar.mjs';
 import { growSchema, listGrow, saveGrow, growObservations, suggestGrow } from './grow.mjs';
 import { actionSchema, connectorStatus, prepareBundle, getBundle, approveBundle, executeBundle } from './actions.mjs';
-import { describeRole } from './decide/provider.mjs';
+import { describeRole, chat } from './decide/provider.mjs';
+import { runDecision, runDecide } from './decide/run.mjs';
 
 // Local configuration is ignored by git. Loading it never invokes a model.
-const envFile = fileURLToPath(new URL('../.env', import.meta.url));
+const envFile = process.env.LATENT_ENV_FILE || fileURLToPath(new URL('../.env', import.meta.url));
 if (existsSync(envFile)) process.loadEnvFile(envFile);
 
 /**
@@ -62,6 +63,10 @@ if (!PREVIEW || !dbPresent) {
 const token = randomBytes(32).toString('hex');
 const port = Number(process.env.PORT || 4317);
 const origin = `http://127.0.0.1:${port}`;
+// Loopback by default. LATENT_BIND=0.0.0.0 plus LATENT_HOSTS=100.x.y.z lets a
+// phone on a private network (for example Tailscale) open the app. Opt-in only.
+const bindAddress = process.env.LATENT_BIND || '127.0.0.1';
+const allowedHosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, ...String(process.env.LATENT_HOSTS || '').split(',').map((h) => h.trim()).filter(Boolean).map((h) => (h.includes(':') ? h : `${h}:${port}`))]);
 
 function fail(message, status = 400) {
   const error = new Error(message);
@@ -70,7 +75,7 @@ function fail(message, status = 400) {
 }
 
 const CSP =
-  "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; " +
+  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; " +
   "connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'";
 
 function send(res, status, value, type = 'application/json') {
@@ -96,8 +101,11 @@ const STATIC = new Map([
   ['/icons/arrow-right.svg', ['icons/arrow-right.svg', 'image/svg+xml']],
   ['/workspace.js', ['workspace.js', 'text/javascript']],
   ['/workspace.css', ['workspace.css', 'text/css']],
-  ['/', ['workspace.html', 'text/html']],
-  ['/index.html', ['workspace.html', 'text/html']],
+  ['/', ['v5.html', 'text/html']],
+  ['/index.html', ['v5.html', 'text/html']],
+  ['/v5.css', ['v5.css', 'text/css']],
+  ['/v5.js', ['v5.js', 'text/javascript']],
+  ['/workspace', ['workspace.html', 'text/html']],
   ['/legacy', ['index.html', 'text/html']],
   ['/tokens.css', ['tokens.css', 'text/css']],
   ['/style.css', ['style.css', 'text/css']],
@@ -108,13 +116,12 @@ const STATIC = new Map([
   ['/icon-192.png', ['icon-192.png', 'image/png']],
   ['/icon-512.png', ['icon-512.png', 'image/png']],
   ['/apple-touch-icon.png', ['apple-touch-icon.png', 'image/png']],
-  ['/fonts/fonetika-400.woff2', ['fonts/fonetika-400.woff2', 'font/woff2']],
-  ['/fonts/fonetika-500.woff2', ['fonts/fonetika-500.woff2', 'font/woff2']],
-  ['/fonts/fonetika-600.woff2', ['fonts/fonetika-600.woff2', 'font/woff2']],
-  ['/fonts/fonetika-700.woff2', ['fonts/fonetika-700.woff2', 'font/woff2']],
-  ['/fonts/fonetika-800.woff2', ['fonts/fonetika-800.woff2', 'font/woff2']],
-  ['/fonts/fonetika-mono-400.woff2', ['fonts/fonetika-mono-400.woff2', 'font/woff2']],
-  ['/fonts/fonetika-mono-500.woff2', ['fonts/fonetika-mono-500.woff2', 'font/woff2']],
+  ['/fonts/geist-latin-400-normal.woff2', ['fonts/geist-latin-400-normal.woff2', 'font/woff2']],
+  ['/fonts/geist-latin-500-normal.woff2', ['fonts/geist-latin-500-normal.woff2', 'font/woff2']],
+  ['/fonts/geist-latin-600-normal.woff2', ['fonts/geist-latin-600-normal.woff2', 'font/woff2']],
+  ['/fonts/geist-latin-700-normal.woff2', ['fonts/geist-latin-700-normal.woff2', 'font/woff2']],
+  ['/fonts/instrument-serif-latin-400-normal.woff2', ['fonts/instrument-serif-latin-400-normal.woff2', 'font/woff2']],
+  ['/fonts/instrument-serif-latin-400-italic.woff2', ['fonts/instrument-serif-latin-400-italic.woff2', 'font/woff2']],
 ]);
 
 function sendFile(res, name, type) {
@@ -145,10 +152,10 @@ async function readBody(req) {
 }
 
 function checkRequest(req) {
-  if (req.headers.host !== `127.0.0.1:${port}` && req.headers.host !== `localhost:${port}`) {
+  if (!allowedHosts.has(req.headers.host)) {
     fail('Invalid host.', 403);
   }
-  if (req.headers.origin && ![origin, `http://localhost:${port}`].includes(req.headers.origin)) {
+  if (req.headers.origin && ![...allowedHosts].map((h) => `http://${h}`).includes(req.headers.origin)) {
     fail('Cross-origin request blocked.', 403);
   }
   if (req.headers['sec-fetch-site'] === 'cross-site') fail('Cross-site request blocked.', 403);
@@ -190,6 +197,39 @@ function runIngest() {
   return syncing;
 }
 
+
+// Model keys live in the git-ignored root .env, next to the rest of the local
+// configuration. The key itself is never sent back to the browser.
+const ROLE_PREFIX = { jev: 'JEV', d1: 'D1' };
+function writeEnv(updates) {
+  const lines = existsSync(envFile) ? readFileSync(envFile, 'utf8').split('\n') : [];
+  for (const [key, value] of Object.entries(updates)) {
+    const at = lines.findIndex((line) => line.startsWith(`${key}=`));
+    const entry = `${key}=${value}`;
+    if (at >= 0) lines[at] = entry; else lines.push(entry);
+    process.env[key] = value;
+  }
+  writeFileSync(envFile, lines.join('\n').replace(/\n*$/, '\n'), { mode: 0o600 });
+}
+function modelsStatus() {
+  const out = {};
+  for (const role of ['jev', 'd1']) {
+    const d = describeRole(role);
+    out[role] = { configured: d.configured, baseUrl: d.baseUrl, model: d.model, hasKey: !d.missing.includes(`${ROLE_PREFIX[role]}_API_KEY`), missing: d.missing };
+  }
+  return out;
+}
+function factReviewSchema() {
+  db.exec('CREATE TABLE IF NOT EXISTS fact_reviews (fact_id TEXT PRIMARY KEY, verdict TEXT NOT NULL, at TEXT NOT NULL)');
+}
+if (!PREVIEW || !dbPresent) factReviewSchema();
+function textFor(id) {
+  for (const sql of ['SELECT text FROM facts WHERE id=?', 'SELECT text FROM commitments WHERE id=?', 'SELECT text FROM bee_todos WHERE id=?']) {
+    try { const row = db.prepare(sql).get(id); if (row?.text) return row.text; } catch {}
+  }
+  return null;
+}
+
 const server = http.createServer(async (req, res) => {
   try {
     checkRequest(req);
@@ -202,6 +242,66 @@ const server = http.createServer(async (req, res) => {
     }
     if (route.startsWith('/api/') && req.headers['x-latent-token'] !== token) {
       fail('Session expired. Reload this page.', 403);
+    }
+
+    if (method === 'GET' && route === '/api/models') return send(res, 200, modelsStatus());
+    if (method === 'POST' && route === '/api/models') {
+      if (PREVIEW) refuseWrite();
+      const body = await readBody(req);
+      const prefix = ROLE_PREFIX[body.role];
+      if (!prefix) fail('Choose jev or d1.');
+      const baseUrl = String(body.baseUrl || '').trim();
+      const model = String(body.model || '').trim();
+      const apiKey = String(body.apiKey || '').trim();
+      if (!/^https?:\/\/[^\s]+$/.test(baseUrl)) fail('Base URL must start with http:// or https://.');
+      if (!model || /\s/.test(model) || model.length > 200) fail('Name the model without spaces.');
+      if (/[\s"'`]/.test(apiKey)) fail('The API key cannot contain spaces or quotes.');
+      const updates = { [`${prefix}_BASE_URL`]: baseUrl, [`${prefix}_MODEL`]: model };
+      if (apiKey) updates[`${prefix}_API_KEY`] = apiKey;
+      writeEnv(updates);
+      return send(res, 200, modelsStatus());
+    }
+    if (method === 'POST' && route === '/api/models/test') {
+      const { role } = await readBody(req);
+      if (!ROLE_PREFIX[role]) fail('Choose jev or d1.');
+      try {
+        const r = await chat({ role, messages: [{ role: 'user', content: 'Reply with the single word OK.' }], timeoutMs: 20000 });
+        return send(res, 200, { ok: true, latencyMs: r.latencyMs ?? null, reply: String(r.content || '').slice(0, 60) });
+      } catch (error) {
+        return send(res, 200, { ok: false, message: error.message });
+      }
+    }
+    if (method === 'POST' && route === '/api/decide/item') {
+      const { id } = await readBody(req);
+      const row = db.prepare('SELECT id, text, quote, owner, counterparty, source_conversation_id, span_start, span_end, created_at, due_at, state, tier, p, jev_scores, d1_scores, evidence FROM commitments WHERE id=?').get(String(id || ''));
+      if (!row) fail('That commitment no longer exists.', 404);
+      const status = modelsStatus();
+      if (!status.jev.configured || !status.d1.configured) return send(res, 200, { configured: false, models: status });
+      try {
+        const r = await runDecision({ row });
+        return send(res, 200, { configured: true, tier: r.tier, p: r.p, reason: r.reason, jev: r.jev, d1: r.d1, latencyMs: r.latencyMs, cost: r.cost, scored: r.scored !== false });
+      } catch (error) {
+        return send(res, 200, { configured: true, error: error.message });
+      }
+    }
+    if (method === 'POST' && route === '/api/decide/run') {
+      if (PREVIEW) refuseWrite();
+      const { limit } = await readBody(req);
+      const result = await runDecide({ limit: Math.min(50, Math.max(1, Number(limit) || 10)), quiet: true, labels: path.join(root, 'labels.json') }, { db });
+      return send(res, 200, { ok: result.ok, decided: result.decided, reason: result.reason || null, missingByRole: result.missingByRole, ledger: L.buildLedger(db) });
+    }
+    const factMatch = route.match(/^\/api\/facts\/([^/]+)$/);
+    if (factMatch && method === 'POST') {
+      if (PREVIEW) refuseWrite();
+      const { verdict } = await readBody(req);
+      if (!['confirmed', 'not_true', 'undo'].includes(verdict)) fail('Choose confirmed or not true.');
+      const id = decodeURIComponent(factMatch[1]);
+      if (verdict === 'undo') db.prepare('DELETE FROM fact_reviews WHERE fact_id=?').run(id);
+      else {
+        db.prepare('INSERT OR REPLACE INTO fact_reviews VALUES (?,?,?)').run(id, verdict, new Date().toISOString());
+        L.insertReceipt(db, { kind: 'remember', decision: 'remember', title: verdict === 'confirmed' ? 'Confirmed a Bee fact' : 'Marked a Bee fact not true', detail: `${textFor(id) || id}. Recorded in Latent only; Bee was not changed.` });
+      }
+      return send(res, 200, { ok: true });
     }
     if (method === 'GET' && route === '/api/workspace') {
       const calendar = FIXTURE || PREVIEW ? { events: horizonDemo().input.events, files: 0, synthetic: true } : await loadCalendars(path.join(dataDir, 'calendars'));
@@ -252,7 +352,9 @@ const server = http.createServer(async (req, res) => {
     if (method === 'GET' && route === '/api/reconcile') {
       if (PREVIEW) return send(res, 200, { preview: true, summary: { todosToRetire: 0, factsKeptPendingEvidence: 0 }, operations: [] });
       const changeset = await generateChangeset(dbPath);
-      return send(res, 200, FIXTURE ? { ...changeset, preview: true } : changeset);
+      changeset.operations = changeset.operations.map((op) => ({ ...op, text: textFor(op.targetId) }));
+      const reviews = Object.fromEntries(db.prepare('SELECT fact_id, verdict FROM fact_reviews').all().map((r) => [r.fact_id, r.verdict]));
+      return send(res, 200, FIXTURE ? { ...changeset, reviews, preview: true } : { ...changeset, reviews });
     }
     if (method === 'POST' && route === '/api/stream-demo') {
       if (!FIXTURE || PREVIEW) refuseWrite();
@@ -341,7 +443,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(port, '127.0.0.1', () => {
+server.listen(port, bindAddress, () => {
   console.log(`Latent is running at ${origin}`);
   console.log(`Ledger: ${dbPath}${FIXTURE || dbPath.includes('fixture') ? ' (fixture mode)' : ''}`);
 });

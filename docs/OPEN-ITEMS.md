@@ -9,7 +9,7 @@ Status as of 21 October 2026, two days before the Friday 23 October noon PDT dea
    - `design/reference/` holds Bee's marketing screenshots and App Store images. `design/assets/bee-lilac.webp` and `bee-macro.jpg` are third-party images. Remove them, or confirm they may be redistributed, and replace them with licensed or original assets.
    - `docs/video-script.md` names a real service in one shot ("Send notes to Disability Services"). Rename it or keep the planned blur.
    - `app/audit-sample.json` is no longer tracked (it quotes real transcripts, including other people). Regenerate it locally with `npm run audit-sample` when needed.
-2. **Show the working backend in the demo, or label the prototype honestly.** The v5 interface is a prototype with synthetic data. The backend that works lives behind the older production UI in `app/public/`. Either port v5 onto `app/` (it needs `/api/horizon/compare`, the action bundles and the MCP tools) or keep it clearly framed as the design target. The README already states this.
+2. ~~Port v5 onto the backend.~~ Done: `npm start` serves v5 at `/` with Demo and Your Bee modes. The older screens remain at `/workspace` and `/legacy`. Remaining: real Bee data on this account is stale (to-dos stop in May; Bee reports every speaker as Unknown), so the live fork is honest but quiet. Rehearse with a fresh `npm run ingest`.
 3. **Connect the demo Google account** so the message and calendar holds are real:
    `gog auth add <demo-email> --services gmail,calendar --gmail-scope send`, then set `LATENT_DEMO_ACCOUNT`, `LATENT_DEMO_CALENDAR` and `LATENT_EXTERNAL_ACTIONS=1`. Rehearse a partial failure. If the connector is down on the day, show the prepared action honestly and do not animate a fake success.
 4. **Rehearse the live moment end to end.** Stream event, new fork within about five seconds, reconnect catch-up. The recovery path is covered by a test; a real attributed Bee event has not been demonstrated.
@@ -18,8 +18,8 @@ Status as of 21 October 2026, two days before the Friday 23 October noon PDT dea
 ## Should do
 
 6. **Measured proof page.** Retired-count audit accuracy, the Jev / System One / both / plain-AI comparison table, and tests passing. `npm run eval` already prints a table; it shows "not configured" until models are connected, and that is the honest result today.
-7. **Jev and System One.** The decision-model adapter exists and the d1 endpoint is intentionally idle. Until real endpoints are wired, the verdicts in the prototype are illustrative and must be described that way.
-8. **Replace the unlicensed font in the production UI.** `app/public/tokens.css` references Fonetika, which is personal-use-only and git-ignored, so a fresh clone gets 404s. Swap in Geist and Instrument Serif (both OFL), which v5 already uses.
+7. **Jev and System One.** Settings now stores keys, tests connections, scores rows and asks both about a promise. Jev has no endpoint yet. The local System One (Splash) answered with HTTP 401 in testing, so its key or server auth needs fixing.
+8. ~~Replace the unlicensed font.~~ Done: Geist and Instrument Serif (OFL) are self-hosted in `app/public/fonts/`.
 9. **Owner audit.** The one-time 40-item hand check that turns the auto-label agreement into an accuracy number.
 10. **Wrapped card.** One shareable card built only from measured numbers. Not started.
 

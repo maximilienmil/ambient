@@ -62,8 +62,8 @@ This is a hackathon build. The line between the two is deliberate and stated her
 | Actions: hash-bound approval, idempotent execution, durable receipts, partial-failure handling | **Working** in a sandbox. Real Gmail and Calendar sends are off until a demo account is connected. |
 | MCP server: eight tools any agent can call (`latent_reconcile`, `latent_should_act`, `latent_merge`, ...) | **Working.** See [docs/mcp.md](docs/mcp.md). |
 | Live Bee stream with reconnect and catch-up | **Working** from fixtures. A captured event is replayed in the demo and labeled as a replay. |
-| The v5 interface in [`design/`](design/) | **Prototype.** Every number, name and model verdict on screen is synthetic and not yet wired to the backend. |
-| Jev and System One verdicts | **Not run.** The adapter exists and the d1 endpoint is intentionally idle. The table in the prototype is illustrative. |
+| The app (Horizon, Compass, Reconcile) | **Working.** One interface, two modes. **Demo** plays the scripted Friday story on synthetic data. **Your Bee** reads your local ledger and calendar: real to-dos, duplicates, facts, conversation history, a fork computed on your calendar, and sandbox or Google actions with receipts. |
+| Jev and System One | **Wired.** Add an OpenAI-compatible base URL, model and key for each in Settings (stored in the git-ignored `.env`), test the connection, score rows, or ask both about a promise. Verdicts in Demo mode are illustrative; no evaluation results are claimed. |
 | Speaker attribution | **Known gap.** Bee reports `Unknown` on this account, so Latent never claims to know your voice. |
 | Outcome prediction and forecasts | **Not built.** No independent labels exist, so Latent shows hours and arithmetic, not probabilities. |
 
@@ -73,18 +73,22 @@ Open items before submission are tracked in [docs/OPEN-ITEMS.md](docs/OPEN-ITEMS
 
 Requires Node 22.13 or newer.
 
-**The backend and its screens, on synthetic data (no Bee needed):**
-
 ```bash
 cd app
 npm ci
-npm run demo        # http://127.0.0.1:4317, marked "synthetic data"
-npm test            # 77 tests, all offline
+npm run demo        # synthetic data, no Bee needed: http://127.0.0.1:4317
+npm test            # offline suite
 ```
 
-**The v5 design prototype:** open [`design/latent-v5.html`](design/latent-v5.html) in a browser. Press **Replay captured promise** on Horizon to watch a promise arrive, then pick a path and approve it. The iPhone frame next to it is the same interface at phone size.
+**With your own Bee:** `npm run ingest` reads your account into `app/data/` (git-ignored), then `npm start`. Switch the top-right toggle from **Demo** to **Your Bee**. Put `.ics` exports in `app/data/calendars/` for the capacity engine. Keep `npm run stream` running in another terminal and new conversations appear in Horizon as Bee records them.
 
-**Use it from an agent (MCP):**
+**Decision models:** open Settings (the gear) and add Jev and System One. Any OpenAI-compatible endpoint works. Keys are written to the root `.env`, never sent back to the browser.
+
+**Real actions:** by default actions run in a sandbox and nothing leaves your machine. To send from a dedicated demo account, see [app/README.md](app/README.md#dedicated-google-demo-account).
+
+**On your phone:** `LATENT_BIND=0.0.0.0 LATENT_HOSTS=<your-tailscale-ip> npm start`, then open `http://<your-tailscale-ip>:4317`. Only do this on a private network.
+
+**From an agent (MCP):**
 
 ```bash
 claude mcp add latent -- node /absolute/path/to/app/mcp-server.mjs
@@ -92,7 +96,7 @@ claude mcp add latent -- node /absolute/path/to/app/mcp-server.mjs
 
 Then ask: *what should I act on?*
 
-**Against a real Bee account:** run `npm run ingest`, then `npm start`. Data stays in `app/data/`, which is git-ignored. See [app/README.md](app/README.md).
+The static design reference lives in [`design/latent-v5.html`](design/latent-v5.html).
 
 ## How it fits together
 
@@ -131,8 +135,8 @@ Latent owns the context, the tradeoff, the recommendation, the approval and the 
 
 | Path | What's there |
 |---|---|
-| [`app/`](app/) | The local service, SQLite ledger, evidence and capacity engines, MCP server, and the production UI |
-| [`design/`](design/) | The v5 interface prototype and the reference material it was designed from |
+| [`app/`](app/) | The local service, SQLite ledger, evidence and capacity engines, MCP server, and the app (`public/v5.*`) |
+| [`design/`](design/) | The static design reference and the material it was designed from |
 | [`docs/`](docs/) | Scope, design direction, glossary, MCP guide, decision records, demo script, archived specs |
 | [`docs/adr/`](docs/adr/) | Why the product makes the claims it makes, and the ones it refuses to |
 

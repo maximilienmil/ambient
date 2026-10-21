@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -43,7 +44,7 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
   async function boot(fixture = false) {
     proc = spawn(process.execPath, ['server.mjs'], {
       cwd: new URL('..', import.meta.url),
-      env: { ...process.env, PORT: String(port), LATENT_DATA_DIR: dir, LATENT_DB: path.join(dir, 'latent.sqlite'), PREVIEW: '0', LATENT_FIXTURE: fixture ? '1' : '0' },
+      env: { ...process.env, PORT: String(port), LATENT_DATA_DIR: dir, LATENT_DB: path.join(dir, 'latent.sqlite'), PREVIEW: '0', LATENT_FIXTURE: fixture ? '1' : '0', LATENT_ENV_FILE: path.join(dir, '.env') },
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     await new Promise((resolve, reject) => {
@@ -99,15 +100,33 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal(executed.results.find(r=>r.step==='message').receipt.sent,false);
     assert.equal((await (await request('/actions')).json()).length,1);
 
-    // the app shell loads from the same origin only, and it is the four-screen app
+    // the app shell loads from the same origin only: the v5 app at /, the earlier workspace at /workspace
     const shell = await fetch(`http://127.0.0.1:${port}/`);
     assert.equal(shell.status, 200);
     const html = await shell.text();
-    assert.match(html, /data-view="horizon"/);
-    assert.match(html, /data-view="grow"/);
-    assert.match(html, /data-view="reconcile"/);
-    assert.match(html, /workspace\.js/);
-    assert.match(html, /href="\/workspace\.css"/);
+    assert.match(html, /src="\/v5\.js"/);
+    assert.match(html, /href="\/v5\.css"/);
+    assert.doesNotMatch(html, /googleapis|<script>/);
+    assert.equal((await fetch(`http://127.0.0.1:${port}/v5.js`)).status, 200);
+    assert.equal((await fetch(`http://127.0.0.1:${port}/fonts/geist-latin-400-normal.woff2`)).status, 200);
+    const older = await (await fetch(`http://127.0.0.1:${port}/workspace`)).text();
+    assert.match(older, /data-view="horizon"/);
+
+    // decision-model keys are written to the local env file and never echoed back
+    let models = await (await request('/models')).json();
+    assert.equal(models.jev.configured, false);
+    assert.equal((await request('/models', 'POST', { role: 'jev', baseUrl: 'not a url', model: 'm' })).status, 400);
+    const saved = await request('/models', 'POST', { role: 'jev', baseUrl: 'http://127.0.0.1:9/v1', model: 'judge-1', apiKey: 'sk-test-123' });
+    const savedText = await saved.text();
+    assert.equal(saved.status, 200);
+    assert.doesNotMatch(savedText, /sk-test-123/);
+    assert.equal(JSON.parse(savedText).jev.configured, true);
+    assert.match(readFileSync(path.join(dir, '.env'), 'utf8'), /JEV_API_KEY=sk-test-123/);
+    const probe = await (await request('/models/test', 'POST', { role: 'jev' })).json();
+    assert.equal(probe.ok, false);
+    // both models are required before a decision runs; nothing is invented
+    assert.equal((await (await request('/decide/item', 'POST', { id: 'seed-a' })).json()).configured, false);
+
 
     // projection
     let ledger = await (await request('/ledger')).json();
@@ -189,6 +208,9 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal(demo.preview, true);
     assert.equal(demo.comparison.variants.find((variant) => variant.id === 'keep').goal.shortfallMinutes, 180);
     assert.equal(demo.models.jev, 'not_run');
+    // fact reviews stay in Latent
+    assert.equal((await request('/facts/fact-1', 'POST', { verdict: 'maybe' })).status, 400);
+    assert.equal((await (await request('/facts/fact-1', 'POST', { verdict: 'confirmed' })).json()).ok, true);
   } finally {
     if (proc && !proc.killed) await stop();
     rmSync(dir, { recursive: true, force: true });
