@@ -1,6 +1,6 @@
 /* Product name in one place. */
 const BRAND = 'Ambient';
-const WORDMARK = '<img class="logo" src="/icon-192.png" alt=""><span class="wm">am<i>·</i><b>bee</b><i>·</i>nt</span>';
+const WORDMARK = '<span class="wm">am<i>·</i><b>bee</b><i>·</i>nt</span>';
 
 const S={mode:'demo',settings:false,heard:false,listen:0,goals:[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']],sugg:true,mood:null,tags:{},tab:'horizon',path:'A',sheet:false,run:null,sent:false,filter:'done',receipt:null,merged:{},facts:{},split:null,range:'week',toast:null};
 const I={
