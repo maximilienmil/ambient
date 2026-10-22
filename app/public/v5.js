@@ -48,10 +48,10 @@ function ringDemo(){
   <div class="legend">${['done','need','wait','later'].map(k=>`<button class="lg" data-filter="${k}" aria-pressed="${S.filter==k}"><i style="background:${COL[k]}"></i>${{done:"Done",need:"Needs you",wait:"Waiting",later:"Later"}[k]}<b>${c[k]}</b></button>`).join('')}
   <div class="more" style="padding:2px 10px">${tot} things from Bee overnight</div></div></div>`}
 function feedDemo(){
- const list=items().filter(i=>i.k==S.filter);
+ const all=items().filter(i=>i.k==S.filter),list=S.feedAll?all:all.slice(0,3);
  return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'While you slept':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Ambient remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
  ${list.map(i=>`<button class="item" data-receipt="${i.id}"><span class="sd" style="background:${COL[i.k]}"></span><div style="min-width:0"><div class="t">${i.t}</div><div class="s"><span class="who ${i.who[0]}">${i.who[1]}</span>${i.src}</div>${i.k=='done'?`<div class="via">via ${i.via}</div>`:''}</div><span class="go2">Receipt ›</span></button>`).join('')}
- ${S.filter=='done'?`<p class="more">and 18 more like these: duplicates merged, done items closed.</p>`:''}</div>`}
+ ${all.length>list.length?`<div class="act"><button class="chip" data-feedall>Show ${all.length-list.length} more</button></div>`:''}${S.filter=='done'?`<p class="more">and 18 more like these: duplicates merged, done items closed.</p>`:''}</div>`}
 const P={
  A:{n:'Protect the launch',s:'Ask Jordan to move the favor to Monday. Release ships Friday.',tag:'Release stays Friday',
   d:{Mon:[['mtg','Standup']],Tue:[['rel','Release 9 to 12']],Wed:[['mtg','Client call']],Thu:[['rel','Release 9 to 12']],Fri:[['due','Ships']],N:[['jor','Jordan deck 9 to 12']]},
@@ -76,7 +76,7 @@ const P={
 const ico={merge:'<svg viewBox="0 0 24 24"><path d="M7 4v6a5 5 0 0 0 5 5h5M17 15l-3-3M17 15l-3 3"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10"/></svg>',cal:'<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',fact:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5M12 16v.5"/></svg>'};
 const FACES=[['Drained','#f6a58a,#ef7b62','M8 16c2-2 6-2 8 0'],['Stretched','#d9c8f7,#b39be8','M8 15.5c2-1.2 6-1.2 8 0'],['Steady','#b9d4f6,#7fa9ea','M8 15h8'],['Good','#fbe58a,#f2c94a','M8 14c2 2 6 2 8 0'],['Light','#bfeccb,#6fcf8f','M7.5 13.5c2 3 7 3 9 0']];
 const LC={need:'var(--need)',done:'var(--done)',wait:'var(--wait)',later:'var(--later)',ink:'#fadb4a'};
-const lbl=(k,t)=>`<div class="lbl"><i style="background:${LC[k]}"></i>${t}</div>`;
+const lbl=(k,t)=>k==='need'?`<div class="lbl"><i style="background:${LC[k]}"></i>${t}</div>`:k==='ink'?`<div class="kicker">${t}</div>`:'';
 const ev=l=>l.map(([c,t])=>`<div class="ev ${c}">${t}</div>`).join('');
 function fork(){
  const E={A:[28,'Ships Friday'],B:[78,'Ships Monday'],C:[128,'Smaller, Friday']};
@@ -388,11 +388,11 @@ function ringLive() {
 }
 function feedLive() {
   const all = litems().filter((i) => catOf(i) === L.filter).sort(dueSort);
-  const list = all.slice(0, 8);
+  const list = all.slice(0, L.feedAll ? 12 : 3);
   const head = { done: ['The hive did', 'Closed or merged', 'Done in Bee or merged by Ambient. Tap any one for its receipt.'], need: ['Needs you', 'Still open in Bee', 'Your Bee to-dos, newest deadline first. Open one to fork your week around it.'], wait: ['Shared', 'Said as “we”', 'Joint intentions picked up from conversations. Ambient will not act on these alone.'], later: ['Heard', 'Picked up from conversations', 'Phrases the extractor heard. Many are other people talking; check before trusting them.'] }[L.filter];
   return `<div class="blk w">${lbl(L.filter, head[0])}<h2>${head[1]}</h2><p class="sub">${head[2]}</p>
   ${list.map((i) => `<button class="item" data-lreceipt="${esc(i.id)}"><span class="sd" style="background:${COL[catOf(i)]}"></span><div style="min-width:0"><div class="t">${esc(i.title)}</div><div class="s"><span class="who ${whoOf(i)[0]}">${whoOf(i)[1]}</span>${esc(i.source)}</div>${catOf(i) === 'need' ? `<div class="via" style="color:#8a4300">${esc(reasonOf(i))}</div>` : ''}</div><span class="go2">Receipt ›</span></button>`).join('') || '<p class="muted">Nothing here.</p>'}
-  ${all.length > list.length ? `<p class="more">and ${all.length - list.length} more in the ledger.</p>` : ''}</div>`;
+  ${all.length > list.length ? (L.feedAll ? `<p class="more">and ${all.length - list.length} more in the ledger.</p>` : `<div class="act"><button class="chip" data-feedall>Show ${Math.min(9, all.length - list.length)} more</button></div>`) : ''}</div>`;
 }
 function listenCard() {
   const h = D.heard, q = h ? String(h.quote || h.title) : '';
@@ -661,7 +661,8 @@ async function runPlan() {
   L.run = null; SPEED = 1; render();
 }
 async function liveClick(d) {
-  if (d.lfilter) { L.filter = d.lfilter; return true; }
+  if ('feedall' in d) { L.feedAll = true; return true; }
+  if (d.lfilter) { L.filter = d.lfilter; L.feedAll = false; return true; }
   if (d.lreceipt) { S.receipt = d.lreceipt; return true; }
   if (d.focus) { L.picked = false; L.focus = d.focus; L.fDue = null; D.cmpKey = null; D.ask = null; D.bundle = null; S.receipt = null; S.tab = 'horizon'; compute(); return true; }
   if (d.fmin) { L.fMin = +d.fmin; compute(); return true; }
@@ -749,6 +750,7 @@ function render() {
   document.querySelectorAll('[data-root]').forEach((r) => {
     const st = r.querySelector('.main')?.scrollTop || 0;
     const oldCanvas = r.querySelector('canvas[data-swarm]');
+    const oldGrain = r.querySelector('.grainbg');
     const sheetSt = r.querySelector('.rc')?.scrollTop || 0;
     const name = S.mode === 'live' ? (D.ledger?.owner || 'You').split(/\s+/)[0] : 'Max';
     r.dataset.tab = S.tab;
@@ -762,6 +764,11 @@ function render() {
     const fresh = r.querySelector('canvas[data-swarm]');
     if (oldCanvas && fresh && oldCanvas.dataset.tab === S.tab) fresh.replaceWith(oldCanvas);
     else if (fresh) fresh.dataset.tab = S.tab;
+    const hero = r.querySelector('.hero');
+    if (hero) {
+      if (oldGrain && oldGrain.dataset.view === S.tab) hero.prepend(oldGrain);
+      else { const g = document.createElement('div'); g.className = 'grainbg'; hero.prepend(g); window.AmbientGrain?.mountGrain(g, S.tab); }
+    }
     const rc = r.querySelector('.rc'); if (rc) rc.scrollTop = sheetSt;
   });
   if (S.mode === 'live' && S.tab === 'horizon' && D.ledger && goalOf() && focusItem()) compute();
@@ -809,10 +816,11 @@ function replay(){S.listen=1;SPEED=3;render();const q='Sure, I’ll help with th
 function go(){const n=P[S.path].steps.length;S.run=0;S.sheet=false;SPEED=4;render();
  const tick=()=>{S.run++;if(S.run>=n){setTimeout(()=>{S.run=null;S.sent=true;SPEED=1;S.filter='done';renderQuiet();toast('Done by the hive')},650);renderQuiet();return}renderQuiet();setTimeout(tick,750)};setTimeout(tick,900)}
 function demoClick(d){
+ if('feedall'in d){S.feedAll=true;return render()}
  
  if(d.path){if(S.run!=null)return;S.path=d.path;S.sheet=false;S.sent=false}
  else if('replay'in d){replay();return}else if('sheet'in d)S.sheet=!S.sheet;else if('go'in d){go();return}else if('undoRun'in d){S.sent=false}
- else if(d.filter)S.filter=d.filter;else if(d.receipt){if(d.receipt=='fork'){S.receipt=null;S.filter='need'}S.receipt=d.receipt}
+ else if(d.filter){S.filter=d.filter;S.feedAll=false}else if(d.receipt){if(d.receipt=='fork'){S.receipt=null;S.filter='need'}S.receipt=d.receipt}
  else if(d.sugg){if(d.sugg=='add')S.goals=S.goals.concat([['Play guitar','Sundays · noticed by Ambient',100,'#bfeccb']]);S.sugg=false}else if(d.range)S.range=d.range;else if(d.mood!==undefined)S.mood=+d.mood;else if(d.tag2){S.tags[d.tag2]=!S.tags[d.tag2]}else if(d.split){S.split=d.split}else if(d.merge!==undefined)S.merged[d.merge]=1;else if(d.unmerge!==undefined)delete S.merged[d.unmerge];
  else if(d.fact!==undefined)S.facts[d.fact]=d.v;else return;render()}
 /* ASCII bees: ten per header, faint, spread out */

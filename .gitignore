@@ -27,3 +27,4 @@ __pycache__/
 
 # Bee check-ins quote real transcripts; regenerate with npm run audit-sample.
 app/audit-sample.json
+.hallmark/

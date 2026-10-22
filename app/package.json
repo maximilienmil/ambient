@@ -26,6 +26,7 @@
     "stream:demo": "node stream-handler.mjs demo data/latent-reconcile-demo.sqlite"
   },
   "dependencies": {
+    "@paper-design/shaders": "^0.0.82",
     "@phosphor-icons/core": "^2.1.1",
     "ical.js": "^2.2.1"
   },

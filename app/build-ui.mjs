@@ -31,4 +31,6 @@ if (watch) {
 } else {
   const { build } = await import('esbuild');
   await build(options);
+  // Header grain gradient (Paper shaders, Apache-2.0), plain script for the v5 app.
+  await build({ entryPoints: ['ui/grain.mjs'], bundle: true, minify: true, format: 'iife', outfile: 'public/grain.js', logLevel: 'info' });
 }

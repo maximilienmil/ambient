@@ -106,6 +106,7 @@ const STATIC = new Map([
   ['/index.html', ['v5.html', 'text/html']],
   ['/v5.css', ['v5.css', 'text/css']],
   ['/v5.js', ['v5.js', 'text/javascript']],
+  ['/grain.js', ['grain.js', 'text/javascript']],
   ['/workspace', ['workspace.html', 'text/html']],
   ['/legacy', ['index.html', 'text/html']],
   ['/tokens.css', ['tokens.css', 'text/css']],
