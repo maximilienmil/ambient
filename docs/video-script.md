@@ -1,6 +1,6 @@
-# Ambeent: demo video script
+# Ambient: demo video script
 
-Target length 2:45. Recorded on a laptop (desktop layout) with one phone shot. Voiceover recorded separately and laid over the picture.
+Target length 2:45. Hard limit: under 3:00; judges may stop at 3:00. Recorded on a laptop (desktop layout) with one phone shot. Voiceover recorded separately and laid over the picture.
 
 The story has two halves. First the scripted **Demo** shows the whole idea in 90 seconds. Then **Your Bee** proves it runs on a real account, and an agent uses it through MCP. Say plainly which half is which; that honesty is part of the pitch.
 
@@ -16,15 +16,15 @@ The story has two halves. First the scripted **Demo** shows the whole idea in 90
 
 ## 0:12–0:20 · The name
 
-**Picture.** The sidebar wordmark, am·bee·nt, centered, with the faint ASCII bees drifting. Slow push-in.
+**Picture.** The app icon (the glowing a·) on the iPhone home screen, tap to open. Then the sidebar wordmark, with the faint ASCII bees drifting. Slow push-in.
 
-**Say.** "This is Ambeent. An ambient agent on top of Bee that makes room for what matters."
+**Say.** "This is Ambient. An ambient agent on top of Bee that makes room for what matters."
 
 ## 0:20–0:40 · The hive worked overnight (Demo)
 
 **Picture.** Horizon in Demo mode, top of page. The "Demo story · synthetic" pill must be visible. Hover the ring, then click **Done** in the legend and scroll the "While you slept" list slowly.
 
-**Say.** "Overnight, the hive handled the small things. It merged duplicates, closed what was already done, held time for a call. Each one has a receipt, and you can see who did it: Ambeent itself, a calendar connector, or another agent through MCP."
+**Say.** "Overnight, the hive handled the small things. It merged duplicates, closed what was already done, held time for a call. Each one has a receipt, and you can see who did it: Ambient itself, a calendar connector, or another agent through MCP."
 
 **Action.** Open one receipt (the Lisbon train receipt, done by Claude through MCP). Close it.
 
@@ -32,15 +32,15 @@ The story has two halves. First the scripted **Demo** shows the whole idea in 90
 
 **Picture.** Click **Replay captured promise**. The quote types out: "Sure, I'll help with the deck by Thursday." The conflict card appears: 6h needed, 6h open, minus 3h.
 
-**Say.** "Then I say yes to something. Bee hears it. Ambeent checks it against my week: the release needs six hours, I have six, and this favor takes three."
+**Say.** "Then I say yes to something. Bee hears it. Ambient checks it against my week: the release needs six hours, I have six, and this favor takes three."
 
 **Edit note.** Let the typing play in full. It is the moment the product reacts to the real world.
 
 ## 1:00–1:25 · Fork the week
 
-**Picture.** Scroll to Fork the week. Click B, then C, then back to A, pausing so the week grid visibly changes each time. End on the recommendation card with "Jev A · System One A · Both agree".
+**Picture.** Scroll to Fork the week. Click B, then C, then back to A, pausing so the week grid visibly changes each time. End on the recommendation card with "Jev A · Liquid d1 A · Both agree".
 
-**Say.** "Instead of another to-do, I get the choice. Protect the launch, keep the favor and ship Monday, or ship something smaller. Each path is real calendar arithmetic, not a guess. Two decision models weigh in, Jev and System One. When they agree, Ambeent recommends. When they don't, it asks me."
+**Say.** "Instead of another to-do, I get the choice. Protect the launch, keep the favor and ship Monday, or ship something smaller. Each path is real calendar arithmetic, not a guess. Two decision models weigh in, Jev and Liquid d1. When they agree, Ambient recommends. When they don't, it asks me."
 
 ## 1:25–1:45 · The hive acts
 
@@ -58,7 +58,7 @@ The story has two halves. First the scripted **Demo** shows the whole idea in 90
 
 **Picture.** Reconcile tab. Merge one duplicate group, watch the count drop, then press Undo. Confirm one harmless fact.
 
-**Say.** "Ambeent also cleans up Bee's record. Duplicates merge, and I can undo it. Facts Bee isn't sure about wait for me, and my answer stays in Ambeent. Bee is never changed behind my back."
+**Say.** "Ambient also cleans up Bee's record. Duplicates merge, and I can undo it. Facts Bee isn't sure about wait for me, and my answer stays in Ambient. Bee is never changed behind my back."
 
 **Privacy.** Several real facts name family members, and one duplicate names a real service. Blur those lines, or scroll past them quickly. Choose the fact you confirm in advance.
 
@@ -72,7 +72,7 @@ The story has two halves. First the scripted **Demo** shows the whole idea in 90
 
 **Picture.** Back to Horizon (Demo), header with bees. Fade the wordmark in.
 
-**Say.** "Bee remembers. Ambeent makes room. am·bee·nt."
+**Say.** "Bee remembers. Ambient makes room."
 
 ---
 
@@ -81,7 +81,7 @@ The story has two halves. First the scripted **Demo** shows the whole idea in 90
 1. `cd app && npm run ingest` for fresh conversations, then `npm start`.
 2. In Compass, Your Bee mode, set one goal with a due date this week and 6 hours.
 3. Export your calendar again to `app/data/calendars/` if this week looks empty. With an empty calendar every path "fits", which is true but less dramatic.
-4. In Settings, connect Jev and System One if you have working endpoints, then test both. If not, the app says "not connected", which is fine to show.
+4. In Settings, connect Jev and Liquid d1 if you have working endpoints, then test both. If not, the app says "not connected", which is fine to show.
 5. Clear the demo state with a reload of `/?mode=demo`.
 6. Browser: hide bookmarks bar and extensions, zoom 100%, window 1440×900. Turn on Do Not Disturb.
 7. For the phone shot, open the app over Tailscale (`LATENT_BIND=0.0.0.0 LATENT_HOSTS=<ip> npm start`) and use iOS screen recording.

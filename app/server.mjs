@@ -23,6 +23,7 @@ import { growSchema, listGrow, saveGrow, growObservations, suggestGrow } from '.
 import { actionSchema, connectorStatus, prepareBundle, getBundle, approveBundle, executeBundle } from './actions.mjs';
 import { describeRole, chat } from './decide/provider.mjs';
 import { runDecision, runDecide } from './decide/run.mjs';
+import { createTools, PROTOCOLS } from './mcp-tools.mjs';
 
 // Local configuration is ignored by git. Loading it never invokes a model.
 const envFile = process.env.LATENT_ENV_FILE || fileURLToPath(new URL('../.env', import.meta.url));
@@ -219,6 +220,38 @@ function modelsStatus() {
   }
   return out;
 }
+// MCP over Streamable HTTP (spec 2025-11-25): POST /mcp with JSON-RPC, JSON responses,
+// no server-initiated stream. Loopback callers need nothing; any other caller must send
+// Authorization: Bearer $LATENT_MCP_TOKEN, and without that variable remote MCP is off.
+const mcp = createTools({ db, dbPath, dataDir });
+const mcpSessions = new Set();
+async function serveMcp(req, res) {
+  const head = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' };
+  const remote = !['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress);
+  const want = process.env.LATENT_MCP_TOKEN;
+  if (remote && (!want || req.headers.authorization !== `Bearer ${want}`)) {
+    res.writeHead(401, { ...head, 'Content-Type': 'application/json', 'WWW-Authenticate': 'Bearer' });
+    return res.end(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32001, message: 'Unauthorized' } }));
+  }
+  if (req.method === 'GET') { res.writeHead(405, { ...head, Allow: 'POST, DELETE' }); return res.end(); }
+  if (req.method === 'DELETE') { mcpSessions.delete(req.headers['mcp-session-id']); res.writeHead(204, head); return res.end(); }
+  if (req.method !== 'POST') { res.writeHead(405, { ...head, Allow: 'POST, DELETE' }); return res.end(); }
+  const version = req.headers['mcp-protocol-version'];
+  if (version && !PROTOCOLS.includes(version)) { res.writeHead(400, { ...head, 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32600, message: `Unsupported MCP-Protocol-Version ${version}` } })); }
+  const body = await readBody(req);
+  const batch = Array.isArray(body) ? body : [body];
+  const out = [];
+  let session = null;
+  for (const message of batch) {
+    const reply = await mcp.handle(message);
+    if (message?.method === 'initialize' && reply?.result) { session = randomBytes(16).toString('hex'); mcpSessions.add(session); }
+    if (reply) out.push(reply);
+  }
+  if (!out.length) { res.writeHead(202, head); return res.end(); }
+  res.writeHead(200, { ...head, 'Content-Type': 'application/json', ...(session ? { 'Mcp-Session-Id': session } : {}) });
+  res.end(JSON.stringify(Array.isArray(body) ? out : out[0]));
+}
+
 function factReviewSchema() {
   db.exec('CREATE TABLE IF NOT EXISTS fact_reviews (fact_id TEXT PRIMARY KEY, verdict TEXT NOT NULL, at TEXT NOT NULL)');
 }
@@ -236,6 +269,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, origin);
     const route = url.pathname;
     const method = req.method;
+    if (route === '/mcp') return await serveMcp(req, res);
 
     if (method === 'GET' && route === '/api/session') {
       return send(res, 200, { token, extractor: 'offline-rules-v1', preview: PREVIEW });
@@ -444,7 +478,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(port, bindAddress, () => {
-  console.log(`Latent is running at ${origin}`);
+  console.log(`Ambient is running at ${origin}`);
   console.log(`Ledger: ${dbPath}${FIXTURE || dbPath.includes('fixture') ? ' (fixture mode)' : ''}`);
 });
 process.on('SIGINT', () => server.close(() => {

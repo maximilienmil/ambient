@@ -17,8 +17,8 @@ Status as of 21 October 2026, two days before the Friday 23 October noon PDT dea
 
 ## Should do
 
-6. **Measured proof page.** Retired-count audit accuracy, the Jev / System One / both / plain-AI comparison table, and tests passing. `npm run eval` already prints a table; it shows "not configured" until models are connected, and that is the honest result today.
-7. **Jev and System One.** Settings now stores keys, tests connections, scores rows and asks both about a promise. Jev has no endpoint yet. The local System One (Splash) answered with HTTP 401 in testing, so its key or server auth needs fixing.
+6. **Measured proof page.** Retired-count audit accuracy, the Jev / Liquid d1 / both / plain-AI comparison table, and tests passing. `npm run eval` already prints a table; it shows "not configured" until models are connected, and that is the honest result today.
+7. **Jev and Liquid d1.** Settings now stores keys, tests connections, scores rows and asks both about a promise. Jev has no endpoint yet. The local Liquid d1 (Splash) answered with HTTP 401 in testing, so its key or server auth needs fixing.
 8. ~~Replace the unlicensed font.~~ Done: Geist and Instrument Serif (OFL) are self-hosted in `app/public/fonts/`.
 9. **Owner audit.** The one-time 40-item hand check that turns the auto-label agreement into an accuracy number.
 10. **Wrapped card.** One shareable card built only from measured numbers. Not started.

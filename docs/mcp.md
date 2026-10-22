@@ -1,6 +1,6 @@
-# Ambeent MCP server
+# Ambient MCP server
 
-Ambeent was called Latent during development; tool names keep the `latent_` prefix so existing agent setups keep working.
+Ambient was called Latent during development; tool names keep the `latent_` prefix so existing agent setups keep working.
 
 Latent ships one tool layer over the ledger the app reads. An agent and the
 screen cannot disagree about how many rows are open, because they read the same
@@ -60,7 +60,7 @@ closed.
 
 ## Agent skill
 
-[`skills/ambeent/SKILL.md`](../skills/ambeent/SKILL.md) tells an agent when to use these tools, the three workflows (what to act on, can I take this on, clean up Bee) and the rules: never act on someone else's promise, ask before writes, and name states exactly.
+[`skills/ambient/SKILL.md`](../skills/ambient/SKILL.md) tells an agent when to use these tools, the three workflows (what to act on, can I take this on, clean up Bee) and the rules: never act on someone else's promise, ask before writes, and name states exactly.
 
 ## Why it is not a wrapper around the Bee API
 

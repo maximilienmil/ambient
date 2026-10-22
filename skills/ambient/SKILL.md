@@ -1,18 +1,18 @@
 ---
-name: ambeent
-description: Triage a Bee wearer's commitments, fork their week, and clean up Bee's record through the Ambeent MCP tools. Use when the user asks what to act on, whether they can take on a new promise, how a new commitment affects their week or a goal, to merge duplicate Bee to-dos, or to review their Bee record.
+name: ambient
+description: Triage a Bee wearer's commitments, fork their week, and clean up Bee's record through the Ambient MCP tools. Use when the user asks what to act on, whether they can take on a new promise, how a new commitment affects their week or a goal, to merge duplicate Bee to-dos, or to review their Bee record.
 ---
 
-# Ambeent
+# Ambient
 
-Ambeent sits on top of a Bee wearable's record. It reads what the person promised, checks it against their calendar, handles small reversible work, and brings them only the decisions that are theirs. These tools read and write the same local ledger the Ambeent app shows, so the agent and the screen never disagree.
+Ambient sits on top of a Bee wearable's record. It reads what the person promised, checks it against their calendar, handles small reversible work, and brings them only the decisions that are theirs. These tools read and write the same local ledger the Ambient app shows, so the agent and the screen never disagree.
 
 ## Setup
 
 The MCP server ships in the repository:
 
 ```bash
-claude mcp add ambeent -- node /absolute/path/to/app/mcp-server.mjs
+claude mcp add ambient -- node /absolute/path/to/app/mcp-server.mjs
 ```
 
 It needs a ledger at `app/data/latent.sqlite` (run `npm run ingest` once) or `LATENT_DB` pointing at one. Calendar exports (`.ics`) in `app/data/calendars/` feed the fork.
@@ -48,6 +48,6 @@ It needs a ledger at `app/data/latent.sqlite` (run `npm run ingest` once) or `LA
 
 - **Never act on someone else's promise.** "We should" and other people's commitments are remembered, not executed. If you cannot tell who said it, ask. Bee may report the speaker as Unknown; do not guess.
 - **Ask before any write.** `latent_merge` and `latent_close` change the ledger. Confirm first, then quote the receipt.
-- **Name states exactly.** A draft is not a send. A request is not an agreement. A calendar hold is not attendance. Closed in Ambeent does not change Bee.
+- **Name states exactly.** A draft is not a send. A request is not an agreement. A calendar hold is not attendance. Closed in Ambient does not change Bee.
 - **No invented numbers.** The fork is calendar arithmetic with stated assumptions (weekdays 9 to 5). Do not turn it into a probability of success, and do not report model scores that were not returned.
 - **Rest counts.** Deferring or dropping a commitment is a valid outcome. Do not frame it as failure.

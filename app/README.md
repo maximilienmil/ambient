@@ -106,7 +106,7 @@ The October 19 design direction is recorded in [SCOPE.md](../docs/SCOPE.md).
 The production UI is awaiting design review. Its new backend is available now:
 
 - `GET /api/horizon/demo`: computed synthetic launch scenario, available only
-  in fixture or preview mode. Jev and System One are explicitly `not_run`.
+  in fixture or preview mode. Jev and Liquid d1 are explicitly `not_run`.
 - `POST /api/horizon/compare`: read-only calculation for two to five alternatives.
   Requires the same session token as other API calls. It never changes a source
   record, approves an action, or writes a calendar event.

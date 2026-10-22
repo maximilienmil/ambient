@@ -211,6 +211,18 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     // fact reviews stay in Latent
     assert.equal((await request('/facts/fact-1', 'POST', { verdict: 'maybe' })).status, 400);
     assert.equal((await (await request('/facts/fact-1', 'POST', { verdict: 'confirmed' })).json()).ok, true);
+
+    // MCP over Streamable HTTP (2025-11-25) from loopback
+    const mcpPost = (body, extra = {}) => fetch(`http://127.0.0.1:${port}/mcp`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream', ...extra }, body: JSON.stringify(body) });
+    const init = await mcpPost({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'test', version: '1' } } });
+    assert.equal(init.status, 200);
+    assert.ok(init.headers.get('mcp-session-id'));
+    assert.equal((await init.json()).result.protocolVersion, '2025-11-25');
+    assert.equal((await mcpPost({ jsonrpc: '2.0', method: 'notifications/initialized' })).status, 202);
+    const listed = await (await mcpPost({ jsonrpc: '2.0', id: 2, method: 'tools/list' }, { 'MCP-Protocol-Version': '2025-11-25' })).json();
+    assert.ok(listed.result.tools.some((t) => t.name === 'latent_fork_week'));
+    assert.equal((await mcpPost({ jsonrpc: '2.0', id: 3, method: 'ping' }, { 'MCP-Protocol-Version': '1999-01-01' })).status, 400);
+    assert.equal((await fetch(`http://127.0.0.1:${port}/mcp`)).status, 405);
   } finally {
     if (proc && !proc.killed) await stop();
     rmSync(dir, { recursive: true, force: true });

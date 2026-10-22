@@ -1,6 +1,6 @@
-/* Product name in one place. The wordmark reads “ambient” with “bee” in the middle. */
-const BRAND = 'Ambeent';
-const WORDMARK = '<span class="mark"></span><span class="wm">am<i>·</i><b>bee</b><i>·</i>nt</span>';
+/* Product name in one place. */
+const BRAND = 'Ambient';
+const WORDMARK = '<img class="logo" src="/icon-192.png" alt=""><span class="wm">ambient</span>';
 
 const S={mode:'demo',settings:false,heard:false,listen:0,goals:[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']],sugg:true,mood:null,tags:{},tab:'horizon',path:'A',sheet:false,run:null,sent:false,filter:'done',receipt:null,merged:{},facts:{},split:null,range:'week',toast:null};
 const I={
@@ -15,24 +15,24 @@ const COL={done:'var(--done)',need:'var(--need)',wait:'var(--wait)',later:'var(-
 const LBL={done:'Done by the hive',need:'Needs you',wait:'Waiting on others',later:'Remembered for later'};
 /* overnight items. who: me = you said it, them = someone told you, sys = from a record */
 const ITEMS=[
- {id:'merge',via:'Ambeent, on this device',k:'done',t:'Merged 4 copies of “Send Jordan the outline”',who:['sys','Bee to-dos'],src:'Tue 10:14 am, Thu 4:02 pm',
+ {id:'merge',via:'Ambient, on this device',k:'done',t:'Merged 4 copies of “Send Jordan the outline”',who:['sys','Bee to-dos'],src:'Tue 10:14 am, Thu 4:02 pm',
   did:'Kept one to-do, retired three copies. Undo stays available for 30 days.',ev:'Same person, same file, same wording within two days.',q:null,jev:'Merge',d1:'Merge'},
- {id:'dentist',via:'Ambeent, checked against Google Calendar',k:'done',t:'Closed “Book a dentist cleaning”',who:['me','You said it'],src:'Bee conversation, Oct 6',
-  q:'I need to book a cleaning before the end of the month.',did:'Marked done in Ambeent. Your Bee to-do is untouched.',ev:'Your calendar shows “Dentist, Oct 17, 9:00 am”, after the conversation.',jev:'Close',d1:'Close'},
- {id:'fact',via:'Bee agent, checked by Ambeent',k:'done',t:'Confirmed a Bee fact: your sister lives in Boston',who:['me','You said it'],src:'2 later conversations, 1 calendar trip',
+ {id:'dentist',via:'Ambient, checked against Google Calendar',k:'done',t:'Closed “Book a dentist cleaning”',who:['me','You said it'],src:'Bee conversation, Oct 6',
+  q:'I need to book a cleaning before the end of the month.',did:'Marked done in Ambient. Your Bee to-do is untouched.',ev:'Your calendar shows “Dentist, Oct 17, 9:00 am”, after the conversation.',jev:'Close',d1:'Close'},
+ {id:'fact',via:'Bee agent, checked by Ambient',k:'done',t:'Confirmed a Bee fact: your sister lives in Boston',who:['me','You said it'],src:'2 later conversations, 1 calendar trip',
   q:'My sister just moved to Boston, I’m visiting her in November.',did:'Moved the fact from “to confirm” to confirmed.',ev:'“Boston, visit Ana” on your calendar Nov 8 to 10.',jev:'Confirm',d1:'Confirm'},
  {id:'hold',via:'Google Calendar connector · demo account',k:'done',t:'Held time for “Client call Wednesday at 2”',who:['me','You said it'],src:'Bee conversation, yesterday 5:40 pm',
   q:'Let’s do the client call Wednesday at two.',did:'Private hold on your demo calendar. No invite was sent to anyone.',ev:'The slot was free and the call was your own plan.',jev:'Hold time',d1:'Hold time'},
- {id:'expense',k:'done',via:'Claude, through the Ambeent MCP server',t:'Filed your Lisbon train receipt',who:['me','You said it'],src:'Bee conversation, Sunday 6:20 pm',
-  q:'Remind me to file the train receipt.',did:'Another agent picked this up through Ambeent’s MCP tools and filed it in your expenses folder.',ev:'The receipt PDF was in your downloads from Sunday.',jev:'Delegate',d1:'Delegate'},
+ {id:'expense',k:'done',via:'Claude, through the Ambient MCP server',t:'Filed your Lisbon train receipt',who:['me','You said it'],src:'Bee conversation, Sunday 6:20 pm',
+  q:'Remind me to file the train receipt.',did:'Another agent picked this up through Ambient’s MCP tools and filed it in your expenses folder.',ev:'The receipt PDF was in your downloads from Sunday.',jev:'Delegate',d1:'Delegate'},
  {id:'fork',via:'Not yet',k:'need',t:'Release Friday, or help Jordan by Thursday?',who:['me','You said it'],src:'Bee conversation, yesterday 4:12 pm',
   q:'Sure, I’ll help with the deck by Thursday.',did:'Nothing yet. Three paths are ready in Fork the week.',ev:'The release needs 6 hours. This week has 6 open. The favor takes 3.',jev:'Ask to move the favor',d1:'Ask to move the favor'},
  {id:'priya',via:'Not yet',k:'need',t:'The models disagree on “Send Priya the budget”',who:['me','You said it'],src:'Bee conversation, Monday 11:05 am',
   q:'I’ll send you the budget once it’s final.',did:'Nothing yet. Waiting for your call in Reconcile.',ev:'The budget file was edited Sunday. It may not be final.',jev:'Draft it now',d1:'Ask first'},
  {id:'slides',via:'Nobody. Not your promise',k:'wait',t:'Priya said she’d send the slides by Monday',who:['them','Priya said it'],src:'Bee conversation, Monday 11:07 am',
-  q:'I’ll get you the slides by Monday.',did:'Remembered only. Ambeent never acts on someone else’s promise.',ev:'Speaker attribution: Priya, not you.',jev:'Remember',d1:'Remember'},
+  q:'I’ll get you the slides by Monday.',did:'Remembered only. Ambient never acts on someone else’s promise.',ev:'Speaker attribution: Priya, not you.',jev:'Remember',d1:'Remember'},
  {id:'venue',via:'Nobody. Not your promise',k:'wait',t:'Sam owes you a reply about the venue',who:['them','Sam said it'],src:'Bee conversation, Sunday',
-  q:'Let me check with the venue and get back to you.',did:'Remembered. If nothing arrives by Friday, Ambeent will ask whether to nudge.',ev:'Speaker attribution: Sam.',jev:'Remember',d1:'Remember'},
+  q:'Let me check with the venue and get back to you.',did:'Remembered. If nothing arrives by Friday, Ambient will ask whether to nudge.',ev:'Speaker attribution: Sam.',jev:'Remember',d1:'Remember'},
  {id:'rust',via:'Nobody yet',k:'later',t:'“Learn Rust someday”',who:['me','You said it'],src:'Bee conversation, Sep 30',
   q:'I really want to learn Rust someday.',did:'Remembered, not scheduled. No date or next step was agreed.',ev:'An aspiration with no time attached.',jev:'Remember',d1:'Remember'}
 ];
@@ -49,7 +49,7 @@ function ringDemo(){
   <div class="more" style="padding:2px 10px">${tot} things from Bee overnight</div></div></div>`}
 function feedDemo(){
  const list=items().filter(i=>i.k==S.filter);
- return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'While you slept':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Ambeent remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
+ return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'While you slept':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Ambient remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
  ${list.map(i=>`<button class="item" data-receipt="${i.id}"><span class="sd" style="background:${COL[i.k]}"></span><div style="min-width:0"><div class="t">${i.t}</div><div class="s"><span class="who ${i.who[0]}">${i.who[1]}</span>${i.src}</div>${i.k=='done'?`<div class="via">via ${i.via}</div>`:''}</div><span class="go2">Receipt ›</span></button>`).join('')}
  ${S.filter=='done'?`<p class="more">and 18 more like these: duplicates merged, done items closed.</p>`:''}</div>`}
 const P={
@@ -106,7 +106,7 @@ function decideDemo(){
 function horizonDemo(){
  const p=P[S.path],m=S.path=='A';
  return `<section class="hero"><canvas data-swarm></canvas>${topBar()}
-  <div class="row"><div class="txt"><h1>The hive is working<br>through your week.</h1>
+  <div class="row"><div class="txt"><div class="eyebrow">Horizon · this week</div><h1>The hive is working<br>through your week.</h1>
   <p>Overnight the hive <span class="ii">${ico.merge}merged 4 duplicates</span>, <span class="ii">${ico.check}closed 2 done to-dos</span>, <span class="ii">${ico.fact}confirmed a fact</span> and <span class="ii">${ico.cal}held time for a call</span>. ${counts().need==1?'One decision is':counts().need+' decisions are'} yours.</p>${ringDemo()}</div></div></section>
  <div class="wrap"><div class="col">
   ${!S.heard?liveDemo():S.sent?'':`<div class="blk y pop">${lbl('need','Needs you')}<h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
@@ -120,7 +120,7 @@ function horizonDemo(){
  </div><div class="col sticky ${S.heard?'':'ghost'}">
   <div class="blk o">${lbl('ink','Release hours this week')}<div class="hrs">${p.h.map(x=>`<i class="${x}"></i>`).join('')}</div><div class="big">${p.big}<small>hours</small></div><p>${p.fit}</p></div>
   <div class="blk ${S.sent?'w':'y'}">${S.sent?lbl('done','The hive did'):lbl('need','Recommended')}<h2>${p.why}</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">${p.body}</p>
-   <div class="models"><span class="mdl">Jev <b>A</b></span><span class="mdl">System One <b>A</b></span><span class="mdl ${m?'agree':'split'}">${m?'Both agree':'You picked '+S.path+'. Your call.'}</span></div>
+   <div class="models"><span class="mdl">Jev <b>A</b></span><span class="mdl">Liquid d1 <b>A</b></span><span class="mdl ${m?'agree':'split'}">${m?'Both agree':'You picked '+S.path+'. Your call.'}</span></div>
    ${decideDemo()}</div>
  </div><div class="span">${feedDemo()}</div></div>`}
 /* compass */
@@ -137,40 +137,40 @@ function wave(){const v=[2,3,1,0,2,3,3,1,0,0,2,3,2,1,0,0,3,3,2,2,1],w=300,h=80,p
 function compassDemo(){
  const R={week:`<div class="blk o">${lbl("ink","Focus time this week")}<div class="big" style="margin-top:8px">6<small>hours open</small></div><p>Tuesday and Thursday mornings. The release needs all of it.</p></div>`,
   month:`<div class="blk o">${lbl("ink","Focus time left in October")}<div class="big" style="margin-top:8px">~22<small>hours</small></div>${wave()}<p>If two mornings a week stay clear. That’s an assumption you can change.</p><div class="act"><button class="chip">2 mornings a week</button><button class="chip">Edit</button></div></div>`,
-  year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Ambeent shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
+  year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Ambient shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
  const g=S.goals;
- return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
+ return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Compass · your direction</div><h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week','month','year'].map(k=>`<button aria-pressed="${S.range==k}" data-range="${k}">${k[0].toUpperCase()+k.slice(1)}</button>`).join('')}</div></section>
  <div class="wrap"><div class="col">
   <div class="blk y">${lbl('need','Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
   <div class="faces">${FACES.map(([n,c,m],i)=>`<button class="face" aria-pressed="${S.mood==i}" data-mood="${i}" aria-label="${n}" style="background:radial-gradient(circle at 35% 30%,${c.split(',')[0]},${c.split(',')[1]})"><svg viewBox="0 0 24 24"><path d="${m}"/></svg></button>`).join('')}</div>
   <div class="tagrow">${['Busy','Scattered','Focused','Social','Rested','Rushed'].map(t=>`<button class="tg2" aria-pressed="${!!S.tags[t]}" data-tag2="${t}">${t}</button>`).join('')}</div>
-  <p class="fine">${S.mood==null?'One tap. Ambeent uses it to size tomorrow, never to grade you.':S.mood<2?'Got it. Ambeent will keep tomorrow lighter and hold one morning free.':'Got it. Tomorrow keeps its current plan.'}</p></div>
-  <div class="blk l">${lbl('wait','Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename. Ambeent suggests; you decide.</p>
+  <p class="fine">${S.mood==null?'One tap. Ambient uses it to size tomorrow, never to grade you.':S.mood<2?'Got it. Ambient will keep tomorrow lighter and hold one morning free.':'Got it. Tomorrow keeps its current plan.'}</p></div>
+  <div class="blk l">${lbl('wait','Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Tap to rename. Ambient suggests; you decide.</p>
   ${g.map(([a,b,pc,c])=>`<div class="goal"><div class="ring" style="width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:conic-gradient(var(--pur) ${pc*3.6}deg,${c} 0)"><span style="background:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center">${pc}%</span></div><div style="flex:1;min-width:0"><input value="${a}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${b}</div></div></div>`).join('')}
-  ${S.sugg?`<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Ambeent noticed</div><b>You’ve spent most Sunday mornings on guitar for two months.</b><div style="font-size:14px;color:var(--mut);margin-top:2px">You never set it as a goal. Want to?</div><div class="act" style="margin-top:10px"><button class="chip on" data-sugg="add">Add “Play guitar”</button><button class="chip" data-sugg="no">Not a goal</button></div></div>`:''}
+  ${S.sugg?`<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Ambient noticed</div><b>You’ve spent most Sunday mornings on guitar for two months.</b><div style="font-size:14px;color:var(--mut);margin-top:2px">You never set it as a goal. Want to?</div><div class="act" style="margin-top:10px"><button class="chip on" data-sugg="add">Add “Play guitar”</button><button class="chip" data-sugg="no">Not a goal</button></div></div>`:''}
   <div class="act"><button class="chip">${I.plus}Add a goal</button></div></div>
 </div>
  <div class="col sticky">${R}
   <div class="blk w">${lbl('later','Observed')}<h2>A pattern, maybe.</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">In weeks you said yes to two favors, your own work moved. Is that the trade you want?</p><div class="act"><button class="chip">That’s not right</button><button class="chip">Ask a follow-up</button></div></div></div>
- <div class="span"><div class="blk w">${lbl('done','The hive')}<h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week. The more Bee heard, the fuller the cell, and the firmer Ambeent’s read on that week.</p>${hive()}
+ <div class="span"><div class="blk w">${lbl('done','The hive')}<h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week. The more Bee heard, the fuller the cell, and the firmer Ambient’s read on that week.</p>${hive()}
    <div class="leg" style="justify-content:space-between"><span>Oct 2025</span><span>334 conversations · 41 of 52 weeks with enough to go on</span><span>Oct 2026</span></div></div></div></div>`}
 /* reconcile */
 function recDemo(){
  const pairs=[['Send Jordan the project outline','Tue 10:14 am','Send outline to Jordan','Thu 4:02 pm','Same person, same file, two days apart.'],['Book dentist','Mon 9:30 am','Call dentist to book','Wed 12:10 pm','Both mention the cleaning.']];
  const facts=[['Your sister lives in Boston','2 later conversations and a Boston trip on your calendar'],['You run on Tuesdays','4 of the last 6 Tuesdays have a run on your calendar']];
  const open=130-Object.keys(S.merged).length;
- return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
+ return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Reconcile · your record</div><h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
   <div class="count">${open<130?"<s>130</s>":""}${open}<span style="font:600 14px Geist;margin-left:10px;color:#4b4825">open to-dos</span></div></section>
  <div class="wrap">
   ${S.split?'':`<div class="blk y span" style="border:2px solid var(--need)">${lbl('need','Needs you')}<h2>The models disagree.</h2><p class="sub" style="color:#4b4825">“Send Priya the budget.” You said it, so the hive could act. But should it?</p>
-   <div class="models" style="margin-top:0"><span class="mdl">Jev <b>Draft it now</b></span><span class="mdl">System One <b>Ask first, the file may not be final</b></span><span class="mdl split">Split</span></div>
+   <div class="models" style="margin-top:0"><span class="mdl">Jev <b>Draft it now</b></span><span class="mdl">Liquid d1 <b>Ask first, the file may not be final</b></span><span class="mdl split">Split</span></div>
    <div class="act"><button class="chip on" data-split="let the hive draft it">Let the hive draft it</button><button class="chip" data-split="you’ll do it yourself">I’ll do it</button></div></div>`}
   <div class="blk l">${lbl('wait','Proposed · duplicates')}<h2>Likely the same task</h2><p class="sub" style="color:#4a3f78">Merging is local and you can undo it.</p>
   ${pairs.map(([a,at,b,bt,why],i)=>S.merged[i]?`<div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:10px"><span class="dot"></span><div style="flex:1">Merged into one: <b>${a}</b></div><button class="chip" data-unmerge="${i}">Undo</button></div>`:`<div class="card" style="margin-bottom:10px"><div class="pair"><div class="card" style="background:#f6f3ea">${a}<small>Bee to-do · ${at}</small></div><div class="card" style="background:#f6f3ea">${b}<small>Bee to-do · ${bt}</small></div></div><p class="fine">${why}</p><div class="act" style="margin-top:8px"><button class="chip on" data-merge="${i}">Merge into one</button><button class="chip">Keep both</button></div></div>`).join('')}</div>
   <div class="blk w">${lbl('wait','Proposed · facts')}<h2>Facts to confirm</h2><p class="sub">Bee saved 248 facts it isn’t sure about. The hive checks them against your calendar and later conversations.</p>
   ${facts.map(([f,e],i)=>`<div class="card" style="background:#f6f3ea;margin-bottom:8px">${S.facts[i]?`<span class="dot" style="display:inline-block;margin-right:8px"></span>${S.facts[i]}: `:''}${f}<small>${e}</small>${S.facts[i]?'':`<div class="act" style="margin-top:8px"><button class="chip on" data-fact="${i}" data-v="Confirmed">Confirm</button><button class="chip" data-fact="${i}" data-v="Removed">Not true</button></div>`}</div>`).join('')}</div>
-  <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b><span class="who me">You said it</span>it can act for you.<span class="who them">Someone told you</span>it only remembers. Unsure speaker means Ambeent asks.</div>
+  <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b><span class="who me">You said it</span>it can act for you.<span class="who them">Someone told you</span>it only remembers. Unsure speaker means Ambient asks.</div>
  </div>`}
 function receiptDemo(){
  const i=items().concat([JORDAN]).find(x=>x.id==S.receipt);if(!i)return'';
@@ -179,7 +179,7 @@ function receiptDemo(){
   <span class="who ${i.who[0]}">${i.who[1]}</span><h3>${i.t}</h3>
   ${i.q?`<div class="quote ${i.who[0]=='them'?'them':''}">“${i.q}”</div>`:''}
   <div class="kv"><span>Source</span><div>${i.src}</div><span>Evidence</span><div>${i.ev}</div><span>What happened</span><div>${i.did}</div><span>Done by</span><div><b>${i.via}</b></div></div>
-  <div class="sec">DECISION MODELS</div><div class="models" style="margin-top:0"><span class="mdl" style="background:#f1eee4">Jev <b>${i.jev}</b></span><span class="mdl" style="background:#f1eee4">System One <b>${i.d1}</b></span><span class="mdl ${agree?'agree':'split'}">${agree?'Agree':'Split, so you decide'}</span></div>
+  <div class="sec">DECISION MODELS</div><div class="models" style="margin-top:0"><span class="mdl" style="background:#f1eee4">Jev <b>${i.jev}</b></span><span class="mdl" style="background:#f1eee4">Liquid d1 <b>${i.d1}</b></span><span class="mdl ${agree?'agree':'split'}">${agree?'Agree':'Split, so you decide'}</span></div>
   ${i.k=='done'?'<div class="act"><button class="chip" data-close>Undo</button></div>':''}</div></div>`}
 /* ===================================================================
    Live mode: the same three screens, built from the local ledger.
@@ -376,7 +376,7 @@ function recommend() {
 function topBar() {
   const last = D.ledger?.lastRun ? new Date(D.ledger.lastRun) : null;
   const pill = S.mode === 'demo' ? 'Demo story · synthetic' : last ? `Bee synced ${last.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}` : 'Not synced yet';
-  return `<div class="top"><div class="sync glass"><span class="band"></span><span class="live"></span>${esc(pill)}</div>
+  return `<div class="top"><div class="mbrand">${WORDMARK}</div><div class="sync glass"><span class="band"></span><span class="live"></span>${esc(pill)}</div>
    <div class="modes glass"><button aria-pressed="${S.mode === 'demo'}" data-mode="demo">Demo</button><button aria-pressed="${S.mode === 'live'}" data-mode="live" ${D.synthetic ? 'title="Start with npm start to read your Bee"' : ''}>Your Bee</button></div>
    <button class="gear glass" data-settings aria-label="Settings">${GEAR}</button></div>`;
 }
@@ -389,7 +389,7 @@ function ringLive() {
 function feedLive() {
   const all = litems().filter((i) => catOf(i) === L.filter).sort(dueSort);
   const list = all.slice(0, 8);
-  const head = { done: ['The hive did', 'Closed or merged', 'Done in Bee or merged by Ambeent. Tap any one for its receipt.'], need: ['Needs you', 'Still open in Bee', 'Your Bee to-dos, newest deadline first. Open one to fork your week around it.'], wait: ['Shared', 'Said as “we”', 'Joint intentions picked up from conversations. Ambeent will not act on these alone.'], later: ['Heard', 'Picked up from conversations', 'Phrases the extractor heard. Many are other people talking; check before trusting them.'] }[L.filter];
+  const head = { done: ['The hive did', 'Closed or merged', 'Done in Bee or merged by Ambient. Tap any one for its receipt.'], need: ['Needs you', 'Still open in Bee', 'Your Bee to-dos, newest deadline first. Open one to fork your week around it.'], wait: ['Shared', 'Said as “we”', 'Joint intentions picked up from conversations. Ambient will not act on these alone.'], later: ['Heard', 'Picked up from conversations', 'Phrases the extractor heard. Many are other people talking; check before trusting them.'] }[L.filter];
   return `<div class="blk w">${lbl(L.filter, head[0])}<h2>${head[1]}</h2><p class="sub">${head[2]}</p>
   ${list.map((i) => `<button class="item" data-lreceipt="${esc(i.id)}"><span class="sd" style="background:${COL[catOf(i)]}"></span><div style="min-width:0"><div class="t">${esc(i.title)}</div><div class="s"><span class="who ${whoOf(i)[0]}">${whoOf(i)[1]}</span>${esc(i.source)}</div>${catOf(i) === 'need' ? `<div class="via" style="color:#8a4300">${esc(reasonOf(i))}</div>` : ''}</div><span class="go2">Receipt ›</span></button>`).join('') || '<p class="muted">Nothing here.</p>'}
   ${all.length > list.length ? `<p class="more">and ${all.length - list.length} more in the ledger.</p>` : ''}</div>`;
@@ -397,14 +397,14 @@ function feedLive() {
 function listenCard() {
   const h = D.heard, q = h ? String(h.quote || h.title) : '';
   return `<div class="blk o live">${lbl('ink', h && L.live ? 'Hearing something new' : 'Listening through Bee')}
-   ${h ? `<div class="said"><span class="who ${whoOf(h)[0]}">${whoOf(h)[1]}</span><span class="typed">“${esc(q.slice(0, L.live || q.length))}${L.live ? '<b class="caret"></b>' : ''}”</span></div><p>${esc(h.source)}. Speaker attribution is not available on this account, so Ambeent labels by phrasing.</p>
+   ${h ? `<div class="said"><span class="who ${whoOf(h)[0]}">${whoOf(h)[1]}</span><span class="typed">“${esc(q.slice(0, L.live || q.length))}${L.live ? '<b class="caret"></b>' : ''}”</span></div><p>${esc(h.source)}. Speaker attribution is not available on this account, so Ambient labels by phrasing.</p>
      <div class="act"><button class="chip" data-focus="${esc(h.id)}">Fork my week around this</button></div>`
    : `<p>New conversations appear here as Bee records them. Keep <b>npm run stream</b> running, or sync now.</p>`}
    <div class="act">${D.busy === 'sync' ? '<span class="chip"><span class="spin"></span>Syncing from Bee</span>' : '<button class="chip" data-sync>Sync from Bee</button>'}</div>
    ${D.sync ? `<div class="${D.sync.ok ? 'okmsg' : 'err'}">${esc(D.sync.text)}</div>` : ''}</div>`;
 }
 function goalForm() {
-  return `<div class="form"><p class="sub" style="color:#4b4825">What are you protecting? Ambeent compares every new promise against it.</p>
+  return `<div class="form"><p class="sub" style="color:#4b4825">What are you protecting? Ambient compares every new promise against it.</p>
    <label>Goal</label><input class="fld" data-in="gTitle" value="${esc(L.gTitle)}" placeholder="Ship the first release">
    <label>Focused hours it still needs</label><div class="pick">${[2, 4, 6, 8, 12].map((h) => `<button data-ghours="${h}" aria-pressed="${L.gHours === h}">${h}h</button>`).join('')}</div>
    <label>Due</label><div class="pick">${[1, 2, 3, 4, 7].map((n) => `<button data-gdue="${n}" aria-pressed="${L.gDue === n}">${n === 7 ? 'In a week' : md(at(addDays(Date.now(), n), 17))}</button>`).join('')}</div>
@@ -446,7 +446,7 @@ function weekGrid() {
 }
 function forkCard() {
   const g = goalOf();
-  if (!g) return `<div class="ghost"><div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><p class="sub">Set the goal you’re protecting and Ambeent will draw three paths.</p></div></div>`;
+  if (!g) return `<div class="ghost"><div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><p class="sub">Set the goal you’re protecting and Ambient will draw three paths.</p></div></div>`;
   if (D.cmpError) return `<div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><div class="err">${esc(D.cmpError)}</div></div>`;
   if (!D.cmp) return `<div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><p class="sub"><span class="spin"></span>Running the capacity engine on your calendar.</p></div>`;
   const opts = { A: ['Protect your goal', 'Ask to move this promise a week later.'], B: ['Keep every promise', 'Do both on their current dates.'], C: ['Shrink the goal', 'Keep the promise and do half the goal now.'] };
@@ -457,22 +457,22 @@ function forkCard() {
 }
 function hoursCard() {
   const v = variant(L.path), g = goalOf();
-  if (!g) return `<div class="blk o">${lbl('ink', 'What are you protecting?')}<h2 style="color:#f4f0d8">Set a goal for this week.</h2><p>Ambeent weighs every new promise against it, using your real calendar.</p>${goalForm().replace('<p class="sub" style="color:#4b4825">What are you protecting? Ambeent compares every new promise against it.</p>', '')}</div>`;
+  if (!g) return `<div class="blk o">${lbl('ink', 'What are you protecting?')}<h2 style="color:#f4f0d8">Set a goal for this week.</h2><p>Ambient weighs every new promise against it, using your real calendar.</p>${goalForm().replace('<p class="sub" style="color:#4b4825">What are you protecting? Ambient compares every new promise against it.</p>', '')}</div>`;
   if (!v) return '';
   const need = v.goal.requiredMinutes, got = v.goal.scheduledBeforeDeadlineMinutes, n = Math.min(12, Math.ceil(need / 60));
   return `<div class="blk o">${lbl('ink', `${g.title.slice(0, 40)} · hours before ${wd(Date.parse(g.due_at))}`)}<div class="hrs">${Array.from({ length: n }, (_, i) => `<i class="${i < Math.floor(got / 60) ? 'rel' : ''}"></i>`).join('')}</div><div class="big">${hrs(got).replace('h', '')} of ${hrs(need).replace('h', '')}<small>hours</small></div><p>${v.goal.status === 'fits' ? 'The goal fits before its deadline on this path.' : `Short ${hrs(v.goal.shortfallMinutes)} before the deadline on this path.`} Calendar arithmetic, not a prediction.</p></div>`;
 }
 function modelsRow() {
   const m = D.models || {}, a = D.ask;
-  const name = { jev: 'Jev', d1: 'System One' };
+  const name = { jev: 'Jev', d1: 'Liquid d1' };
   if (!m.jev?.configured || !m.d1?.configured) return `<div class="models">${['jev', 'd1'].map((r) => `<span class="mdl">${name[r]} <b>${m[r]?.configured ? 'ready' : 'not connected'}</b></span>`).join('')}<button class="mdl split" data-settings>Add model keys</button></div>`;
-  if (!a) return `<div class="models"><span class="mdl">Jev <b>ready</b></span><span class="mdl">System One <b>ready</b></span><button class="mdl agree" data-ask>Ask both about this promise</button></div>`;
-  if (a.busy) return `<div class="models"><span class="mdl"><span class="spin"></span>Asking Jev and System One</span></div>`;
+  if (!a) return `<div class="models"><span class="mdl">Jev <b>ready</b></span><span class="mdl">Liquid d1 <b>ready</b></span><button class="mdl agree" data-ask>Ask both about this promise</button></div>`;
+  if (a.busy) return `<div class="models"><span class="mdl"><span class="spin"></span>Asking Jev and Liquid d1</span></div>`;
   if (a.error) return `<div class="err">${esc(a.error)}</div>`;
   const top = (d) => d ? Object.entries(d).sort((x, y) => y[1] - x[1])[0] : null;
   const tj = top(a.jev?.distribution || a.jev), td = top(a.d1?.distribution || a.d1);
   const agree = tj && td && tj[0] === td[0];
-  return `<div class="models"><span class="mdl">Jev <b>${tj ? `${tj[0]} ${Math.round(tj[1] * 100)}%` : 'no answer'}</b></span><span class="mdl">System One <b>${td ? `${td[0]} ${Math.round(td[1] * 100)}%` : 'no answer'}</b></span><span class="mdl ${agree ? 'agree' : 'split'}">${agree ? 'Agree' : 'Split, so you decide'} · policy: ${esc(a.tier)}</span></div>`;
+  return `<div class="models"><span class="mdl">Jev <b>${tj ? `${tj[0]} ${Math.round(tj[1] * 100)}%` : 'no answer'}</b></span><span class="mdl">Liquid d1 <b>${td ? `${td[0]} ${Math.round(td[1] * 100)}%` : 'no answer'}</b></span><span class="mdl ${agree ? 'agree' : 'split'}">${agree ? 'Agree' : 'Split, so you decide'} · policy: ${esc(a.tier)}</span></div>`;
 }
 function messageFor() {
   const f = focusItem(), g = goalOf(), due = fDue();
@@ -500,7 +500,7 @@ function actCard() {
     const holds = res.filter((r) => r.step.startsWith('hold') && r.status === 'complete');
     body = `<div class="result"><div class="sec" style="margin-top:0">${b.state === 'complete' ? 'DONE BY THE HIVE' : esc(b.state.replace('_', ' ').toUpperCase())} · ${new Date(b.created_at).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</div>
      <div class="rt">${b.payload.executor === 'google' ? (sent?.kind === 'message_sent' ? 'Message sent and time held.' : 'Time held.') : 'Prepared in the sandbox.'}</div>
-     <div class="kv"><span>Done by</span><div>${b.payload.executor === 'google' ? 'Gmail and Google Calendar · demo account' : 'Ambeent sandbox. Nothing left this device'}</div><span>Calendar</span><div>${holds.length} ${b.payload.executor === 'google' ? 'private holds' : 'local holds'}</div><span>Message</span><div>${sent ? (sent.kind === 'message_sent' ? `Sent to ${esc(b.payload.message.to)}. A request is not a yes.` : 'Prepared, not sent') : 'Not reached'}</div><span>Receipt</span><div class="small">${esc(b.id.slice(0, 8))} · hash ${esc(b.hash.slice(0, 10))}</div></div>
+     <div class="kv"><span>Done by</span><div>${b.payload.executor === 'google' ? 'Gmail and Google Calendar · demo account' : 'Ambient sandbox. Nothing left this device'}</div><span>Calendar</span><div>${holds.length} ${b.payload.executor === 'google' ? 'private holds' : 'local holds'}</div><span>Message</span><div>${sent ? (sent.kind === 'message_sent' ? `Sent to ${esc(b.payload.message.to)}. A request is not a yes.` : 'Prepared, not sent') : 'Not reached'}</div><span>Receipt</span><div class="small">${esc(b.id.slice(0, 8))} · hash ${esc(b.hash.slice(0, 10))}</div></div>
      <div class="act"><button class="chip" data-newplan>Plan another</button></div></div>`;
   } else if (L.run != null) {
     body = `<div class="run"><div class="lane">${[0, 1, 2, 3].map((i) => `<span style="animation-delay:${-i * .55}s">\\(◉)/ · ·</span>`).join('')}</div>${['Preparing the exact payload', 'Approving this version', exec === 'google' ? 'Holding time and sending' : 'Running in the sandbox'].map((s, i) => `<div class="step ${i < L.run ? 'ok' : i === L.run ? 'cur' : ''}"><span class="ck">${i < L.run ? '✓' : ''}</span>${s}</div>`).join('')}</div>`;
@@ -520,7 +520,7 @@ function actCard() {
 function horizonLive() {
   const t = D.ledger?.totals || {}, td = D.ledger?.today || {}, c = liveCounts();
   return `<section class="hero"><canvas data-swarm></canvas>${topBar()}
-  <div class="row"><div class="txt"><h1>The hive is working<br>through your week.</h1>
+  <div class="row"><div class="txt"><div class="eyebrow">Horizon · this week</div><h1>The hive is working<br>through your week.</h1>
   <p>Bee heard <span class="ii">${ico.cal}${t.conversations || 0} conversations</span>. The hive found <span class="ii">${ico.merge}${todoDupes().reduce((a, g) => a + g.count - 1, 0)} duplicate to-dos</span>, <span class="ii">${ico.check}${c.done} things already done</span>, and <span class="ii">${ico.fact}${c.need} to-dos are still open</span> in Bee.</p>${ringLive()}</div></div></section>
   <div class="wrap"><div class="col">${listenCard()}${conflictCard()}${forkCard()}</div>
   <div class="col sticky">${hoursCard()}${actCard()}</div><div class="span">${feedLive()}</div></div>`;
@@ -567,18 +567,18 @@ function compassLive() {
   const sugg = (D.ws?.suggestions || []).filter((s) => !(L.hidden || []).includes(s.id))[0];
   const hv = hiveLive(), t = D.ledger?.totals || {};
   const doneTodos = litems().filter((i) => i.origin === 'bee_todo' && i.state === 'done').length;
-  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
+  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Compass · your direction</div><h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week', 'month', 'year'].map((k) => `<button aria-pressed="${S.range === k}" data-range="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div></section>
   <div class="wrap"><div class="col">
    <div class="blk y">${lbl('need', 'Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
    <div class="faces">${FACES.map(([n, c, m], i) => `<button class="face" aria-pressed="${S.mood == i}" data-mood="${i}" aria-label="${n}" style="background:radial-gradient(circle at 35% 30%,${c.split(',')[0]},${c.split(',')[1]})"><svg viewBox="0 0 24 24"><path d="${m}"/></svg></button>`).join('')}</div>
-   <p class="fine">${S.mood == null ? 'One tap. Kept on this device. Ambeent uses it to size tomorrow, never to grade you.' : 'Saved on this device.'}</p></div>
+   <p class="fine">${S.mood == null ? 'One tap. Kept on this device. Ambient uses it to size tomorrow, never to grade you.' : 'Saved on this device.'}</p></div>
    <div class="blk l">${lbl('wait', 'Your choice')}<h2>Goals</h2><p class="sub" style="color:#4a3f78">Edit a title and press Enter. Goals with a due date and hours drive the fork.</p>
-   ${goals.map((g) => `<div class="goal"><div style="flex:1;min-width:0"><input value="${esc(g.title)}" data-goaltitle="${esc(g.id)}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${g.due_at ? `Due ${md(Date.parse(g.due_at))}` : 'No date'}${g.minutes ? ` · ${hrs(g.minutes)} left` : ''}${g.evidence?.source ? ` · ${esc(g.evidence.source === 'user-stated' ? 'you said it' : 'noticed by Ambeent')}` : ''}</div></div><button class="chip" data-goaldone="${esc(g.id)}">Done</button></div>`).join('') || '<p class="muted">No goals yet.</p>'}
-   ${sugg ? `<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Ambeent noticed</div><b>${esc(sugg.title)}</b><div style="font-size:14px;color:var(--mut);margin-top:2px">${esc(sugg.detail)}</div><div class="act" style="margin-top:10px"><button class="chip on" data-suggadd="${esc(sugg.id)}">Make it a goal</button><button class="chip" data-sugghide="${esc(sugg.id)}">Not a goal</button></div></div>` : ''}
+   ${goals.map((g) => `<div class="goal"><div style="flex:1;min-width:0"><input value="${esc(g.title)}" data-goaltitle="${esc(g.id)}" aria-label="Goal"><div style="color:var(--mut);font-size:13px">${g.due_at ? `Due ${md(Date.parse(g.due_at))}` : 'No date'}${g.minutes ? ` · ${hrs(g.minutes)} left` : ''}${g.evidence?.source ? ` · ${esc(g.evidence.source === 'user-stated' ? 'you said it' : 'noticed by Ambient')}` : ''}</div></div><button class="chip" data-goaldone="${esc(g.id)}">Done</button></div>`).join('') || '<p class="muted">No goals yet.</p>'}
+   ${sugg ? `<div class="sugg"><div class="lbl" style="margin-bottom:4px"><i style="background:var(--later)"></i>Ambient noticed</div><b>${esc(sugg.title)}</b><div style="font-size:14px;color:var(--mut);margin-top:2px">${esc(sugg.detail)}</div><div class="act" style="margin-top:10px"><button class="chip on" data-suggadd="${esc(sugg.id)}">Make it a goal</button><button class="chip" data-sugghide="${esc(sugg.id)}">Not a goal</button></div></div>` : ''}
    ${L.newGoal ? `<div class="sugg">${goalForm()}</div>` : '<div class="act"><button class="chip" data-newgoal>' + I.plus + 'Add a goal</button></div>'}</div></div>
   <div class="col sticky">${rangeLive()}
-   <div class="blk w">${lbl('later', 'Observed')}<h2>From your record</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">Bee recorded ${t.beeTodos || 0} to-dos and marked ${doneTodos} done. ${t.facts || 0} facts are saved about you. Repetition alone does not establish what matters to you, so Ambeent asks instead of assuming.</p></div></div>
+   <div class="blk w">${lbl('later', 'Observed')}<h2>From your record</h2><p style="margin:6px 0 0;font-size:15px;color:#3b3818">Bee recorded ${t.beeTodos || 0} to-dos and marked ${doneTodos} done. ${t.facts || 0} facts are saved about you. Repetition alone does not establish what matters to you, so Ambient asks instead of assuming.</p></div></div>
   <div class="span"><div class="blk w">${lbl('done', 'The hive')}<h2>The hive grows with every conversation.</h2><p class="sub">Each cell is a week of your Bee record. Fuller cells mean more conversations, and a firmer read on that week.</p>${hv.svg}
    <div class="leg" style="justify-content:space-between"><span>${new Date(hv.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}</span><span>${hv.total} conversations · ${hv.active} of 52 weeks with something to go on</span><span>Now</span></div></div></div></div>`;
 }
@@ -598,20 +598,20 @@ function recLive() {
   const reviews = D.rec?.reviews || {};
   const facts = ops.slice(0, L.factShow);
   const modelsCard = !m.jev?.configured || !m.d1?.configured
-    ? `<div class="blk y span" style="border:2px solid var(--need)">${lbl('need', 'Needs you')}<h2>Connect the decision models.</h2><p class="sub" style="color:#4b4825">Jev and System One each judge whether a row should be ignored, remembered, asked about, drafted or acted on. When they disagree, it comes here. ${m.jev?.configured ? "Jev is connected." : "Jev is not connected."} ${m.d1?.configured ? "System One is connected." : "System One is not connected."} Both are needed.</p><div class="act"><button class="chip on" data-settings>Add model keys</button></div></div>`
-    : split.length ? `<div class="blk y span" style="border:2px solid var(--need)">${lbl('need', 'Needs you')}<h2>The models disagree.</h2>${split.map((i) => { const t = (d) => Object.entries(d).sort((a, b) => b[1] - a[1])[0]; return `<div class="card" style="margin-bottom:8px">${esc(i.title)}<div class="models" style="margin-top:8px"><span class="mdl">Jev <b>${t(i.jevDist)[0]}</b></span><span class="mdl">System One <b>${t(i.d1Dist)[0]}</b></span><span class="mdl split">Split</span></div></div>`; }).join('')}</div>`
+    ? `<div class="blk y span" style="border:2px solid var(--need)">${lbl('need', 'Needs you')}<h2>Connect the decision models.</h2><p class="sub" style="color:#4b4825">Jev and Liquid d1 each judge whether a row should be ignored, remembered, asked about, drafted or acted on. When they disagree, it comes here. ${m.jev?.configured ? "Jev is connected." : "Jev is not connected."} ${m.d1?.configured ? "Liquid d1 is connected." : "Liquid d1 is not connected."} Both are needed.</p><div class="act"><button class="chip on" data-settings>Add model keys</button></div></div>`
+    : split.length ? `<div class="blk y span" style="border:2px solid var(--need)">${lbl('need', 'Needs you')}<h2>The models disagree.</h2>${split.map((i) => { const t = (d) => Object.entries(d).sort((a, b) => b[1] - a[1])[0]; return `<div class="card" style="margin-bottom:8px">${esc(i.title)}<div class="models" style="margin-top:8px"><span class="mdl">Jev <b>${t(i.jevDist)[0]}</b></span><span class="mdl">Liquid d1 <b>${t(i.d1Dist)[0]}</b></span><span class="mdl split">Split</span></div></div>`; }).join('')}</div>`
     : `<div class="blk y span">${lbl('need', 'Decision models')}<h2>No disagreements yet.</h2><p class="sub" style="color:#4b4825">${(D.ledger?.stats?.unscored || 0)} rows have not been scored by both models.</p><div class="act">${D.busy === 'score' ? '<span class="chip"><span class="spin"></span>Scoring</span>' : '<button class="chip on" data-score>Score the next 10</button>'}</div>${D.scoreMsg ? `<div class="${D.scoreMsg.ok ? 'okmsg' : 'err'}">${esc(D.scoreMsg.text)}</div>` : ''}</div>`;
-  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
+  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Reconcile · your record</div><h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
   <div class="count">${openTodos < totalTodos ? `<s>${totalTodos}</s>` : ''}${openTodos}<span style="font:600 14px Geist;margin-left:10px;color:#4b4825">open Bee to-dos</span></div></section>
   <div class="wrap">${modelsCard}
    <div class="blk l">${lbl('wait', 'Proposed · duplicates')}<h2>Likely the same task</h2><p class="sub" style="color:#4a3f78">Same wording, recorded more than once. Merging keeps the copy with a due date. You can undo it.</p>
    ${L.undo.map((u, k) => `<div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:10px"><span class="dot"></span><div style="flex:1">Merged ${u.ids.length} copies: <b>${esc(u.text)}</b></div><button class="chip" data-unmerge="${k}">Undo</button></div>`).join('')}
    ${groups.map((g, k) => `<div class="card" style="margin-bottom:10px">${esc(g.text)}<small>${g.count} copies · open ${g.openDays} days</small><div class="act" style="margin-top:8px"><button class="chip on" data-lmerge="${k}">Merge into one</button></div></div>`).join('') || '<p class="muted">No duplicates left.</p>'}</div>
-   <div class="blk w">${lbl('wait', 'Proposed · facts')}<h2>Facts to confirm</h2><p class="sub">${ops.length} facts Bee saved without confirmation. The hive found no independent evidence for these yet, so they wait for you. Your answer stays in Ambeent; Bee is not changed.</p>
+   <div class="blk w">${lbl('wait', 'Proposed · facts')}<h2>Facts to confirm</h2><p class="sub">${ops.length} facts Bee saved without confirmation. The hive found no independent evidence for these yet, so they wait for you. Your answer stays in Ambient; Bee is not changed.</p>
    ${D.rec?.error ? `<div class="err">${esc(D.rec.error)}</div>` : !D.rec ? '<p class="sub"><span class="spin"></span>Checking facts</p>' : ''}
    ${facts.map((o) => { const v = reviews[o.targetId]; return `<div class="card" style="background:#f6f3ea;margin-bottom:8px">${v ? `<span class="dot" style="display:inline-block;margin-right:8px"></span><b>${v === 'confirmed' ? 'Confirmed' : 'Not true'}:</b> ` : ''}${esc(o.text)}<small>${esc(o.reason || '')}</small><div class="act" style="margin-top:8px">${v ? `<button class="chip" data-fact2="${esc(o.targetId)}" data-v="undo">Undo</button>` : `<button class="chip on" data-fact2="${esc(o.targetId)}" data-v="confirmed">Confirm</button><button class="chip" data-fact2="${esc(o.targetId)}" data-v="not_true">Not true</button>`}</div></div>`; }).join('')}
    ${ops.length > facts.length ? '<div class="act"><button class="chip" data-morefacts>Show more</button></div>' : ''}</div>
-   <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b> Bee reports the speaker as Unknown on this account, so Ambeent labels by phrasing (“I’ll”, “we should”) and asks before acting on anything.</div></div>`;
+   <div class="span note"><b style="color:var(--ink)">Who said it decides what the hive may do.</b> Bee reports the speaker as Unknown on this account, so Ambient labels by phrasing (“I’ll”, “we should”) and asks before acting on anything.</div></div>`;
 }
 function receiptLive() {
   const i = litems().find((x) => x.id === S.receipt);
@@ -623,7 +623,7 @@ function receiptLive() {
    <span class="who ${whoOf(i)[0]}">${whoOf(i)[1]}</span><h3>${esc(i.title)}</h3>
    ${i.quote ? `<div class="quote">“${esc(i.quote.slice(0, 400))}”</div>` : ''}
    <div class="kv"><span>Source</span><div>${esc(i.source)}</div><span>Rule</span><div>${esc(i.rule || '—')}</div><span>State</span><div>${esc(i.state)}${i.closedBy ? ` · closed by ${esc(i.closedBy.source || '')}` : ''}</div>${i.dueAt ? `<span>Due</span><div>${md(Date.parse(i.dueAt))}</div>` : ''}${slip ? `<span>Why first</span><div>${esc(slip.reason)}</div>` : ''}<span>Policy</span><div>${esc(i.tier || i.decision)}${i.why ? ` · ${esc(i.why)}` : ''}</div></div>
-   <div class="sec">DECISION MODELS</div><div class="models" style="margin-top:0">${tj ? `<span class="mdl" style="background:#f1eee4">Jev <b>${tj[0]} ${Math.round(tj[1] * 100)}%</b></span><span class="mdl" style="background:#f1eee4">System One <b>${td ? td[0] : '—'}</b></span>` : '<span class="mdl" style="background:#f1eee4">Not scored yet</span><button class="mdl split" data-settings>Connect models</button>'}</div>
+   <div class="sec">DECISION MODELS</div><div class="models" style="margin-top:0">${tj ? `<span class="mdl" style="background:#f1eee4">Jev <b>${tj[0]} ${Math.round(tj[1] * 100)}%</b></span><span class="mdl" style="background:#f1eee4">Liquid d1 <b>${td ? td[0] : '—'}</b></span>` : '<span class="mdl" style="background:#f1eee4">Not scored yet</span><button class="mdl split" data-settings>Connect models</button>'}</div>
    ${i.state === 'live' ? `<div class="act"><button class="chip on" data-focus="${esc(i.id)}">Fork my week around this</button></div>` : ''}</div></div>`;
 }
 function settings() {
@@ -639,7 +639,7 @@ function settings() {
   return `<div class="scrim" data-close><div class="rc" role="dialog" aria-label="Settings"><button class="x" data-close aria-label="Close">✕</button><h3>Settings</h3>
    <div class="sec">MODE</div><p class="small">${D.synthetic ? 'This server is running the synthetic demo (npm run demo). Start it with npm start to read your Bee.' : 'Demo shows the scripted story. Your Bee reads the local ledger on this machine.'}</p>
    <div class="sec">DECISION MODELS</div><p class="small muted">Keys are written to the git-ignored .env on this machine and never sent back to the browser.</p>
-   ${role('jev', 'Jev', 'expected-utility judge')}${role('d1', 'System One', 'fast first read (d1)')}
+   ${role('jev', 'Jev', 'decision model')}${role('d1', 'Liquid d1', 'System 1 model')}
    <div class="sec">BEE</div><p class="small">${D.ledger ? `${D.ledger.totals?.conversations || 0} conversations · last sync ${D.ledger.lastRun ? new Date(D.ledger.lastRun).toLocaleString() : 'never'}` : 'No ledger loaded.'}</p>
    <div class="sec">ACTIONS</div><p class="small">${conn.configured && conn.enabled ? `Google demo account connected: ${esc(conn.account)}.` : 'Google demo account not connected. Actions run in the sandbox. To connect: gog auth add &lt;demo-email&gt; --services gmail,calendar --gmail-scope send, then set LATENT_DEMO_ACCOUNT, LATENT_DEMO_CALENDAR and LATENT_EXTERNAL_ACTIONS=1 in .env and restart.'}</p></div></div>`;
 }
@@ -728,8 +728,8 @@ async function settingsClick(d) {
 /* ---------- shell ---------- */
 const labels = [['horizon', 'Horizon'], ['compass', 'Compass'], ['rec', 'Reconcile']];
 function page() {
-  if (!D.ready) return `<section class="hero"><h1>Ambeent</h1><p><span class="spin"></span>Opening your hive.</p></section>`;
-  if (D.error && S.mode === 'live') return `<section class="hero">${topBar()}<h1>Ambeent</h1><div class="err">${esc(D.error)}</div></section>`;
+  if (!D.ready) return `<section class="hero"><h1>Ambient</h1><p><span class="spin"></span>Opening your hive.</p></section>`;
+  if (D.error && S.mode === 'live') return `<section class="hero">${topBar()}<h1>Ambient</h1><div class="err">${esc(D.error)}</div></section>`;
   if (S.mode === 'live') return S.tab === 'horizon' ? horizonLive() : S.tab === 'compass' ? compassLive() : recLive();
   return S.tab === 'horizon' ? horizonDemo() : S.tab === 'compass' ? compassDemo() : recDemo();
 }
@@ -743,6 +743,7 @@ function render() {
     const oldCanvas = r.querySelector('canvas[data-swarm]');
     const sheetSt = r.querySelector('.rc')?.scrollTop || 0;
     const name = S.mode === 'live' ? (D.ledger?.owner || 'You').split(/\s+/)[0] : 'Max';
+    r.dataset.tab = S.tab;
     r.innerHTML = `<aside class="side"><div class="brand">${WORDMARK}</div>${labels.map(([k, l]) => `<button class="nav" ${S.tab == k ? 'aria-current="page"' : ''} data-tab="${k}">${I[k]}${l}</button>`).join('')}<div class="me"><span class="av">${esc(initials())}</span>${esc(name)}</div></aside>
     <main class="main">${page()}</main>
     <nav class="tabbar glass">${labels.map(([k, l]) => `<button class="tb" ${S.tab == k ? 'aria-current="page"' : ''} data-tab="${k}">${I[k]}${l}</button>`).join('')}</nav>
@@ -803,7 +804,7 @@ function demoClick(d){
  if(d.path){if(S.run!=null)return;S.path=d.path;S.sheet=false;S.sent=false}
  else if('replay'in d){replay();return}else if('sheet'in d)S.sheet=!S.sheet;else if('go'in d){go();return}else if('undoRun'in d){S.sent=false}
  else if(d.filter)S.filter=d.filter;else if(d.receipt){if(d.receipt=='fork'){S.receipt=null;S.filter='need'}S.receipt=d.receipt}
- else if(d.sugg){if(d.sugg=='add')S.goals=S.goals.concat([['Play guitar','Sundays · noticed by Ambeent',100,'#bfeccb']]);S.sugg=false}else if(d.range)S.range=d.range;else if(d.mood!==undefined)S.mood=+d.mood;else if(d.tag2){S.tags[d.tag2]=!S.tags[d.tag2]}else if(d.split){S.split=d.split}else if(d.merge!==undefined)S.merged[d.merge]=1;else if(d.unmerge!==undefined)delete S.merged[d.unmerge];
+ else if(d.sugg){if(d.sugg=='add')S.goals=S.goals.concat([['Play guitar','Sundays · noticed by Ambient',100,'#bfeccb']]);S.sugg=false}else if(d.range)S.range=d.range;else if(d.mood!==undefined)S.mood=+d.mood;else if(d.tag2){S.tags[d.tag2]=!S.tags[d.tag2]}else if(d.split){S.split=d.split}else if(d.merge!==undefined)S.merged[d.merge]=1;else if(d.unmerge!==undefined)delete S.merged[d.unmerge];
  else if(d.fact!==undefined)S.facts[d.fact]=d.v;else return;render()}
 /* ASCII bees: ten per header, faint, spread out */
 const bees=[[.06,.18],[.30,.10],[.55,.16],[.80,.08],[.94,.30],[.70,.42],[.42,.50],[.16,.62],[.60,.80],[.88,.70]].map(([x,y],i)=>({x,y,s:.6+.1*(i%4),p:i*1.9}));
