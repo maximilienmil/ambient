@@ -1,6 +1,6 @@
 /* Product name in one place. */
 const BRAND = 'Ambient';
-const WORDMARK = '<img class="logo" src="/icon-192.png" alt=""><span class="wm">ambient</span>';
+const WORDMARK = '<img class="logo" src="/icon-192.png" alt=""><span class="wm">am<i>·</i><b>bee</b><i>·</i>nt</span>';
 
 const S={mode:'demo',settings:false,heard:false,listen:0,goals:[['Ship the first release','6 h left · due Fri',70,'#fadb4a'],['Run three times a week','2 of 3 this week',66,'#d3c6fa'],['Read before bed','No data yet',0,'#e5e1d4']],sugg:true,mood:null,tags:{},tab:'horizon',path:'A',sheet:false,run:null,sent:false,filter:'done',receipt:null,merged:{},facts:{},split:null,range:'week',toast:null};
 const I={
@@ -106,7 +106,7 @@ function decideDemo(){
 function horizonDemo(){
  const p=P[S.path],m=S.path=='A';
  return `<section class="hero"><canvas data-swarm></canvas>${topBar()}
-  <div class="row"><div class="txt"><div class="eyebrow">Horizon · this week</div><h1>The hive is working<br>through your week.</h1>
+  <div class="row"><div class="txt"><h1>The hive is working<br>through your week.</h1>
   <p>Overnight the hive <span class="ii">${ico.merge}merged 4 duplicates</span>, <span class="ii">${ico.check}closed 2 done to-dos</span>, <span class="ii">${ico.fact}confirmed a fact</span> and <span class="ii">${ico.cal}held time for a call</span>. ${counts().need==1?'One decision is':counts().need+' decisions are'} yours.</p>${ringDemo()}</div></div></section>
  <div class="wrap"><div class="col">
   ${!S.heard?liveDemo():S.sent?'':`<div class="blk y pop">${lbl('need','Needs you')}<h2>Release Friday, or help Jordan by Thursday?</h2><p class="sub" style="margin:0;color:#4b4825">You told Jordan you’d help with a presentation. It takes time the release needs.</p>
@@ -139,7 +139,7 @@ function compassDemo(){
   month:`<div class="blk o">${lbl("ink","Focus time left in October")}<div class="big" style="margin-top:8px">~22<small>hours</small></div>${wave()}<p>If two mornings a week stay clear. That’s an assumption you can change.</p><div class="act"><button class="chip">2 mornings a week</button><button class="chip">Edit</button></div></div>`,
   year:`<div class="blk o">${lbl("ink","Patterns across the year")}<div class="big" style="margin-top:8px">3<small>launch weeks crowded by favors</small></div><p>Seen, not predicted. Ambient shows patterns here, not forecasts, until there’s more to go on.</p></div>`}[S.range];
  const g=S.goals;
- return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Compass · your direction</div><h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
+ return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week','month','year'].map(k=>`<button aria-pressed="${S.range==k}" data-range="${k}">${k[0].toUpperCase()+k.slice(1)}</button>`).join('')}</div></section>
  <div class="wrap"><div class="col">
   <div class="blk y">${lbl('need','Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
@@ -160,7 +160,7 @@ function recDemo(){
  const pairs=[['Send Jordan the project outline','Tue 10:14 am','Send outline to Jordan','Thu 4:02 pm','Same person, same file, two days apart.'],['Book dentist','Mon 9:30 am','Call dentist to book','Wed 12:10 pm','Both mention the cleaning.']];
  const facts=[['Your sister lives in Boston','2 later conversations and a Boston trip on your calendar'],['You run on Tuesdays','4 of the last 6 Tuesdays have a run on your calendar']];
  const open=130-Object.keys(S.merged).length;
- return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Reconcile · your record</div><h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
+ return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
   <div class="count">${open<130?"<s>130</s>":""}${open}<span style="font:600 14px Geist;margin-left:10px;color:#4b4825">open to-dos</span></div></section>
  <div class="wrap">
   ${S.split?'':`<div class="blk y span" style="border:2px solid var(--need)">${lbl('need','Needs you')}<h2>The models disagree.</h2><p class="sub" style="color:#4b4825">“Send Priya the budget.” You said it, so the hive could act. But should it?</p>
@@ -520,7 +520,7 @@ function actCard() {
 function horizonLive() {
   const t = D.ledger?.totals || {}, td = D.ledger?.today || {}, c = liveCounts();
   return `<section class="hero"><canvas data-swarm></canvas>${topBar()}
-  <div class="row"><div class="txt"><div class="eyebrow">Horizon · this week</div><h1>The hive is working<br>through your week.</h1>
+  <div class="row"><div class="txt"><h1>The hive is working<br>through your week.</h1>
   <p>Bee heard <span class="ii">${ico.cal}${t.conversations || 0} conversations</span>. The hive found <span class="ii">${ico.merge}${todoDupes().reduce((a, g) => a + g.count - 1, 0)} duplicate to-dos</span>, <span class="ii">${ico.check}${c.done} things already done</span>, and <span class="ii">${ico.fact}${c.need} to-dos are still open</span> in Bee.</p>${ringLive()}</div></div></section>
   <div class="wrap"><div class="col">${listenCard()}${conflictCard()}${forkCard()}</div>
   <div class="col sticky">${hoursCard()}${actCard()}</div><div class="span">${feedLive()}</div></div>`;
@@ -567,7 +567,7 @@ function compassLive() {
   const sugg = (D.ws?.suggestions || []).filter((s) => !(L.hidden || []).includes(s.id))[0];
   const hv = hiveLive(), t = D.ledger?.totals || {};
   const doneTodos = litems().filter((i) => i.origin === 'bee_todo' && i.state === 'done').length;
-  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Compass · your direction</div><h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
+  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Where your time<br>is heading.</h1><p>Your goals in your words, against what your calendar can hold.</p>
   <div class="seg2 glass">${['week', 'month', 'year'].map((k) => `<button aria-pressed="${S.range === k}" data-range="${k}">${k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div></section>
   <div class="wrap"><div class="col">
    <div class="blk y">${lbl('need', 'Needs you · one tap a day')}<h2>How did yesterday feel?</h2>
@@ -601,7 +601,7 @@ function recLive() {
     ? `<div class="blk y span" style="border:2px solid var(--need)">${lbl('need', 'Needs you')}<h2>Connect the decision models.</h2><p class="sub" style="color:#4b4825">Jev and Liquid d1 each judge whether a row should be ignored, remembered, asked about, drafted or acted on. When they disagree, it comes here. ${m.jev?.configured ? "Jev is connected." : "Jev is not connected."} ${m.d1?.configured ? "Liquid d1 is connected." : "Liquid d1 is not connected."} Both are needed.</p><div class="act"><button class="chip on" data-settings>Add model keys</button></div></div>`
     : split.length ? `<div class="blk y span" style="border:2px solid var(--need)">${lbl('need', 'Needs you')}<h2>The models disagree.</h2>${split.map((i) => { const t = (d) => Object.entries(d).sort((a, b) => b[1] - a[1])[0]; return `<div class="card" style="margin-bottom:8px">${esc(i.title)}<div class="models" style="margin-top:8px"><span class="mdl">Jev <b>${t(i.jevDist)[0]}</b></span><span class="mdl">Liquid d1 <b>${t(i.d1Dist)[0]}</b></span><span class="mdl split">Split</span></div></div>`; }).join('')}</div>`
     : `<div class="blk y span">${lbl('need', 'Decision models')}<h2>No disagreements yet.</h2><p class="sub" style="color:#4b4825">${(D.ledger?.stats?.unscored || 0)} rows have not been scored by both models.</p><div class="act">${D.busy === 'score' ? '<span class="chip"><span class="spin"></span>Scoring</span>' : '<button class="chip on" data-score>Score the next 10</button>'}</div>${D.scoreMsg ? `<div class="${D.scoreMsg.ok ? 'okmsg' : 'err'}">${esc(D.scoreMsg.text)}</div>` : ''}</div>`;
-  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<div class="eyebrow">Reconcile · your record</div><h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
+  return `<section class="hero" style="min-height:220px"><canvas data-swarm></canvas>${topBar()}<h1>Keep what<br>holds up.</h1><p>The hive checks Bee’s to-dos and facts against what actually happened. You only see what it can’t settle.</p>
   <div class="count">${openTodos < totalTodos ? `<s>${totalTodos}</s>` : ''}${openTodos}<span style="font:600 14px Geist;margin-left:10px;color:#4b4825">open Bee to-dos</span></div></section>
   <div class="wrap">${modelsCard}
    <div class="blk l">${lbl('wait', 'Proposed · duplicates')}<h2>Likely the same task</h2><p class="sub" style="color:#4a3f78">Same wording, recorded more than once. Merging keeps the copy with a due date. You can undo it.</p>
@@ -633,6 +633,7 @@ function settings() {
    <div class="form"><label>Base URL (OpenAI-compatible)</label><input class="fld" data-mf="${r}-baseUrl" value="${esc(m[r]?.baseUrl || '')}" placeholder="https://api.example.com/v1">
    <label>Model</label><input class="fld" data-mf="${r}-model" value="${esc(m[r]?.model || '')}" placeholder="model-name">
    <label>API key</label><input class="fld" type="password" data-mf="${r}-apiKey" placeholder="${m[r]?.hasKey ? 'Saved. Leave blank to keep it.' : 'Paste the key'}" autocomplete="off"></div>
+   <div class="act"><button class="chip" data-bedrock="${r}">Use Amazon Bedrock</button></div>
    <div class="act"><button class="chip on" data-savemodel="${r}">Save</button><button class="chip" data-testmodel="${r}">Test connection</button></div>
    ${D.saveMsg[r] ? `<div class="${D.saveMsg[r].ok ? 'okmsg' : 'err'}">${esc(D.saveMsg[r].text)}</div>` : ''}
    ${D.test[r] ? `<div class="${D.test[r].ok ? 'okmsg' : 'err'}">${D.test[r].busy ? '<span class="spin"></span>Testing' : esc(D.test[r].ok ? `Answered in ${D.test[r].latencyMs ?? '?'} ms: ${D.test[r].reply}` : D.test[r].message)}</div>` : ''}</div>`;
@@ -712,6 +713,13 @@ async function liveClick(d) {
   return false;
 }
 async function settingsClick(d) {
+  if (d.bedrock) {
+    const r = d.bedrock, set = (f, v) => { const el = document.querySelector(`[data-mf="${r}-${f}"]`); if (el) el.value = v; };
+    set('baseUrl', 'https://bedrock-runtime.us-west-2.amazonaws.com/openai/v1');
+    set('model', r === 'jev' ? 'openai.gpt-oss-120b-1:0' : 'openai.gpt-oss-20b-1:0');
+    D.saveMsg[r] = { ok: true, text: 'Bedrock endpoint filled in. Paste a Bedrock API key (AWS console, Bedrock, API keys), then Save and Test.' };
+    return false;
+  }
   if (d.savemodel) {
     const r = d.savemodel, get = (f) => document.querySelector(`[data-mf="${r}-${f}"]`)?.value || '';
     try { D.models = await api('/api/models', { role: r, baseUrl: get('baseUrl'), model: get('model'), apiKey: get('apiKey') }); D.saveMsg[r] = { ok: true, text: 'Saved to .env on this machine.' }; } catch (e) { D.saveMsg[r] = { ok: false, text: e.message }; }
@@ -744,6 +752,7 @@ function render() {
     const sheetSt = r.querySelector('.rc')?.scrollTop || 0;
     const name = S.mode === 'live' ? (D.ledger?.owner || 'You').split(/\s+/)[0] : 'Max';
     r.dataset.tab = S.tab;
+    if (r.dataset.revealed !== S.tab + S.mode) { r.dataset.revealed = S.tab + S.mode; r.classList.add('reveal'); clearTimeout(r._rv); r._rv = setTimeout(() => r.classList.remove('reveal'), 1400); }
     r.innerHTML = `<aside class="side"><div class="brand">${WORDMARK}</div>${labels.map(([k, l]) => `<button class="nav" ${S.tab == k ? 'aria-current="page"' : ''} data-tab="${k}">${I[k]}${l}</button>`).join('')}<div class="me"><span class="av">${esc(initials())}</span>${esc(name)}</div></aside>
     <main class="main">${page()}</main>
     <nav class="tabbar glass">${labels.map(([k, l]) => `<button class="tb" ${S.tab == k ? 'aria-current="page"' : ''} data-tab="${k}">${I[k]}${l}</button>`).join('')}</nav>

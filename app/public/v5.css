@@ -260,10 +260,22 @@ textarea.fld{min-height:110px;resize:vertical;line-height:1.4}
 }
 .app{--tabtint:#f3e4a0;--tabink:#7a5c00}
 .app[data-tab=compass]{--tabtint:#d6ebcd;--tabink:#2f6b3f}
-.app[data-tab=rec]{--tabtint:#e2d9fb;--tabink:#4d2fb8}
+.app[data-tab=rec]{--tabtint:#d4e6f7;--tabink:#1f5f8f}
 @container (min-width:761px){
  .app[data-tab=compass] .hero{background:radial-gradient(90% 130% at 15% -20%,#bfe2ae 0,#d2eac6 36%,transparent 70%),radial-gradient(80% 120% at 100% 10%,#9ccfd8 0,#c5e2e6 45%,transparent 80%),#eef2e2}
  .app[data-tab=compass] .eyebrow{color:#2f5a35}
- .app[data-tab=rec] .hero{background:radial-gradient(90% 130% at 15% -20%,#d5c7fb 0,#e0d6fb 36%,transparent 70%),radial-gradient(80% 120% at 100% 10%,#a8bff6 0,#c8d5f8 45%,transparent 80%),#efedf6}
+ .app[data-tab=rec] .hero{background:radial-gradient(90% 130% at 15% -20%,#bfe0f5 0,#d3e9f7 36%,transparent 70%),radial-gradient(80% 120% at 100% 10%,#9ec9ec 0,#c4def2 45%,transparent 80%),#eef4f8}
  .app[data-tab=rec] .eyebrow{color:#3d2a8a}
 }
+.wm i{font-style:normal;color:#b8ab6a;margin:0 1px}.wm b{font-weight:400;background:linear-gradient(90deg,#c99a06,#8a6ad8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.app[data-tab=compass] .sticky{position:static}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+@container (min-width:761px){
+ .reveal .hero{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+ .reveal .wrap>*>.blk,.reveal .wrap>.blk,.reveal .wrap>.span{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+ .reveal .wrap>.col:nth-child(1)>.blk:nth-child(1){animation-delay:.08s}.reveal .wrap>.col:nth-child(1)>.blk:nth-child(2){animation-delay:.16s}.reveal .wrap>.col:nth-child(1)>.blk:nth-child(3){animation-delay:.24s}
+ .reveal .wrap>.col:nth-child(2)>.blk:nth-child(1){animation-delay:.12s}.reveal .wrap>.col:nth-child(2)>.blk:nth-child(2){animation-delay:.2s}.reveal .wrap>.span{animation-delay:.3s}
+ .blk{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+ .blk.w:hover,.blk.l:hover,.blk.y:hover{transform:translateY(-2px);box-shadow:0 14px 34px #2a24061a}
+}
+@media (prefers-reduced-motion:reduce){.reveal *{animation:none!important}.blk:hover{transform:none!important}}

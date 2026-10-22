@@ -82,7 +82,7 @@ npm test            # offline suite
 
 **With your own Bee:** `npm run ingest` reads your account into `app/data/` (git-ignored), then `npm start`. Switch the top-right toggle from **Demo** to **Your Bee**. Put `.ics` exports in `app/data/calendars/` for the capacity engine. Keep `npm run stream` running in another terminal and new conversations appear in Horizon as Bee records them.
 
-**Decision models:** open Settings (the gear) and add Jev and Liquid d1. Any OpenAI-compatible endpoint works. Keys are written to the root `.env`, never sent back to the browser.
+**Decision models:** Jev runs on **Amazon Bedrock** (see [docs/AWS.md](docs/AWS.md)): Settings → Jev → Use Amazon Bedrock. Open Settings (the gear) and add Jev and Liquid d1. Any OpenAI-compatible endpoint works. Keys are written to the root `.env`, never sent back to the browser.
 
 **Real actions:** by default actions run in a sandbox and nothing leaves your machine. To send from a dedicated demo account, see [app/README.md](app/README.md#dedicated-google-demo-account).
 

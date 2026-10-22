@@ -6,7 +6,7 @@ Drafts for each field the Amazon Developer Hackathon asks for. Edit the voice, k
 
 - **Primary track:** Bee (Wearable AI). Priority use case: personal productivity.
 - **Mini challenge:** Open Source (MIT-licensed public repository, plus the agent skill in `skills/ambient`).
-- **Mini challenge, only if completed before submitting:** AWS Builder. Point Jev at Amazon Bedrock (see "AWS" below) and record that it answers. Do not enter it otherwise.
+- **Mini challenge:** AWS Builder. Jev runs on Amazon Bedrock (gpt-oss-120b) through Bedrock's OpenAI-compatible API. Integration documented in `docs/AWS.md`. Confirm Test connection succeeds before submitting.
 
 ## Project description
 
@@ -47,7 +47,7 @@ The same capabilities are open to any agent: a Model Context Protocol server (st
 - *Used for:* exposing Ambient's ledger and fork to any agent, over stdio and Streamable HTTP.
 - *Worked well:* the spec is small enough to implement without an SDK.
 
-**AWS** *(fill in only if Bedrock was used)*
+**Amazon Bedrock**
 - Amazon Bedrock as the Jev decision-model endpoint through its OpenAI-compatible Chat Completions API. Configured in Settings; no code changes needed because `app/decide/provider.mjs` speaks that contract.
 
 ## Friction log
