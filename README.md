@@ -44,7 +44,7 @@ Ambient treats a promise differently depending on who made it.
 
 ## What's real and what's simulated
 
-The demo tells a story on synthetic data. The local app reads a real account. Both are labeled, and the difference matters.
+This demo tells a story on synthetic data. The local app reads a real account.
 
 | | Status |
 |---|---|
@@ -56,7 +56,6 @@ The demo tells a story on synthetic data. The local app reads a real account. Bo
 | Live Bee stream with reconnect and catch-up | **Working.** Live events stream in as Bee records them. The demo replays a captured event so judges can see the whole flow in ninety seconds, and the replay is labeled as such. |
 | The app (Horizon, Compass, Reconcile) | **Working.** One interface, two modes. **Demo** plays the scripted story on synthetic data. **Your Bee** reads your local ledger and calendar: real to-dos, duplicates, facts, conversation history, a fork computed on your calendar, and sandbox or Google actions with receipts. |
 | Jev and Liquid d1 | **Wired.** Add an OpenAI-compatible base URL, model and key for each in Settings (stored in the git-ignored `.env`), test the connection, score rows, or ask both about a promise. Verdicts in Demo mode are illustrative; no evaluation results are claimed. |
-| Speaker attribution | **Refused, on purpose.** Bee's API reports every speaker as `Unknown` on this account, so Ambient never claims to know who said what. Ownership stays unproven until Bee can prove it. |
 | Outcome prediction and forecasts | **Best guess, not certainty.** Estimates are drawn from your own history, how often promises like yours get closed, and the hive sharpens them as it grows. No number here is a probability. |
 
 Open items before submission are tracked in [docs/OPEN-ITEMS.md](docs/OPEN-ITEMS.md).
