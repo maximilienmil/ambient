@@ -279,3 +279,4 @@ textarea.fld{min-height:110px;resize:vertical;line-height:1.4}
  .blk.w:hover,.blk.l:hover,.blk.y:hover{transform:translateY(-2px);box-shadow:0 14px 34px #2a24061a}
 }
 @media (prefers-reduced-motion:reduce){.reveal *{animation:none!important}.blk:hover{transform:none!important}}
+@container (max-width:760px){.mbrand .logo{display:none}}
