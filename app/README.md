@@ -1,4 +1,4 @@
-# Latent
+# Ambient
 
 ## October 20 working build
 
@@ -52,7 +52,7 @@ with completed work; only unique scheduling-intent matches qualify automatically
 
 ---
 
-Latent turns Bee's record into a week-ahead scenario, then shows which record
+Ambient turns Bee's record into a week-ahead scenario, then shows which record
 changes have evidence. Bee data stays in a local SQLite ledger.
 
 Ingest reads the Bee account through the Bee CLI into local SQLite. It keeps the

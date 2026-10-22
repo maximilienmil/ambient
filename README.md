@@ -4,7 +4,7 @@
 
 Bee remembers everything you say. Ambient decides what's worth your attention.
 
-> **Elevator pitch (200 chars):** Bee remembers everything you say. Ambient decides what's worth your attention—merging duplicates, checking promises against your calendar, and showing real tradeoffs before you commit.
+> **Elevator pitch:** Ambient turns Bee conversations into action, checks promises against your calendar, explains when it acts or waits, keeps receipts, and coordinates with others’ agents. No group chat needed.
 
 Ambient is an ambient agent that sits on top of your [Bee](https://bee.computer) record. It reads what you promised, checks it against your calendar and the rest of your record, quietly handles the small stuff, and brings you only the decisions that are actually yours. It does not add another list to look at. It takes things off the one you already have.
 
@@ -93,7 +93,7 @@ npm test            # offline suite
 **From an agent (MCP).** Over stdio for Claude Code and other local agents, or over Streamable HTTP (spec 2025-11-25) at `http://127.0.0.1:4317/mcp` while the app runs. Remote callers need `LATENT_MCP_TOKEN` set and an `Authorization: Bearer` header.
 
 ```bash
-claude mcp add latent -- node /absolute/path/to/app/mcp-server.mjs
+claude mcp add ambient -- node /absolute/path/to/app/mcp-server.mjs
 ```
 
 Then ask: *what should I act on?* or *can I help Jordan with the deck by Thursday?* The [agent skill](skills/ambient/SKILL.md) teaches the workflows.
