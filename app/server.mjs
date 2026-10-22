@@ -95,6 +95,8 @@ function send(res, status, value, type = 'application/json') {
 const STATIC = new Map([
   ['/assets/horizon-atmosphere.svg', ['assets/horizon-atmosphere.svg', 'image/svg+xml']],
   ['/assets/horizon-grain.svg', ['assets/horizon-grain.svg', 'image/svg+xml']],
+  ['/assets/urban-vintage.jpg', ['assets/urban-vintage.jpg', 'image/jpeg']],
+  ['/assets/fog-calm.jpg', ['assets/fog-calm.jpg', 'image/jpeg']],
   ['/icons/house.svg', ['icons/house.svg', 'image/svg+xml']],
   ['/icons/brain.svg', ['icons/brain.svg', 'image/svg+xml']],
   ['/icons/check-square.svg', ['icons/check-square.svg', 'image/svg+xml']],

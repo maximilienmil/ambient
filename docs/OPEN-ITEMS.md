@@ -25,8 +25,8 @@ Status as of 21 October 2026, two days before the Friday 23 October noon PDT dea
 
 ## Known gaps, stated on purpose
 
-- **Speaker attribution.** Bee reports `Unknown` on this account ([ADR 0002](adr/0002-no-voice-attribution.md)). Latent does not claim to know your voice. The demo uses a captured event, labeled as a replay.
-- **No outcome predictor.** There are no independent labels, so there is no completion probability anywhere. The product shows hours and arithmetic.
+- **Speaker attribution.** Bee's API reports every speaker as `Unknown` on this account ([ADR 0002](adr/0002-no-voice-attribution.md)). Ambient treats ownership as unproven and never claims to know your voice. The demo replays a captured event, labeled as a replay.
+- **Forecasts are guesses, not probabilities.** Estimates come from this person's own promise history (completion base rates, a fitted slip model on follow-through) and sharpen as the hive grows. No number in the product is a probability; the UI says so next to the estimate.
 - **Semantic duplicates.** Reconcile merges exact-text duplicates today. Same-meaning, different-words is a follow-up.
 - **Month and Year views.** Static illustrations of the intended shape. Real month estimates need editable assumptions backed by data.
 - **Not in scope for this submission:** native iOS, TimesFM, a year-long forecast, agent-to-agent negotiation.
