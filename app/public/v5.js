@@ -422,27 +422,33 @@ function conflictCard() {
    <label>Due</label><div class="pick">${[1, 2, 3, 5, 7].map((n) => { const v = at(addDays(Date.now(), n), 17); return `<button data-fdue="${v}" aria-pressed="${dayStart(due) === dayStart(v)}">${md(v)}</button>`; }).join('')}</div></div>
    ${g ? `<div class="stats"><div class="stat"><b>${hrs(g.minutes)}</b><span>${esc(g.title.slice(0, 40))} still needs</span></div><div class="stat"><b>${hrs(free)}</b><span>open before ${wd(Date.parse(g.due_at))}, 9 to 5 weekdays</span></div><div class="stat neg"><b>−${hrs(L.fMin)}</b><span>this promise takes</span></div></div>` : ''}</div>`;
 }
+function pathTag(id) {
+  const v = variant(id); if (!v) return '…';
+  const gOk = v.goal.status === 'fits', pOk = promiseIn(v)?.status === 'fits';
+  if (id === 'A') return gOk ? 'Goal on time, promise next week' : `Goal still short ${hrs(v.goal.shortfallMinutes)}`;
+  if (id === 'B') return gOk && pOk ? 'Both on time' : !gOk ? `Goal short ${hrs(v.goal.shortfallMinutes)}` : 'Promise runs late';
+  return gOk && pOk ? 'Half the goal, promise on time' : 'Still too tight';
+}
 function forkSvg(mobile) {
-  const tag = (id) => { const v = variant(id); if (!v) return '…'; return v.goal.status === 'fits' && promiseIn(v)?.status === 'fits' ? 'Both fit' : v.goal.status === 'fits' ? 'Goal fits' : 'Goal at risk'; };
-  const E = { A: [28, tag('A')], B: [78, tag('B')], C: [128, tag('C')] };
-  const [vb, x0, x1, tx, fs] = mobile ? [330, 30, 170, 184, 17] : [520, 44, 300, 316, 19];
-  return `<svg viewBox="0 0 ${vb} 156" style="width:100%;display:block;margin:0 0 12px" role="img" aria-label="Three paths from today">${Object.entries(E).map(([k, [y, t]]) => { const on = L.path === k; return `<g data-lpath="${k}" style="cursor:pointer"><path d="M${x0} 78C${x0 + 100} 78 ${x1 - 110} ${y} ${x1} ${y}" fill="none" stroke="${on ? '#6a3fe6' : '#ffffff'}" stroke-width="${on ? 5 : 3}" stroke-linecap="round" opacity="${on ? 1 : .75}"/><circle cx="${x1}" cy="${y}" r="${on ? 9 : 6}" fill="${on ? '#6a3fe6' : '#fff'}"/><text x="${tx}" y="${y + 4}" font-size="${fs}" font-family="Geist" font-weight="${on ? 700 : 500}" fill="#17160a">${k} · ${t}</text></g>`; }).join('')}<circle cx="${x0}" cy="78" r="12" fill="#17160a"/><text x="${x0}" y="122" font-size="${mobile ? 14 : 16}" font-family="Geist" font-weight="600" text-anchor="middle" fill="#17160a">Today</text></svg>`;
+  const ok = (id) => variant(id)?.goal.status === 'fits';
+  const E = { A: 28, B: 78, C: 128 };
+  const [vb, x0, x1, tx, fs] = mobile ? [360, 24, 120, 132, 14] : [560, 40, 220, 236, 16];
+  return `<svg viewBox="0 0 ${vb} 156" style="width:100%;display:block;margin:0 0 12px" role="img" aria-label="Three paths from today">${Object.entries(E).map(([k, y]) => { const on = L.path === k; const end = ok(k) ? '#1f7a4c' : '#c2410c'; return `<g data-lpath="${k}" style="cursor:pointer"><path d="M${x0} 78C${x0 + 70} 78 ${x1 - 80} ${y} ${x1} ${y}" fill="none" stroke="${on ? '#6a3fe6' : '#fffdf8'}" stroke-width="${on ? 5 : 3}" stroke-linecap="round" opacity="${on ? 1 : .8}"/><circle cx="${x1}" cy="${y}" r="${on ? 9 : 7}" fill="${end}" stroke="#fffdf8" stroke-width="2"/><text x="${tx}" y="${y + 5}" font-size="${fs}" font-family="Geist" font-weight="${on ? 700 : 500}" fill="#17160a">${k} · ${esc(pathTag(k))}</text></g>`; }).join('')}<circle cx="${x0}" cy="78" r="11" fill="#17160a"/><text x="${x0}" y="118" font-size="13" font-family="Geist" font-weight="600" text-anchor="middle" fill="#17160a">Now</text></svg>`;
 }
 function weekGrid() {
   const v = variant(L.path);
   const days = []; for (let d = dayStart(Date.now()); days.length < 6; d = addDays(d, 1)) { const w = new Date(d).getDay(); if (w !== 0 && w !== 6) days.push(d); }
   const blocks = v ? v.plan.commitments.flatMap((c) => c.blocks.map((b) => ({ id: c.id, s: Date.parse(b.start), e: Date.parse(b.end) }))) : [];
-  const g = goalOf(), due = fDue();
-  return `<div class="week">${days.map((d) => {
+  const g = goalOf(), due = fDue(), pd = L.path === 'A' ? addDays(due, 7) : due;
+  const pos = (d, t) => Math.max(0, Math.min(100, (t - at(d, 9)) / (8 * 36e5) * 100));
+  const seg = (d, s, e, cls, label) => `<i class="tl-${cls}" style="left:${pos(d, s)}%;width:${Math.max(2, pos(d, e) - pos(d, s))}%" title="${esc(label)}">${pos(d, e) - pos(d, s) > 14 ? esc(label) : ''}</i>`;
+  return `<div class="tl"><div class="tl-axis"><span></span><div><b>9</b><b>11</b><b>1</b><b>3</b><b>5</b></div></div>${days.map((d) => {
     const end = addDays(d, 1);
-    const evs = calEvents().filter((e) => Date.parse(e.start) < end && Date.parse(e.end) > d).map((e) => ['mtg', `Busy ${span(Date.parse(e.start), Date.parse(e.end))}`]);
-    const bl = blocks.filter((b) => b.s >= d && b.s < end).map((b) => [b.id === 'goal' ? 'rel' : 'jor', `${b.id === 'goal' ? 'Goal' : 'Promise'} ${span(b.s, b.e)}`]);
-    const dues = [];
-    if (g && dayStart(Date.parse(g.due_at)) === d) dues.push(['due', 'Goal due']);
-    const pd = L.path === 'A' ? addDays(due, 7) : due;
-    if (dayStart(pd) === d) dues.push(['due', 'Promise due']);
-    return `<div class="day"><b>${wd(d)} ${new Date(d).getDate()}</b>${ev([...bl, ...evs.slice(0, 3), ...dues])}</div>`;
-  }).join('')}</div><div class="leg"><span><i style="background:var(--yel)"></i>Goal</span><span><i style="background:var(--lil)"></i>The promise</span><span><i style="background:#e5e1d4"></i>Your calendar</span><span>Weekdays 9 to 5 assumed</span></div>`;
+    const busy = calEvents().filter((e) => Date.parse(e.start) < end && Date.parse(e.end) > d).map((e) => seg(d, Date.parse(e.start), Date.parse(e.end), 'busy', 'Busy')).join('');
+    const bl = blocks.filter((b) => b.s >= d && b.s < end).map((b) => seg(d, b.s, b.e, b.id === 'goal' ? 'goal' : 'promise', `${b.id === 'goal' ? 'Goal' : 'Promise'} ${span(b.s, b.e)}`)).join('');
+    const flags = [g && dayStart(Date.parse(g.due_at)) === d ? '<em class="tl-due">Goal due</em>' : '', dayStart(pd) === d ? '<em class="tl-due p">Promise due</em>' : ''].join('');
+    return `<div class="tl-row"><span>${wd(d)} ${new Date(d).getDate()}</span><div class="tl-track">${busy}${bl}</div>${flags ? `<div class="tl-flags">${flags}</div>` : ''}</div>`;
+  }).join('')}</div><div class="leg"><span><i style="background:var(--yel)"></i>Goal work</span><span><i style="background:#5b3fc4"></i>The promise</span><span><i style="background:#cfc9b8"></i>Already busy</span><span>Weekdays 9 to 5</span></div>`;
 }
 function forkCard() {
   const g = goalOf();
@@ -452,7 +458,8 @@ function forkCard() {
   const opts = { A: ['Protect your goal', 'Ask to move this promise a week later.'], B: ['Keep every promise', 'Do both on their current dates.'], C: ['Shrink the goal', 'Keep the promise and do half the goal now.'] };
   return `<div class="blk l">${lbl('wait', 'Your choice')}<h2>Fork the week</h2><p class="sub">Three ways this week can go, placed on your real calendar.</p>
    <div class="fkd">${forkSvg(false)}</div><div class="fkm">${forkSvg(true)}</div>
-   ${['A', 'B', 'C'].map((k) => { const v = variant(k), p = promiseIn(v); return `<button class="opt" aria-pressed="${L.path === k}" data-lpath="${k}"><span class="rad">${k}</span><div><b>${opts[k][0]}</b><span>${opts[k][1]}</span><em class="tag" style="font-style:normal">Goal ${v.goal.status === 'fits' ? 'fits' : `short ${hrs(v.goal.shortfallMinutes)}`} · promise ${p?.status === 'fits' ? 'fits' : `short ${hrs(p?.shortfallMinutes || 0)}`}</em></div></button>`; }).join('')}
+   <p class="verdict">${['A','B','C'].every((k) => variant(k).goal.status === 'fits' && promiseIn(variant(k))?.status === 'fits') ? 'Your calendar has room for every path. B keeps both promises on time.' : `Not everything fits. ${recommend()} protects what matters most.`}</p>
+   ${['A', 'B', 'C'].map((k) => { const v = variant(k), p = promiseIn(v); return `<button class="opt" aria-pressed="${L.path === k}" data-lpath="${k}"><span class="rad">${k}</span><div><b>${opts[k][0]}</b><span>${opts[k][1]}</span><em class="tag" style="font-style:normal">${esc(pathTag(k))}</em></div></button>`; }).join('')}
    <div class="blk w" style="margin-top:14px;padding:16px"><div style="font-weight:600;margin-bottom:10px">Your week with ${L.path}</div>${weekGrid()}</div></div>`;
 }
 function hoursCard() {

@@ -309,9 +309,9 @@ textarea.fld{min-height:110px;resize:vertical;line-height:1.4}
 .stat b{font-size:38px}.o .big{font-size:46px}.lg b{font-size:15px}.ring .ctr b{font-size:22px}
 .o .big small,.count span{font-family:Geist,sans-serif;font-weight:500;letter-spacing:0}
 /* 9. Sync pill uses the a· icon. */
-.sync .band{background:url(/icon-192.png) center/cover!important}
+
 /* 6. Fluted glass on the phone tab bar and the desktop mode switch. */
-.tabbar,.modes{background-image:repeating-linear-gradient(90deg,#ffffff38 0 2px,#ffffff00 2px 9px,#00000008 9px 10px),linear-gradient(135deg,#ffffff8c,#ffffff33)!important;backdrop-filter:blur(14px) saturate(1.8)!important;-webkit-backdrop-filter:blur(14px) saturate(1.8)!important}
+
 /* 7. Desktop: compact hero so the decision sits above the fold. */
 @container (min-width:761px){.hero{min-height:0!important;padding-bottom:22px}.hero h1{font-size:54px}.ringcard{margin-top:12px}}
 /* Impeccable fixes: static live dot, tinted labels on yellow, darker secondary text. */
@@ -332,3 +332,17 @@ button:focus-visible{outline:3px solid #17160a;outline-offset:2px}
 /* Two-tone focus ring: visible on light and dark cards alike. */
 button:focus-visible{outline:2px solid #17160a;outline-offset:2px;box-shadow:0 0 0 5px #fadb4a}
 button:active:not(:disabled){transform:scale(.98)}
+
+/* Fork timeline: one 9-to-5 track per day; block length is hours. */
+.verdict{font-size:15px;font-weight:600;margin:0 0 10px;color:#2c2357}
+.tl{display:grid;gap:8px}
+.tl-axis,.tl-row{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:10px}
+.tl-axis div{display:flex;justify-content:space-between;font-size:11px;color:#463a73}.tl-axis b{font-weight:500}
+.tl-row>span{font-size:13px;font-weight:600}
+.tl-track{position:relative;height:30px;border-radius:9px;background:#fffdf880;overflow:hidden}
+.tl-track i{position:absolute;top:3px;bottom:3px;border-radius:6px;font:600 11.5px/24px Geist;padding:0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:normal}
+.tl-goal{background:var(--yel);color:#3d3000}.tl-promise{background:#5b3fc4;color:#fffdf8}.tl-busy{background:#cfc9b8;color:#4f4c40}
+.tl-flags{grid-column:2;display:flex;gap:6px;margin-top:-2px}
+.tl-due{font:600 11px Geist;font-style:normal;color:#a33a20;border:1.5px dashed #c24a2d;border-radius:99px;padding:1px 8px}.tl-due.p{color:#3d2a8a;border-color:#5b3fc4}
+@container (max-width:760px){.tl-axis,.tl-row{grid-template-columns:52px 1fr}}
+@container (min-width:761px){.hero .top{position:relative;top:auto;right:auto;justify-content:flex-end;margin:-14px -12px 4px}}
