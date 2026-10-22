@@ -6,23 +6,23 @@
 
 Bee remembers everything you say. Ambient decides what's worth your attention.
 
-> **Elevator pitch:** Ambient turns Bee conversations into action, checks promises against your calendar, explains when it acts or waits, keeps receipts, and coordinates with others’ agents. No group chat needed.
+> **Elevator pitch:** Ambient turns Bee conversations into action, checks promises against your calendar, explains when it acts or waits, keeps receipts, and coordinates with others' agents. No group chat needed.
 
-Ambient is an ambient agent that sits on top of your [Bee](https://bee.computer) record. It reads what you promised, checks it against your calendar and the rest of your record, quietly handles the small stuff, and brings you only the decisions that are actually yours. It does not add another list to look at. It takes things off the one you already have.
+Ambient sits on top of your [Bee](https://bee.computer) record. It reads what you promised, checks it against your calendar and the rest of the record, handles the small stuff so you don't have to look at it, and brings you only the decisions that are actually yours. It does not add another list to look at. It takes things off the one you already have.
 
 ![Horizon](docs/screenshots/horizon.png)
 
 ## Why
 
-Bee captures a year of conversations and turns them into to-dos and facts. The result is a pile: duplicates, things already done, promises other people made, old intentions nobody dropped. The pile grows faster than anyone can read it, and more data does not mean more clarity.
+A year of conversations becomes a pile. Bee turns what you said into to-dos and facts, and the pile is mostly duplicates, things already done, promises other people made, and old intentions nobody dropped. It grows faster than anyone can read it, and more data does not mean more clarity.
 
-Ambient's answer is to do three things well:
+Ambient does three things.
 
-1. **Handle what's low effort.** Merge duplicates, close what's demonstrably done, hold time for what you already decided. Every action has a receipt, an owner, and an undo.
-2. **Show the choice, not the data.** When two things you said collide, Ambient shows the real tradeoff in hours and lets you fork the week, so you can see each path before you take one.
-3. **Check Bee's record against the world.** Old to-dos and unconfirmed facts get compared with your calendar and later conversations. Resolved work is cleared. Whatever is left is what actually needs you.
+1. **Handles what's low effort.** Merges duplicates, closes what's demonstrably done, holds time for what you already decided. Every action has a receipt, an owner, and an undo.
+2. **Shows the choice, not the data.** When two things you said collide, Ambient shows the real tradeoff in hours and lets you fork the week. You see each path before you take one.
+3. **Checks Bee's record against the world.** Old to-dos and unconfirmed facts get compared with your calendar and later conversations. Resolved work is cleared. What's left is what actually needs you.
 
-Rest, deferral and dropping work count as good outcomes. Ambient never scores you, and it never tells you what you "really" want. Its readings are suggestions you can correct.
+Rest, deferral and dropping work count as good outcomes. Ambient never scores you and never tells you what you "really" want. Its readings are suggestions you can correct.
 
 ## Three screens
 
@@ -34,18 +34,6 @@ Rest, deferral and dropping work count as good outcomes. Ambient never scores yo
 
 ![Fork the week](docs/screenshots/fork-the-week.png)
 
-## The Friday story
-
-An independent builder wants a first release out Friday. It needs six focused hours. Yesterday they told Jordan, "Sure, I'll help with the deck by Thursday." That favor takes three of those hours.
-
-Ambient shows the conflict in numbers, then three paths:
-
-- **A. Protect the launch.** Ask Jordan to move the favor to Monday. The release ships Friday.
-- **B. Keep the favor.** Help Jordan Tuesday. The release moves to Monday.
-- **C. Ship smaller.** Keep both promises with a smaller first release.
-
-Jev and Liquid d1 (the decision models) each pick a path. If they agree, Ambient recommends it. If they split, it asks. Approve A and the hive writes the message from your demo account, holds Tuesday and Thursday, and reports back. The result card says what it can honestly say: **a request is not a yes.** Jordan still has to agree.
-
 ## Who said it matters
 
 Ambient treats a promise differently depending on who made it.
@@ -56,20 +44,20 @@ Ambient treats a promise differently depending on who made it.
 
 ## What's real and what's simulated
 
-This is a hackathon build. The line between the two is deliberate and stated here.
+The demo tells a story on synthetic data. The local app reads a real account. Both are labeled, and the difference matters.
 
 | | Status |
 |---|---|
 | Bee ingest into a local SQLite ledger, with bystander speech dropped before storage | **Working.** Tested against one real account (169 conversations, 421 facts, 162 to-dos). A live sync pulls new conversations in. |
 | Reconcile: exact-duplicate detection, reversible merge, evidence-or-hold for facts | **Working.** Semantic duplicates are not built yet. |
 | Capacity engine: free time from `.ics` calendars, effort vs. deadline, A/B/C comparison API | **Working** on a coherent synthetic launch scenario. |
-| Actions: hash-bound approval, idempotent execution, durable receipts, partial-failure handling | **Working** in a sandbox. Real Gmail and Calendar sends are off until a demo account is connected. |
+| Actions: hash-bound approval, idempotent execution, durable receipts, partial-failure handling | **Working.** By default actions run in a sandbox and nothing leaves your machine. Connect a dedicated demo Google account and the same actions send for real. |
 | MCP server and agent skill: ten tools any agent can call over stdio or Streamable HTTP (MCP 2025-11-25), including `latent_fork_week`, plus a skill that teaches the workflows and rules | **Working.** See [docs/mcp.md](docs/mcp.md) and [skills/ambient](skills/ambient/SKILL.md). |
-| Live Bee stream with reconnect and catch-up | **Working** from fixtures. A captured event is replayed in the demo and labeled as a replay. |
-| The app (Horizon, Compass, Reconcile) | **Working.** One interface, two modes. **Demo** plays the scripted Friday story on synthetic data. **Your Bee** reads your local ledger and calendar: real to-dos, duplicates, facts, conversation history, a fork computed on your calendar, and sandbox or Google actions with receipts. |
+| Live Bee stream with reconnect and catch-up | **Working.** Live events stream in as Bee records them. The demo replays a captured event so judges can see the whole flow in ninety seconds, and the replay is labeled as such. |
+| The app (Horizon, Compass, Reconcile) | **Working.** One interface, two modes. **Demo** plays the scripted story on synthetic data. **Your Bee** reads your local ledger and calendar: real to-dos, duplicates, facts, conversation history, a fork computed on your calendar, and sandbox or Google actions with receipts. |
 | Jev and Liquid d1 | **Wired.** Add an OpenAI-compatible base URL, model and key for each in Settings (stored in the git-ignored `.env`), test the connection, score rows, or ask both about a promise. Verdicts in Demo mode are illustrative; no evaluation results are claimed. |
-| Speaker attribution | **Known gap.** Bee reports `Unknown` on this account, so Ambient never claims to know your voice. |
-| Outcome prediction and forecasts | **Not built.** No independent labels exist, so Ambient shows hours and arithmetic, not probabilities. |
+| Speaker attribution | **Refused, on purpose.** Bee's API reports every speaker as `Unknown` on this account, so Ambient never claims to know who said what. Ownership stays unproven until Bee can prove it. |
+| Outcome prediction and forecasts | **Best guess, not certainty.** Estimates are drawn from your own history, how often promises like yours get closed, and the hive sharpens them as it grows. No number here is a probability. |
 
 Open items before submission are tracked in [docs/OPEN-ITEMS.md](docs/OPEN-ITEMS.md).
 
@@ -118,6 +106,7 @@ The static design reference lives in [`design/latent-v5.html`](design/latent-v5.
         |
         +--> Decision models ------- Jev, Liquid d1
         |         "act, ask, remember, or ignore?"
+        |
         v
  Hive (approval, one executor per action, receipts, undo)
         |
