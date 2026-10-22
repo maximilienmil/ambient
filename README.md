@@ -2,6 +2,8 @@
 
 **Room for what matters.**
 
+[Try the interactive demo](https://maximilienmil.github.io/ambient/) (synthetic data, simulated actions). Run the local app below for real Bee and connector access.
+
 Bee remembers everything you say. Ambient decides what's worth your attention.
 
 > **Elevator pitch:** Ambient turns Bee conversations into action, checks promises against your calendar, explains when it acts or waits, keeps receipts, and coordinates with others’ agents. No group chat needed.
