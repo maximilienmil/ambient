@@ -4,6 +4,8 @@
 
 Bee remembers everything you say. Ambient decides what's worth your attention.
 
+> **Elevator pitch (200 chars):** Bee remembers everything you say. Ambient decides what's worth your attention—merging duplicates, checking promises against your calendar, and showing real tradeoffs before you commit.
+
 Ambient is an ambient agent that sits on top of your [Bee](https://bee.computer) record. It reads what you promised, checks it against your calendar and the rest of your record, quietly handles the small stuff, and brings you only the decisions that are actually yours. It does not add another list to look at. It takes things off the one you already have.
 
 ![Horizon](docs/screenshots/horizon.png)
