@@ -11,7 +11,7 @@ node seg-phone.mjs    http://127.0.0.1:4317 out/seg/phone.mp4
 node seg-real.mjs     http://127.0.0.1:4317 out/seg/real.mp4      # Your Bee, redacted
 for f in hook turn hive term close phonebg; do node render.mjs $f; done
 node chrome.mjs out/seg                                            # phone bezel and mask
-# phoneclip: overlay seg/phone.mp4 on ambient-phonebg.mp4 with the mask and bezel (see assemble notes in git history)
+./phoneclip.sh                                                     # phone inside its bezel
 node assemble.mjs && node music.mjs                                # silent cut, then the 120 BPM synthesized track
 ```
 
