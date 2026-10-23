@@ -33,3 +33,21 @@ JEV_API_KEY=<bedrock api key>
 ```
 
 Then `cd app && npm run decide -- --limit 10` scores ten rows from the command line.
+
+## Verified live call
+
+On October 23, 2026, Ambient made an authenticated call to Amazon Bedrock
+in `us-east-2` using `openai.gpt-oss-120b-1:0`. The request used the actual
+commitment scoring prompt with a synthetic commitment. The adapter parsed the
+response and validated the five-option probability distribution.
+
+The final verification took 1,871 ms and used 498 tokens. The model recommended
+remembering the commitment without an external action. See
+[the credential-free verification receipt](bedrock-verification.json).
+
+Bedrock GPT-OSS returned a reasoning prefix before its final JSON. The adapter
+removes only that explicitly delimited prefix, then strictly parses JSON.
+For this endpoint/model family it omits `response_format`, which produced
+malformed final JSON in live testing, while retaining prompt instructions and
+application schema validation. Other providers retain their existing behavior.
+No personal Bee data was sent, and the test key was not saved in the repository.

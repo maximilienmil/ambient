@@ -1,0 +1,23 @@
+{
+  "verifiedAt": "2026-10-23T15:37:02.738Z",
+  "ok": true,
+  "region": "us-east-2",
+  "model": "openai.gpt-oss-120b-1:0",
+  "usage": {
+    "promptTokens": 270,
+    "completionTokens": 228,
+    "totalTokens": 498
+  },
+  "latencyMs": 1871,
+  "result": {
+    "distribution": {
+      "ignore": 0.1,
+      "remember": 0.9,
+      "ask": 0,
+      "draft": 0,
+      "execute": 0
+    },
+    "reason": "The quote is a personal statement of intent to email an outline, but no recipient is specified and no external action is authorized. No actionable request is present, so the appropriate response is to retain the information without taking any further action."
+  },
+  "synthetic": true
+}

@@ -164,7 +164,11 @@ export async function chat({
   // Body fields and names per the doc cited at the top of this file.
   const body = { model: config.model, messages };
   if (Number.isFinite(temperature)) body.temperature = temperature;
-  if (responseFormat) body.response_format = responseFormat;
+  // Bedrock GPT-OSS JSON mode can emit malformed final content. Request
+  // JSON in the scoring prompt and retain strict parsing/schema validation.
+  const bedrockGptOss = /^https:\/\/bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com\/openai\/v1\/?$/.test(config.baseUrl)
+    && /^openai\.gpt-oss-/.test(config.model);
+  if (responseFormat && !bedrockGptOss) body.response_format = responseFormat;
 
   const controller = new AbortController();
   const abort = () => controller.abort();
@@ -238,7 +242,11 @@ export async function chatJson(options) {
   const result = await chat(options);
   let parsed;
   try {
-    parsed = JSON.parse(result.content);
+    // Bedrock GPT-OSS may prepend a separate reasoning block to its final JSON.
+    // Remove only that anchored, explicitly delimited prefix; all remaining
+    // content must still be one valid JSON value and pass the caller's schema.
+    const content = result.content.replace(/^\s*<reasoning>[\s\S]*?<\/reasoning>\s*/, '');
+    parsed = JSON.parse(content);
   } catch {
     throw new ProviderError(`${result.role} returned content that is not JSON.`, {
       role: result.role,
