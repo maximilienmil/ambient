@@ -1,6 +1,6 @@
 // Bystander redaction.
 //
-// Latent only stores the wearer's own utterances. Every other speaker in a Bee
+// Ambient only stores the wearer's own utterances. Every other speaker in a Bee
 // transcript is dropped before anything touches SQLite. The only counts that
 // survive for dropped speech are integers, never text.
 //
@@ -42,7 +42,7 @@ export function ownerLabelSet(profile, extra = []) {
   add(profile?.lastName);
   add([profile?.firstName, profile?.lastName].filter(Boolean).join(' '));
   for (const alias of ALIASES) add(alias);
-  for (const value of String(process.env.LATENT_OWNER_LABELS || '')
+  for (const value of String(process.env.AMBIENT_OWNER_LABELS || '')
     .split(',')
     .map((part) => part.trim())
     .filter(Boolean)) {

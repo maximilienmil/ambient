@@ -1,4 +1,4 @@
-# Latent - Glossary
+# Ambient - Glossary
 
 One context. These definitions are normative: when code, copy or a slide disagrees with this file, the code or copy is wrong.
 
@@ -9,9 +9,9 @@ One context. These definitions are normative: when code, copy or a slide disagre
 - **Fact** - an assertion Bee writes about the wearer (`facts`, 170 exist). Always third person ("Is a French native speaker..."). `confirmed` is Bee's own flag and is `1` on all 170, so it is not a review state.
 - **Bee todo** - a task Bee extracted from a conversation (`bee_todos`, 162 exist: 130 open, 32 completed). Bee has already attributed it to the wearer, so it is usable as-is.
 
-## Latent's units
+## Ambient's units
 
-- **Candidate** - a promise-shaped span Latent extracts from an utterance with the rule extractor (`extract.mjs`). 374 exist. A candidate is *not yet* a commitment.
+- **Candidate** - a promise-shaped span Ambient extracts from an utterance with the rule extractor (`extract.mjs`). 374 exist. A candidate is *not yet* a commitment.
 - **Commitment** - the ledger unit, and the only thing the product counts. It has exactly two legitimate provenances:
   1. a Bee todo (already attributed by Bee), or
   2. a candidate that passes the *attribution gate*.

@@ -1,4 +1,4 @@
-// Local server for the Latent app.
+// Local server for the Ambient app.
 //
 // Serves the phone-shell UI and a small JSON API over the SQLite ledger written
 // by the ingest layer. Binds to loopback only, requires a per-run token on every
@@ -26,7 +26,7 @@ import { runDecision, runDecide } from './decide/run.mjs';
 import { createTools, PROTOCOLS } from './mcp-tools.mjs';
 
 // Local configuration is ignored by git. Loading it never invokes a model.
-const envFile = process.env.LATENT_ENV_FILE || fileURLToPath(new URL('../.env', import.meta.url));
+const envFile = process.env.AMBIENT_ENV_FILE || fileURLToPath(new URL('../.env', import.meta.url));
 if (existsSync(envFile)) process.loadEnvFile(envFile);
 
 /**
@@ -37,7 +37,7 @@ if (existsSync(envFile)) process.loadEnvFile(envFile);
  * read-only in this mode and is never written to.
  */
 const PREVIEW = process.env.PREVIEW === '1';
-const FIXTURE = process.env.LATENT_FIXTURE === '1';
+const FIXTURE = process.env.AMBIENT_FIXTURE === '1';
 
 /** Preview mode never takes a write. */
 function refuseWrite() {
@@ -45,8 +45,8 @@ function refuseWrite() {
 }
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = process.env.LATENT_DATA_DIR || path.join(root, 'data');
-const dbPath = process.env.LATENT_DB || path.join(dataDir, 'latent.sqlite');
+const dataDir = process.env.AMBIENT_DATA_DIR || path.join(root, 'data');
+const dbPath = process.env.AMBIENT_DB || path.join(dataDir, 'ambient.sqlite');
 const dbDir = path.dirname(dbPath);
 mkdirSync(dbDir, { recursive: true, mode: 0o700 });
 // Preview mode opens the real ledger read-only and never migrates it, so a
@@ -64,10 +64,10 @@ if (!PREVIEW || !dbPresent) {
 const token = randomBytes(32).toString('hex');
 const port = Number(process.env.PORT || 4317);
 const origin = `http://127.0.0.1:${port}`;
-// Loopback by default. LATENT_BIND=0.0.0.0 plus LATENT_HOSTS=100.x.y.z lets a
+// Loopback by default. AMBIENT_BIND=0.0.0.0 plus AMBIENT_HOSTS=100.x.y.z lets a
 // phone on a private network (for example Tailscale) open the app. Opt-in only.
-const bindAddress = process.env.LATENT_BIND || '127.0.0.1';
-const allowedHosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, ...String(process.env.LATENT_HOSTS || '').split(',').map((h) => h.trim()).filter(Boolean).map((h) => (h.includes(':') ? h : `${h}:${port}`))]);
+const bindAddress = process.env.AMBIENT_BIND || '127.0.0.1';
+const allowedHosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`, ...String(process.env.AMBIENT_HOSTS || '').split(',').map((h) => h.trim()).filter(Boolean).map((h) => (h.includes(':') ? h : `${h}:${port}`))]);
 
 function fail(message, status = 400) {
   const error = new Error(message);
@@ -174,7 +174,7 @@ function runIngest() {
   syncing = new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['ingest.mjs'], {
       cwd: root,
-      env: { ...process.env, LATENT_DB: dbPath },
+      env: { ...process.env, AMBIENT_DB: dbPath },
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     let out = '';
@@ -225,13 +225,13 @@ function modelsStatus() {
 }
 // MCP over Streamable HTTP (spec 2025-11-25): POST /mcp with JSON-RPC, JSON responses,
 // no server-initiated stream. Loopback callers need nothing; any other caller must send
-// Authorization: Bearer $LATENT_MCP_TOKEN, and without that variable remote MCP is off.
+// Authorization: Bearer $AMBIENT_MCP_TOKEN, and without that variable remote MCP is off.
 const mcp = createTools({ db, dbPath, dataDir });
 const mcpSessions = new Set();
 async function serveMcp(req, res) {
   const head = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' };
   const remote = !['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress);
-  const want = process.env.LATENT_MCP_TOKEN;
+  const want = process.env.AMBIENT_MCP_TOKEN;
   if (remote && (!want || req.headers.authorization !== `Bearer ${want}`)) {
     res.writeHead(401, { ...head, 'Content-Type': 'application/json', 'WWW-Authenticate': 'Bearer' });
     return res.end(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32001, message: 'Unauthorized' } }));
@@ -277,7 +277,7 @@ const server = http.createServer(async (req, res) => {
     if (method === 'GET' && route === '/api/session') {
       return send(res, 200, { token, extractor: 'offline-rules-v1', preview: PREVIEW });
     }
-    if (route.startsWith('/api/') && req.headers['x-latent-token'] !== token) {
+    if (route.startsWith('/api/') && req.headers['x-ambient-token'] !== token) {
       fail('Session expired. Reload this page.', 403);
     }
 
@@ -336,7 +336,7 @@ const server = http.createServer(async (req, res) => {
       if (verdict === 'undo') db.prepare('DELETE FROM fact_reviews WHERE fact_id=?').run(id);
       else {
         db.prepare('INSERT OR REPLACE INTO fact_reviews VALUES (?,?,?)').run(id, verdict, new Date().toISOString());
-        L.insertReceipt(db, { kind: 'remember', decision: 'remember', title: verdict === 'confirmed' ? 'Confirmed a Bee fact' : 'Marked a Bee fact not true', detail: `${textFor(id) || id}. Recorded in Latent only; Bee was not changed.` });
+        L.insertReceipt(db, { kind: 'remember', decision: 'remember', title: verdict === 'confirmed' ? 'Confirmed a Bee fact' : 'Marked a Bee fact not true', detail: `${textFor(id) || id}. Recorded in Ambient only; Bee was not changed.` });
       }
       return send(res, 200, { ok: true });
     }

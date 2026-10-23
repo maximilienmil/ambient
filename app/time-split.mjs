@@ -118,7 +118,7 @@ export function evaluateTimeSplit(dbPath, splitPoint) {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const dbPath = process.argv[2] || 'data/latent.sqlite';
+  const dbPath = process.argv[2] || 'data/ambient.sqlite';
   const splitPoint = process.argv[3] || '2026-03'; // Default: March 2026
 
   const result = evaluateTimeSplit(dbPath, splitPoint);

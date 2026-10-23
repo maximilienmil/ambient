@@ -109,9 +109,9 @@ export function executeDraft(s, key, version) {
   record(s, c.id, 'draft_prepared', 'Not sent'); return c;
 }
 export function completeAgentRun(s, key, version, result) {
-  const c=getCommitment(s,key);if(c.version!==version)fail('This commitment changed while Latent was working.',409);
+  const c=getCommitment(s,key);if(c.version!==version)fail('This commitment changed while Ambient was working.',409);
   if(c.status!=='open')fail('This commitment is no longer open.',409);
-  if(c.agent?.state==='working')fail('Latent is already working on this commitment.',409);
+  if(c.agent?.state==='working')fail('Ambient is already working on this commitment.',409);
   if(!result||typeof result!=='object')fail('The agent did not return a usable plan.',502);
   const state=['ready','needs_you','remembered'].includes(result.state)?result.state:'needs_you';
   if(state==='ready'&&(!['prepare_email','prepare_message','prepare_action'].includes(result.action)||typeof result.body!=='string'||result.body.length>10000))fail('The agent plan failed validation.',502);
@@ -121,8 +121,8 @@ export function completeAgentRun(s, key, version, result) {
   record(s,c.id,state==='ready'?'agent_prepared':state==='remembered'?'agent_remembered':'agent_needs_you',c.agent.summary);
   return c;
 }
-export function startAgentRun(s,key,version){const c=getCommitment(s,key);if(c.version!==version)fail('Commitment changed; refresh before handoff.',409);if(c.status!=='open')fail('Only an open commitment can be handed to Latent.');if(c.agent?.state==='working')return c.agent;c.agent={id:id(),state:'working',steps:[],at:now(),version};record(s,c.id,'agent_started','Local agent run');return c.agent;}
-export function updateAgentStep(s,key,version,result){const c=getCommitment(s,key);if(c.version!==version)fail('Commitment changed while Latent was working.',409);if(c.agent?.state!=='working')fail('No active agent run.');c.agent.steps.push(String(result).slice(0,240));c.agent.steps=c.agent.steps.slice(0,5);c.agent.at=now();return c.agent;}
+export function startAgentRun(s,key,version){const c=getCommitment(s,key);if(c.version!==version)fail('Commitment changed; refresh before handoff.',409);if(c.status!=='open')fail('Only an open commitment can be handed to Ambient.');if(c.agent?.state==='working')return c.agent;c.agent={id:id(),state:'working',steps:[],at:now(),version};record(s,c.id,'agent_started','Local agent run');return c.agent;}
+export function updateAgentStep(s,key,version,result){const c=getCommitment(s,key);if(c.version!==version)fail('Commitment changed while Ambient was working.',409);if(c.agent?.state!=='working')fail('No active agent run.');c.agent.steps.push(String(result).slice(0,240));c.agent.steps=c.agent.steps.slice(0,5);c.agent.at=now();return c.agent;}
 export function deleteSource(s, key) {
   if (!s.sources.some(x => x.id === key)) fail('Source not found.', 404);
   const keys = s.commitments.filter(x => x.sourceId === key).map(x => x.id);
@@ -168,5 +168,5 @@ export function calendarFile(p) {
   if (!p.hold || p.state !== 'scheduled') fail('Save a private hold first.', 409);
   const start = `${p.date.replaceAll('-','')}T${String(p.hour).padStart(2,'0')}0000Z`;
   const end = `${p.date.replaceAll('-','')}T${String(p.hour + 1).padStart(2,'0')}0000Z`;
-  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Latent//Private Hold//EN','BEGIN:VEVENT',`UID:${p.hold.id}@latent.local`,`DTSTAMP:${p.hold.at.replaceAll(/[-:]/g,'').replace(/\.\d+Z/,'Z')}`,`DTSTART:${start}`,`DTEND:${end}`,'SUMMARY:Dinner planning hold (Latent sandbox)','DESCRIPTION:Private planning hold. No invitation sent. Confirm details separately.','CLASS:PRIVATE','STATUS:TENTATIVE','END:VEVENT','END:VCALENDAR',''].join('\r\n');
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Ambient//Private Hold//EN','BEGIN:VEVENT',`UID:${p.hold.id}@ambient.local`,`DTSTAMP:${p.hold.at.replaceAll(/[-:]/g,'').replace(/\.\d+Z/,'Z')}`,`DTSTART:${start}`,`DTEND:${end}`,'SUMMARY:Dinner planning hold (Ambient sandbox)','DESCRIPTION:Private planning hold. No invitation sent. Confirm details separately.','CLASS:PRIVATE','STATUS:TENTATIVE','END:VEVENT','END:VCALENDAR',''].join('\r\n');
 }

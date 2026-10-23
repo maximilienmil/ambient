@@ -45,7 +45,7 @@ const TIER_LABEL = {
 };
 
 const POLICY = {
-  draft: 'Latent can prepare a draft. Nothing is sent or shared without your approval.',
+  draft: 'Ambient can prepare a draft. Nothing is sent or shared without your approval.',
   ask: 'Held back. The commitment is unclear or shared, so it needs your decision before any action.',
   remember: 'Remembered without interrupting. Surfaced again when it is relevant.',
   execute: 'Closed. No external action is pending for this item.',

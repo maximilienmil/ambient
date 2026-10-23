@@ -95,7 +95,7 @@ async function runIncrementalCatchup(dbPath) {
 
 /** Reconnect until aborted; do a cursor-based catch-up before every reconnect. */
 export async function consumeStream(options = {}) {
-  const dbPath = options.dbPath || path.join(root, 'data', 'latent.sqlite');
+  const dbPath = options.dbPath || path.join(root, 'data', 'ambient.sqlite');
   const beeBin = options.beeBin || process.env.BEE_BIN || 'bee';
   const profile = options.profile || await bee.getProfile();
   const controller = options.controller || new AbortController();
@@ -113,9 +113,9 @@ export async function consumeStream(options = {}) {
         pending = pending.then(async () => {
           try {
             const result = await processStreamEvent(JSON.parse(line), db, { profile });
-            if (result.accepted) console.log(`Latent · new promise · ${result.commitments[0].tier}`);
+            if (result.accepted) console.log(`Ambient · new promise · ${result.commitments[0].tier}`);
           } catch (error) {
-            console.error(`Latent · stream event skipped · ${error.message}`);
+            console.error(`Ambient · stream event skipped · ${error.message}`);
           }
         });
       };
@@ -135,11 +135,11 @@ export async function consumeStream(options = {}) {
       if (buffer.trim()) consumeLine(buffer);
       await pending;
       if (controller.signal.aborted) break;
-      console.error(`Latent · Bee stream disconnected (${code ?? 'signal'}); catching up.`);
+      console.error(`Ambient · Bee stream disconnected (${code ?? 'signal'}); catching up.`);
       try {
         await (options.catchup || runIncrementalCatchup)(dbPath);
       } catch (error) {
-        console.error(`Latent · catch-up failed · ${error.message}`);
+        console.error(`Ambient · catch-up failed · ${error.message}`);
       }
       const delay = Math.min(5000, 250 * (2 ** Math.min(attempt - 1, 4)));
       await new Promise((resolve) => {
@@ -155,7 +155,7 @@ export async function consumeStream(options = {}) {
 /** Fixture path uses the exact event processor but never reads Bee or user data. */
 export async function demoStream(options = {}) {
   const fixturePath = options.fixturePath || path.join(root, 'fixtures', 'stream-events.json');
-  const dbPath = options.dbPath || path.join(root, 'data', 'latent-fixture.sqlite');
+  const dbPath = options.dbPath || path.join(root, 'data', 'ambient-fixture.sqlite');
   const profile = options.profile || { firstName: 'Demo', lastName: 'User', timezone: 'UTC' };
   const { readFile } = await import('node:fs/promises');
   const events = JSON.parse(await readFile(fixturePath, 'utf8'));
@@ -171,7 +171,7 @@ export async function demoStream(options = {}) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const mode = process.argv[2] || 'stream';
-  const dbPath = process.argv[3] || (mode === 'demo' ? path.join(root, 'data', 'latent-fixture.sqlite') : undefined);
+  const dbPath = process.argv[3] || (mode === 'demo' ? path.join(root, 'data', 'ambient-fixture.sqlite') : undefined);
   if (mode === 'demo') {
     demoStream({ dbPath }).then((result) => console.log(`Processed ${result.processed} events; ${result.accepted} promise(s) extracted.`));
   } else {
@@ -179,7 +179,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.once('SIGINT', () => controller.abort());
     process.once('SIGTERM', () => controller.abort());
     consumeStream({ dbPath, controller }).catch((error) => {
-      console.error(`Latent stream failed: ${error.message}`);
+      console.error(`Ambient stream failed: ${error.message}`);
       process.exitCode = 1;
     });
   }

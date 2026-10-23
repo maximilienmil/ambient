@@ -7,7 +7,7 @@ export function actionSchema(db) {
     CREATE TABLE IF NOT EXISTS action_results (bundle_id TEXT NOT NULL, step TEXT NOT NULL, status TEXT NOT NULL, receipt TEXT, PRIMARY KEY(bundle_id,step));`);
 }
 export function connectorStatus(env=process.env) {
-  return { provider: 'gog', configured: Boolean(env.LATENT_DEMO_ACCOUNT && env.LATENT_DEMO_CALENDAR), enabled: env.LATENT_EXTERNAL_ACTIONS === '1', account: env.LATENT_DEMO_ACCOUNT || null, calendar: env.LATENT_DEMO_CALENDAR || null, d1: 'idle' };
+  return { provider: 'gog', configured: Boolean(env.AMBIENT_DEMO_ACCOUNT && env.AMBIENT_DEMO_CALENDAR), enabled: env.AMBIENT_EXTERNAL_ACTIONS === '1', account: env.AMBIENT_DEMO_ACCOUNT || null, calendar: env.AMBIENT_DEMO_CALENDAR || null, d1: 'idle' };
 }
 function validate(payload) {
   if (!payload || typeof payload !== 'object') fail('Supply an action payload.');
@@ -37,7 +37,7 @@ export function approveBundle(db,id,hash) {
   db.prepare("UPDATE action_bundles SET state='approved',approved_hash=? WHERE id=?").run(hash,id);return getBundle(db,id);
 }
 async function gog(args,env,input=null) {
-  const argv=[...args,'--account',env.LATENT_DEMO_ACCOUNT,'--json','--no-input'];
+  const argv=[...args,'--account',env.AMBIENT_DEMO_ACCOUNT,'--json','--no-input'];
   const stdout=await new Promise((resolve,reject)=>{
     const child=execFile(env.GOG_BIN||'gog',argv,{timeout:30000,maxBuffer:1024*1024},(error,stdout)=>error?reject(new Error('Google connector request failed. Check account authorization.')):resolve(stdout));
     child.stdin.end(input||'');
@@ -50,17 +50,17 @@ export function googleExecutor(env=process.env) {
       if(!status.configured||!status.enabled)fail('Connect and enable the dedicated demo account before external actions.',409);
       // Check identity before any mutation; configuration alone is not authentication.
       const auth=await gog(['auth','list'],env);
-      if(!(auth.accounts||[]).some(a=>(a.email||a.account)===env.LATENT_DEMO_ACCOUNT))fail('Dedicated demo account is not authenticated in gog.',409);
+      if(!(auth.accounts||[]).some(a=>(a.email||a.account)===env.AMBIENT_DEMO_ACCOUNT))fail('Dedicated demo account is not authenticated in gog.',409);
       for(const block of blocks){
         if(Date.parse(block.start)<=Date.now())fail('A focus block is in the past. Recalculate the plan.',409);
-        const data=await gog(['calendar','events',env.LATENT_DEMO_CALENDAR,'--from',block.start,'--to',block.end,'--all-pages'],env);
+        const data=await gog(['calendar','events',env.AMBIENT_DEMO_CALENDAR,'--from',block.start,'--to',block.end,'--all-pages'],env);
         const events=Array.isArray(data)?data:data.events;
         if(!Array.isArray(events))fail('Calendar availability response could not be verified.',502);
         if(events.some(e=>e.status!=='cancelled'&&e.transparency!=='transparent'))fail('Calendar availability changed. Review a new plan.',409);
       }
     },
     async hold(block,id,title){
-      const r=await gog(['calendar','create',env.LATENT_DEMO_CALENDAR,'--private-prop',`latentAction=${id}`,'--summary',title,'--from',block.start,'--to',block.end,'--visibility','private','--send-updates','none'],env);
+      const r=await gog(['calendar','create',env.AMBIENT_DEMO_CALENDAR,'--private-prop',`ambientAction=${id}`,'--summary',title,'--from',block.start,'--to',block.end,'--visibility','private','--send-updates','none'],env);
       const event=r.event||r;if(!event.id)throw new Error('Calendar returned no event ID.');return {provider:'google-calendar',id:event.id,url:event.htmlLink||null,kind:'calendar_hold',at:new Date().toISOString()};
     },
     async send(message){

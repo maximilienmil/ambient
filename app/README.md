@@ -35,9 +35,9 @@ gog auth add <demo-email> --services gmail,calendar --gmail-scope send
 Then set the ignored root `.env` and restart the server:
 
 ```dotenv
-LATENT_DEMO_ACCOUNT=<demo-email>
-LATENT_DEMO_CALENDAR=primary
-LATENT_EXTERNAL_ACTIONS=1
+AMBIENT_DEMO_ACCOUNT=<demo-email>
+AMBIENT_DEMO_CALENDAR=primary
+AMBIENT_EXTERNAL_ACTIONS=1
 ```
 
 The actual demo identity is saved locally with external actions disabled.
@@ -83,8 +83,8 @@ unconfirmed facts until independent evidence is available. It does not apply
 proposals to Bee.
 
 `npm run ingest` first, or the ledger is empty. `PORT=4318 npm start` picks
-another port; `LATENT_DATA_DIR=/absolute/path` picks another data directory.
-SQLite lives at `data/latent.sqlite` (mode 600, excluded from version control)
+another port; `AMBIENT_DATA_DIR=/absolute/path` picks another data directory.
+SQLite lives at `data/ambient.sqlite` (mode 600, excluded from version control)
 and is not encrypted by the app. The server binds to loopback only, requires a
 per-run session token on every `/api` call, and rejects cross-origin and
 cross-site requests.
@@ -353,7 +353,7 @@ says so.
 **Redaction.** Only the wearer's own utterances are stored, verbatim. Bystander
 speech is dropped before storage and reported as a count; bystander text never
 reaches SQLite (a test scans every table for a planted marker). Attribution comes
-from the Bee profile name plus `LATENT_OWNER_LABELS`, falling back to
+from the Bee profile name plus `AMBIENT_OWNER_LABELS`, falling back to
 `You`/`Me`/`Owner`. When Bee reports a single speaker label for a whole
 conversation and none matches the wearer's name, the ingest attributes that one
 voice to the wearer and records `assumed-single-speaker` on every affected row and

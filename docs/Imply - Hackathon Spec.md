@@ -1,6 +1,6 @@
 # Imply: Hackathon Spec
 
-*Working name. Alternates: Latent, Motive. Names are not availability-checked.*
+*Working name. Alternates: Ambient, Motive. Names are not availability-checked.*
 
 ## One-line pitch
 

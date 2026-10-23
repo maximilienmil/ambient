@@ -1,4 +1,4 @@
-# Latent interface direction
+# Ambient interface direction
 
 Confirmed by the owner, October 20, 2026.
 

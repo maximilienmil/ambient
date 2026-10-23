@@ -10,7 +10,9 @@ Bee remembers everything you say. Ambient decides what's worth your attention.
 
 Ambient sits on top of your [Bee](https://bee.computer) record. It reads what you promised, checks it against your calendar and the rest of the record, handles the small stuff so you don't have to look at it, and brings you only the decisions that are actually yours. It does not add another list to look at. It takes things off the one you already have.
 
-![Horizon](docs/screenshots/horizon.png)
+![Horizon](docs/media/desktop-horizon.png)
+
+![Ambient on iPhone: Horizon, Fork the week, Reconcile](docs/media/iphone.png)
 
 ## Why
 
@@ -32,7 +34,9 @@ Rest, deferral and dropping work count as good outcomes. Ambient never scores yo
 | **Compass** | Where your time is heading. Editable goals, a one-tap daily check-in, week/month/year capacity, and a hive that grows with every conversation. Ambient can also notice goals you act on but never wrote down. |
 | **Reconcile** | Bee's old to-dos and unconfirmed facts, checked against evidence. Duplicates merge, resolved items close, and the models' disagreements come to you. |
 
-![Fork the week](docs/screenshots/fork-the-week.png)
+![Fork the week: three paths on a 9-to-5 week](docs/media/fork.gif)
+
+![Fork the week in the app](docs/media/desktop-fork.png)
 
 ## Who said it matters
 
@@ -52,7 +56,7 @@ This demo tells a story on synthetic data. The local app reads a real account.
 | Reconcile: exact-duplicate detection, reversible merge, evidence-or-hold for facts | **Working.** Semantic duplicates are not built yet. |
 | Capacity engine: free time from `.ics` calendars, effort vs. deadline, A/B/C comparison API | **Working** on a coherent synthetic launch scenario. |
 | Actions: hash-bound approval, idempotent execution, durable receipts, partial-failure handling | **Working.** By default actions run in a sandbox and nothing leaves your machine. Connect a dedicated demo Google account and the same actions send for real. |
-| MCP server and agent skill: ten tools any agent can call over stdio or Streamable HTTP (MCP 2025-11-25), including `latent_fork_week`, plus a skill that teaches the workflows and rules | **Working.** See [docs/mcp.md](docs/mcp.md) and [skills/ambient](skills/ambient/SKILL.md). |
+| MCP server and agent skill: ten tools any agent can call over stdio or Streamable HTTP (MCP 2025-11-25), including `ambient_fork_week`, plus a skill that teaches the workflows and rules | **Working.** See [docs/mcp.md](docs/mcp.md) and [skills/ambient](skills/ambient/SKILL.md). |
 | Live Bee stream with reconnect and catch-up | **Working.** Live events stream in as Bee records them. The demo replays a captured event so judges can see the whole flow in ninety seconds, and the replay is labeled as such. |
 | The app (Horizon, Compass, Reconcile) | **Working.** One interface, two modes. **Demo** plays the scripted story on synthetic data. **Your Bee** reads your local ledger and calendar: real to-dos, duplicates, facts, conversation history, a fork computed on your calendar, and sandbox or Google actions with receipts. |
 | Jev and Liquid d1 | **Wired.** Add an OpenAI-compatible base URL, model and key for each in Settings (stored in the git-ignored `.env`), test the connection, score rows, or ask both about a promise. Verdicts in Demo mode are illustrative; no evaluation results are claimed. |
@@ -77,9 +81,9 @@ npm test            # offline suite
 
 **Real actions:** by default actions run in a sandbox and nothing leaves your machine. To send from a dedicated demo account, see [app/README.md](app/README.md#dedicated-google-demo-account).
 
-**On your phone:** `LATENT_BIND=0.0.0.0 LATENT_HOSTS=<your-tailscale-ip> npm start`, then open `http://<your-tailscale-ip>:4317`. Only do this on a private network.
+**On your phone:** `AMBIENT_BIND=0.0.0.0 AMBIENT_HOSTS=<your-tailscale-ip> npm start`, then open `http://<your-tailscale-ip>:4317`. Only do this on a private network.
 
-**From an agent (MCP).** Over stdio for Claude Code and other local agents, or over Streamable HTTP (spec 2025-11-25) at `http://127.0.0.1:4317/mcp` while the app runs. Remote callers need `LATENT_MCP_TOKEN` set and an `Authorization: Bearer` header.
+**From an agent (MCP).** Over stdio for Claude Code and other local agents, or over Streamable HTTP (spec 2025-11-25) at `http://127.0.0.1:4317/mcp` while the app runs. Remote callers need `AMBIENT_MCP_TOKEN` set and an `Authorization: Bearer` header.
 
 ```bash
 claude mcp add ambient -- node /absolute/path/to/app/mcp-server.mjs
@@ -87,7 +91,9 @@ claude mcp add ambient -- node /absolute/path/to/app/mcp-server.mjs
 
 Then ask: *what should I act on?* or *can I help Jordan with the deck by Thursday?* The [agent skill](skills/ambient/SKILL.md) teaches the workflows.
 
-The static design reference lives in [`design/latent-v5.html`](design/latent-v5.html).
+Launch films are generated from code in [`launch/`](launch/): real app screenshots composed in HTML and rendered frame by frame. See [launch/README.md](launch/README.md).
+
+The static design reference lives in [`design/ambient-v5.html`](design/ambient-v5.html).
 
 ## How it fits together
 
@@ -130,6 +136,7 @@ Ambient owns the context, the tradeoff, the recommendation, the approval and the
 | [`app/`](app/) | The local service, SQLite ledger, evidence and capacity engines, MCP server, and the app (`public/v5.*`) |
 | [`design/`](design/) | The static design reference and the material it was designed from |
 | [`docs/`](docs/) | Scope, design direction, glossary, MCP guide, decision records, demo script, archived specs |
+| [`launch/`](launch/) | Screenshot capture and the five programmatic launch films |
 | [`skills/ambient/`](skills/ambient/) | The agent skill for the MCP tools |
 | [`docs/adr/`](docs/adr/) | Why the product makes the claims it makes, and the ones it refuses to |
 

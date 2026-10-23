@@ -16,7 +16,7 @@ import { STATES, counts } from './db.mjs';
 
 const DAY = 86_400_000;
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const DEFAULT_DATA_DIR = process.env.LATENT_DATA_DIR || path.join(ROOT, 'data');
+const DEFAULT_DATA_DIR = process.env.AMBIENT_DATA_DIR || path.join(ROOT, 'data');
 
 /** The five options every decision model scores. Declared once, used everywhere. */
 export const OPTIONS = ['ignore', 'remember', 'ask', 'draft', 'execute'];
@@ -67,7 +67,7 @@ export function decisionOf(row) {
 // What each decision means for action. Plain statements, no promises the code
 // cannot keep.
 const POLICY = {
-  draft: 'Latent can prepare a draft. Nothing is sent or shared without your approval.',
+  draft: 'Ambient can prepare a draft. Nothing is sent or shared without your approval.',
   ask: 'Held back. The commitment is unclear or shared, so it needs your decision before any action.',
   remember: 'Remembered without interrupting. Surfaced again when it is relevant.',
   execute: 'Closed. No external action is pending for this item.',
@@ -681,13 +681,13 @@ export function planIcs(db, id) {
   const content = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Latent//Local//EN',
+    'PRODID:-//Ambient//Local//EN',
     'BEGIN:VEVENT',
-    `UID:${plan.id}@latent.local`,
+    `UID:${plan.id}@ambient.local`,
     `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${day}`,
     `SUMMARY:${icsEscape(plan.title)}`,
-    `DESCRIPTION:${icsEscape(`Proposed by Latent with ${plan.participants.join(', ')}.`)}`,
+    `DESCRIPTION:${icsEscape(`Proposed by Ambient with ${plan.participants.join(', ')}.`)}`,
     'END:VEVENT',
     'END:VCALENDAR',
     '',
@@ -762,7 +762,7 @@ export function negotiationOf(db) {
     const events = [
       {
         at: plan.createdAt,
-        actor: 'Latent',
+        actor: 'Ambient',
         role: 'proposer',
         simulated: false,
         kind: 'proposed',
@@ -788,7 +788,7 @@ export function negotiationOf(db) {
     if (plan.state === 'executed') {
       events.push({
         at: plan.updatedAt,
-        actor: 'Latent',
+        actor: 'Ambient',
         role: 'proposer',
         simulated: false,
         kind: 'dispatched',
@@ -801,7 +801,7 @@ export function negotiationOf(db) {
     if (plan.state === 'cancelled') {
       events.push({
         at: plan.updatedAt,
-        actor: 'Latent',
+        actor: 'Ambient',
         role: 'proposer',
         simulated: false,
         kind: 'cancelled',

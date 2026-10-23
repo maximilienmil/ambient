@@ -20,7 +20,7 @@ Ambient is an ambient agent on top of Bee. It reads your real Bee record through
 2. **Forks your week.** When you say yes to something new ("Sure, I'll help with the deck by Thursday"), Ambient compares three paths against the goal you are protecting, using your real calendar: protect the goal, keep every promise, or shrink the goal. Each path is calendar arithmetic, not a guess. Two decision models (Jev, and Liquid d1 as the System 1 model) weigh in; when they disagree, Ambient asks you.
 3. **Acts, and tells the truth about it.** Approve a path and the hive prepares the message and holds the time, through a sandbox or a connected Google account, with a hash-bound approval and a receipt. A request is labeled as a request, not an agreement.
 
-The same capabilities are open to any agent: a Model Context Protocol server (stdio, and Streamable HTTP per spec 2025-11-25) exposes ten tools, including `latent_fork_week`, and an agent skill teaches the workflows and rules.
+The same capabilities are open to any agent: a Model Context Protocol server (stdio, and Streamable HTTP per spec 2025-11-25) exposes ten tools, including `ambient_fork_week`, and an agent skill teaches the workflows and rules.
 
 **How it works.** Node.js local service and SQLite ledger. `app/bee.mjs` calls the Bee CLI (`bee conversations`, `bee todos`, `bee facts`, `bee stream`) for ingest and live updates. Bystander speech is dropped before storage. A capacity engine (`app/horizon.mjs`) places work into free calendar time from `.ics` exports. Actions run through `app/actions.mjs` with idempotent, hash-bound approvals. The web app works on desktop and installs to an iPhone home screen.
 
@@ -28,7 +28,7 @@ The same capabilities are open to any agent: a Model Context Protocol server (st
 
 ## Built during the hackathon
 
-**Confirm before submitting.** The repository's first commit is October 18, 2026 and already contains a working ingest and an earlier four-screen app. If any of that predates the submission window, say so here and list what changed during the window: the reconcile engine, the calendar capacity engine and fork, the action bundles, the v5 interface (Horizon, Compass, Reconcile) with Demo and Your Bee modes, the decision-model settings, MCP over Streamable HTTP, the `latent_fork_week` tool and the agent skill.
+**Confirm before submitting.** The repository's first commit is October 18, 2026 and already contains a working ingest and an earlier four-screen app. If any of that predates the submission window, say so here and list what changed during the window: the reconcile engine, the calendar capacity engine and fork, the action bundles, the v5 interface (Horizon, Compass, Reconcile) with Demo and Your Bee modes, the decision-model settings, MCP over Streamable HTTP, the `ambient_fork_week` tool and the agent skill.
 
 ## Product feedback
 
@@ -60,7 +60,7 @@ The same capabilities are open to any agent: a Model Context Protocol server (st
 | 4 | Find duplicate to-dos | Grouped open to-dos by text | Bee de-duplicates repeated mentions | The same task appears up to 10 times | Medium | Exact-text merge with undo | De-duplicate on creation, or expose a group id |
 | 5 | Resume after a dropped stream | `bee stream`, then network drop | A resume cursor | Events missed during the gap | Low | Catch up with `bee changed` after reconnect | Document the recommended reconnect pattern |
 
-*(Add the date, your environment and exact commands to each row before submitting.)*
+*Environment for every row: macOS 26.6.2, Node 26.8, `@beeai/cli` 0.7.3, one real account, 18 to 22 October 2026. Commands: `bee conversations list --json`, `bee conversations get <id>`, `bee todos list --json`, `bee facts list --json`, `bee stream`, `bee changed`, run through `app/bee.mjs` by `npm run ingest` and `npm run stream`.*
 
 ## Feature requests
 
@@ -68,6 +68,12 @@ The same capabilities are open to any agent: a Model Context Protocol server (st
 - **Completion timestamps on to-dos.** Important. Enables honest "done when" evidence.
 - **Fact provenance.** Important. Lets apps verify instead of asking the user to comb through.
 - **Write API for to-do merge or close.** Nice to have. Ambient keeps changes local today.
+
+## Media
+
+- **Cover image (1200×630):** `docs/media/cover.png` (wordmark) or `docs/media/cover-fork.png` (the fork).
+- **Screenshots for the gallery, in order:** `desktop-horizon.png`, `desktop-heard.png`, `desktop-fork.png`, `iphone.png`, `desktop-compass.png`, `desktop-rec.png` (all in `docs/media/`, Demo mode, synthetic data).
+- **Launch films:** five silent cuts render from `launch/` (see `launch/README.md`). Upload `ambient-room.mp4` to YouTube as the launch film; the judged demo video is the narrated walkthrough in `docs/video-script.md`, under 3 minutes.
 
 ## Reviewers (if the repo stays private)
 

@@ -1,4 +1,4 @@
-# SCOPE — Latent for the Bee Hackathon
+# SCOPE — Ambient for the Bee Hackathon
 
 ## Direction confirmed October 19
 
@@ -6,7 +6,7 @@ This section records the owner's design interview and takes precedence over
 conflicting product priorities and milestone sequencing below. The original
 plan remains for its evidence rules and unfulfilled acceptance targets.
 
-**Latent is ambient intelligence that turns everyday context into room to act.**
+**Ambient is ambient intelligence that turns everyday context into room to act.**
 It reduces overwhelm through actionable interpretation, handles low effort
 work within granted permissions, and helps people explore alternative futures.
 Do not explicitly market it toward executive dysfunction; make it useful through
@@ -35,7 +35,7 @@ connector receipts. A sent renegotiation request is not the recipient's agreemen
 - Jev and System One assess evidence, commitment identity, reconciliation,
   proposed paths, and whether an action can and should be delegated. Calendar
   arithmetic establishes feasibility. Missing model endpoints stay explicit.
-- Latent owns the context, tradeoff, recommendation, approval and result record.
+- Ambient owns the context, tradeoff, recommendation, approval and result record.
   Bee's agent, other agents through MCP, or direct connectors can execute.
   One approved action must not run independently through multiple executors.
 - Target Bee live speech with attributed owner events; captured event replay
@@ -63,7 +63,7 @@ Schedule: M1 Sun night → M2 Mon → M2.5 Mon → M3 Tue → M4 Wed (feature fr
 Wed night) → video Thu → submit Thu night. Friday is buffer only — nothing is
 planned there.
 
-The product spine, one sentence: **Bee remembers your past. Latent simulates
+The product spine, one sentence: **Bee remembers your past. Ambient simulates
 your future — and checks Bee's own record against outside evidence.**
 
 ## The product (settled decisions)
@@ -216,7 +216,7 @@ until the current milestone's test passes.
 
 ### Stretch (only if M2 passes by Tuesday morning; 3-hour cap)
 
-`latent apply` on ≤10 allowlisted reversible items, snapshot first, undo log,
+`ambient apply` on ≤10 allowlisted reversible items, snapshot first, undo log,
 idempotency (apply twice changes nothing). If not working by Tuesday
 afternoon, drop for good.
 
@@ -232,7 +232,7 @@ afternoon, drop for good.
 - 2:10 Show the trade.
 - 2:30 Eval chart: forecast vs reality. If the predictor was cut, the chart
   says so on screen — the honest result is part of the pitch.
-- 2:50 "Bee remembers everything. Latent knows what matters."
+- 2:50 "Bee remembers everything. Ambient knows what matters."
 
 Fixture footage is labeled on screen as fixture. Audit/labeling never appears.
 

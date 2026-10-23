@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Latent ingest layer.
+// Ambient ingest layer.
 //
 // Reads live data from the wearer's own Bee account through the Bee CLI
 // (https://docs.bee.computer/docs/cli) and stores it locally in SQLite.
@@ -41,13 +41,13 @@ export function parseArgs(argv) {
   const options = {
     full: false,
     quiet: false,
-    strict: process.env.LATENT_STRICT_REDACTION === '1',
+    strict: process.env.AMBIENT_STRICT_REDACTION === '1',
     // The account holds more than a year of conversations. The old default of
     // 25 made "a year of data" false and left the record with one month.
     conversations: 2000,
     maxTodos: 500,
     maxFacts: 500,
-    db: process.env.LATENT_DB || path.join(root, 'data', 'latent.sqlite'),
+    db: process.env.AMBIENT_DB || path.join(root, 'data', 'ambient.sqlite'),
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -63,7 +63,7 @@ export function parseArgs(argv) {
   return options;
 }
 
-const HELP = `Latent · bee ingest
+const HELP = `Ambient · bee ingest
 
   node ingest.mjs [options]
 
@@ -72,7 +72,7 @@ const HELP = `Latent · bee ingest
   --max-todos N         max Bee todos to pull in a backfill (default 500)
   --max-facts N         max Bee facts to pull in a backfill (default 500)
   --strict              fail closed: drop any utterance whose speaker is not the wearer by name
-  --db PATH             SQLite file (default app/data/latent.sqlite)
+  --db PATH             SQLite file (default app/data/ambient.sqlite)
   --quiet               only print the final summary line
 
 Redaction: only the wearer's utterances are stored. A conversation whose single
@@ -100,7 +100,7 @@ export async function runIngest(options, adapter = bee) {
     const owner = [profile.firstName, profile.lastName].filter(Boolean).join(' ').trim() || 'You';
     const ownerLabels = ownerLabelSet(profile);
 
-    emit(`Latent ingest · ${startedAt}`);
+    emit(`Ambient ingest · ${startedAt}`);
     emit(`Signed in as ${owner} (${profile.timezone}).`);
     emit(`SQLite: ${options.db}`);
 

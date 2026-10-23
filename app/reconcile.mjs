@@ -198,7 +198,7 @@ export async function applyChangeset(dbPath, changeset, dryRun = true) {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const dbPath = process.argv[2] || 'data/latent.sqlite';
+  const dbPath = process.argv[2] || 'data/ambient.sqlite';
   const outputPath = process.argv[3] || 'changeset.json';
   const dryRun = process.argv.includes('--apply') ? false : true;
 

@@ -107,6 +107,6 @@ html = html.replace(
   </body>`,
 );
 
-const out = new URL('../docs/archive/Latent - Wireframe.html', import.meta.url);
+const out = new URL('../docs/archive/Ambient - Wireframe.html', import.meta.url);
 writeFileSync(out, html);
 console.log(`Wrote ${out.pathname} (${Math.round(html.length / 1024)}kb, self-contained)`);

@@ -64,7 +64,7 @@ The story has two halves. First the scripted **Demo** shows the whole idea in 90
 
 ## 2:25–2:40 · Any agent can use it
 
-**Picture.** Terminal with Claude Code. Type: `can I help Jordan with the deck by Thursday? it's about 3 hours`. The agent calls `latent_fork_week` and answers with the three paths.
+**Picture.** Terminal with Claude Code. Type: `can I help Jordan with the deck by Thursday? it's about 3 hours`. The agent calls `ambient_fork_week` and answers with the three paths.
 
 **Say.** "And it isn't locked in an app. Through MCP and an agent skill, any agent can ask the same question and get the same honest answer."
 
@@ -84,9 +84,11 @@ The story has two halves. First the scripted **Demo** shows the whole idea in 90
 4. In Settings, connect Jev and Liquid d1 if you have working endpoints, then test both. If not, the app says "not connected", which is fine to show.
 5. Clear the demo state with a reload of `/?mode=demo`.
 6. Browser: hide bookmarks bar and extensions, zoom 100%, window 1440×900. Turn on Do Not Disturb.
-7. For the phone shot, open the app over Tailscale (`LATENT_BIND=0.0.0.0 LATENT_HOSTS=<ip> npm start`) and use iOS screen recording.
+7. For the phone shot, open the app over Tailscale (`AMBIENT_BIND=0.0.0.0 AMBIENT_HOSTS=<ip> npm start`) and use iOS screen recording.
 
 ## How to record and edit
+
+- **Ready-made footage:** the opening (0:00–0:20) can be the first 19 seconds of `launch/out/ambient-room.mp4`, and the agent shot can be cut from `ambient-agents.mp4`. Render them with `node launch/render.mjs room` (see `launch/README.md`).
 
 - **Screen:** macOS `Cmd+Shift+5` → Record Selected Portion around the browser window, or Screen Studio if you have it (it adds smooth zooms on clicks automatically).
 - **Voice:** record the voiceover separately, in a quiet room, from this script. Read it twice and keep the better take of each line.

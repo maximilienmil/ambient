@@ -3,7 +3,7 @@
 // The same tools are served over Streamable HTTP at /mcp by server.mjs.
 //
 // Run:  node mcp-server.mjs
-// Env:  LATENT_DB   path to the ledger (default app/data/latent.sqlite)
+// Env:  AMBIENT_DB   path to the ledger (default app/data/ambient.sqlite)
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,7 +12,7 @@ import { openDb } from './db.mjs';
 import { createTools } from './mcp-tools.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const dbPath = process.env.LATENT_DB || path.join(root, 'data', 'latent.sqlite');
+const dbPath = process.env.AMBIENT_DB || path.join(root, 'data', 'ambient.sqlite');
 if (!existsSync(dbPath)) {
   process.stderr.write(`ambient: no ledger at ${dbPath}. Run "npm run ingest" first.\n`);
   process.exit(1);

@@ -76,7 +76,7 @@ export function exportLabels({ db, n = 30, out }) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const options = parseArgs(process.argv.slice(2));
-  const db = openDb(process.env.LATENT_DB || path.join(root, 'data', 'latent.sqlite'));
+  const db = openDb(process.env.AMBIENT_DB || path.join(root, 'data', 'ambient.sqlite'));
   try {
     const total = db.prepare('SELECT COUNT(*) AS n FROM commitments').get().n;
     if (total === 0) {

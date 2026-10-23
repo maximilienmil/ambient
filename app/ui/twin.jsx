@@ -136,7 +136,7 @@ export function useTwin() {
     setState((previous) => ({ ...previous, loading: true }));
     try {
       const session = await (await fetch('/api/session')).json();
-      const response = await fetch('/api/ledger', { headers: { 'X-Latent-Token': session.token } });
+      const response = await fetch('/api/ledger', { headers: { 'X-Ambient-Token': session.token } });
       if (!response.ok) throw new Error('The ledger could not be read.');
       const ledger = await response.json();
       setState({
@@ -583,13 +583,13 @@ function TwinChrome({ items, norms, weeks, loading, error, onOpen }) {
 function TwinMount() {
   const { items, norms, weeks, loading, error, reload } = useTwin();
   const onOpen = useCallback((id) => {
-    if (window.Latent && typeof window.Latent.openReceipt === 'function') window.Latent.openReceipt(id);
+    if (window.Ambient && typeof window.Ambient.openReceipt === 'function') window.Ambient.openReceipt(id);
   }, []);
 
   useEffect(() => {
-    window.LatentTwin = { reload };
+    window.AmbientTwin = { reload };
     return () => {
-      if (window.LatentTwin && window.LatentTwin.reload === reload) delete window.LatentTwin;
+      if (window.AmbientTwin && window.AmbientTwin.reload === reload) delete window.AmbientTwin;
     };
   }, [reload]);
 

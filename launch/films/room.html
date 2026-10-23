@@ -1,0 +1,48 @@
+<!doctype html><meta charset="utf-8"><title>Ambient · Room</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>
+#open{background:var(--ink);color:var(--paper)}
+.stats{display:flex;gap:110px;justify-content:center;margin-top:60px}
+.stats div{font:400 150px/1 "Instrument Serif",serif}.stats span{display:block;font:500 26px Geist;color:var(--mute);margin-top:14px}
+.stage{position:absolute;left:210px;top:70px;width:1500px}
+.side{position:absolute;left:150px;top:50%;width:560px;translate:0 -50%}
+.side h2{font-size:76px}.side p{margin-top:26px;color:var(--mute);font-size:30px;max-width:520px}
+.right{position:absolute;right:100px;top:160px;width:1100px;height:760px}
+.right img{position:absolute;left:-235px;top:-85px;width:1354px!important;max-width:none}
+.quote{font:italic 400 104px/1.08 "Instrument Serif",serif;max-width:1500px}
+.wash.g{background:radial-gradient(40% 50% at 25% 40%,#fadb4a99,transparent),radial-gradient(40% 50% at 75% 60%,#b9a0f299,transparent)}
+.tag{font-size:26px;color:var(--mute);margin-bottom:22px}
+</style>
+<body>
+<section class="abs center" id="open" data-a="0" data-b="10.4" data-f=".01"><div>
+  <h1 data-a=".6" data-b="5.6" data-y="24" style="position:absolute;left:0;right:0;top:420px">Bee remembers everything you say.</h1>
+  <div data-a="5.6" data-b="10.4" data-y="24" style="position:absolute;left:0;right:0;top:330px">
+    <div class="k" style="color:#a8a28d">After a year, one real account holds</div>
+    <div class="stats"><div><b id="c1" style="font-weight:400">0</b><span>conversations</span></div><div><b id="c2" style="font-weight:400">0</b><span>to-dos</span></div><div><b id="c3" style="font-weight:400">0</b><span>facts</span></div></div>
+  </div></div></section>
+<section class="abs center" data-a="10.4" data-b="14.6"><h1 style="max-width:1500px">Remembering everything isn’t the same as <i>knowing what matters.</i></h1></section>
+<section class="abs center" data-a="14.6" data-b="19.6"><div class="wash g"></div><div style="position:relative"><div class="wm">am<i>·</i><b>bee</b><i>·</i>nt</div><div class="k" style="margin-top:28px;font-size:30px">An ambient agent on top of Bee. Room for what matters.</div></div></section>
+<section class="abs" data-a="19.6" data-b="27"><div class="stage shot" id="s1"><img src="../shots/desktop-horizon.png"></div>
+  <div class="cap" data-a="20.6" data-b="26.6">Overnight, the hive handled the small things.</div></section>
+<section class="abs center" data-a="27" data-b="33.4"><div><div class="tag pill" data-a="27.4" data-b="33.4"><span class="dot" style="background:#e05a2b"></span>Bee heard, yesterday 4:12 pm</div><p class="quote" style="margin-top:36px">“<span id="q"></span>”</p></div></section>
+<section class="abs" data-a="33.4" data-b="45">
+  <div class="side"><div class="tag">Fork the week</div><h2 id="ph">Protect the launch.</h2><p id="pp">Ask Jordan to move the favor to Monday. The release ships Friday.</p></div>
+  <div class="right shot"><img id="fk" src="../shots/desktop-fork-A.png"><img id="fk2" src="../shots/desktop-fork-B.png" style="opacity:0"><img id="fk3" src="../shots/desktop-fork-C.png" style="opacity:0"></div>
+  <div class="cap" style="left:150px;right:auto;text-align:left;bottom:90px;font-size:40px;color:var(--mute)" data-a="41" data-b="45">Calendar arithmetic. Not a guess.</div></section>
+<section class="abs" data-a="45" data-b="52.4"><div class="stage shot" id="s2"><img src="../shots/desktop-running.png"></div>
+  <div class="cap" data-a="48.6" data-b="52.4" style="background:linear-gradient(transparent,var(--paper) 40%);padding:80px 0 0;bottom:0;height:220px">One tap. And it tells the truth: <i>a request is not a yes.</i></div></section>
+<section class="abs center" data-a="52.4" data-b="60" data-f=".8"><div class="wash g" style="opacity:.5"></div><div style="position:relative"><h1>Bee remembers.<br><i>Ambient makes room.</i></h1><div class="k" style="margin-top:46px">github.com/maximilienmil/ambient · MCP server · agent skill · MIT</div></div></section>
+<script>
+const DUR = 60;
+const F = [['Protect the launch.','Ask Jordan to move the favor to Monday. The release ships Friday.'],['Keep the favor.','Help Jordan Tuesday. The release moves to next Monday.'],['Ship something smaller.','Help Jordan and ship less on Friday. Billing waits.']];
+function tick(t){
+  count($('#c1'),169,seg(t,6.2,8.6)); count($('#c2'),162,seg(t,6.6,9)); count($('#c3'),421,seg(t,7,9.4));
+  $('#s1').style.transform = `scale(${lerp(1,1.12,seg(t,19.6,27,inout))})`; $('#s1').style.transformOrigin='30% 20%';
+  $('#s2').style.transform = `translateY(${lerp(0,-300,seg(t,45.6,49.5,inout))}px) scale(${lerp(1,1.06,seg(t,45,52.4))})`;
+  type($('#q'),'Sure, I’ll help with the deck by Thursday.',(t-28.2)/2.6);
+  const i = t<37.2?0:t<41?1:2, fade=(a)=>seg(t,a,a+.5);
+  $('#fk2').style.opacity=fade(37.2); $('#fk3').style.opacity=fade(41);
+  $('#ph').textContent=F[i][0]; $('#pp').textContent=F[i][1];
+  const k=t<37.2?t-33.4:t<41?t-37.2:t-41; const o=seg(k,0,.5); $('#ph').style.opacity=o; $('#pp').style.opacity=o;
+}
+</script>

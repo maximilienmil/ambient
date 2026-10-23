@@ -61,7 +61,7 @@ test('judge cannot use pre-promise, another speaker or fabricated support',async
  assert.equal((await judgeFromLaterConversations(c,{observations:[{...observation,text:'I plan to send it next week.'}],judgeClient})).verdict,'unknown');
 });
 test('truncated live stream is recovered once by catch-up within five seconds',async()=>{
- const dir=mkdtempSync(path.join(os.tmpdir(),'latent-stream-')),dbPath=path.join(dir,'ledger.sqlite');openDb(dbPath).close();
+ const dir=mkdtempSync(path.join(os.tmpdir(),'ambient-stream-')),dbPath=path.join(dir,'ledger.sqlite');openDb(dbPath).close();
  const controller=new AbortController();const profile={firstName:'Demo',lastName:'User',timezone:'UTC'};
  const missed={type:'new-utterance',data:{utterance:{id:'missed-event',conversation_id:'conversation',speaker:'Demo User',spoken_at:1792324800000,text:"I'll send the report by Friday.",start:0,end:1}}};
  const start=Date.now();let catchups=0;

@@ -1,5 +1,5 @@
 {
-  "name": "latent-local",
+  "name": "ambient-local",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -20,10 +20,10 @@
     "audit-sample": "node audit-sample.mjs",
     "time-split": "node time-split.mjs",
     "fixtures": "node fixtures/generate.mjs",
-    "demo": "node fixtures/create-demo.mjs && LATENT_FIXTURE=1 LATENT_DB=data/latent-reconcile-demo.sqlite node server.mjs",
+    "demo": "node fixtures/create-demo.mjs && AMBIENT_FIXTURE=1 AMBIENT_DB=data/ambient-reconcile-demo.sqlite node server.mjs",
     "reconcile": "node reconcile.mjs",
     "stream": "node stream-handler.mjs",
-    "stream:demo": "node stream-handler.mjs demo data/latent-reconcile-demo.sqlite"
+    "stream:demo": "node stream-handler.mjs demo data/ambient-reconcile-demo.sqlite"
   },
   "dependencies": {
     "@paper-design/shaders": "^0.0.82",

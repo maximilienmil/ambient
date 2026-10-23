@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8"><title>Ambient · Any agent</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>
+.term{position:absolute;left:160px;right:160px;top:110px;bottom:110px;border-radius:26px;background:#17160a;color:#ebe5d3;padding:56px 64px;font:400 27px/1.55 ui-monospace,"SF Mono",Menlo,monospace;box-shadow:0 50px 120px -30px rgba(40,30,0,.5);overflow:hidden}
+.term .u{color:#fadb4a}.term .m{color:#8d8670}.term .t{color:#b9a0f2}.term .ok{color:#9fd3a5}.term .bad{color:#f0a070}
+.term p{margin:0 0 18px;white-space:pre-wrap}
+.ans{font-family:Geist;font-size:31px;line-height:1.45;color:#f3efe4}
+</style>
+<body>
+<section class="abs center" data-a="0" data-b="4"><h1>Not locked in an app.</h1></section>
+<section class="abs" data-a="4" data-b="33">
+  <div class="term">
+    <p><span class="u">›</span> <span id="ask"></span></p>
+    <p id="call" class="m" style="opacity:0"><span class="t">● ambient_fork_week</span>  promise: “Help Jordan with the deck”, 3h, due Thu
+                       goal: “Ship the release”, 6h, due Fri</p>
+    <p id="res" class="m" style="opacity:0">  calendarEventsConsidered: 5
+  A  protect the goal     goal <span class="ok">fits 6h</span>     promise <span class="ok">fits</span> (moved a week)
+  B  keep every promise   goal <span class="bad">at_risk, 1h short</span>   promise <span class="ok">fits</span>
+  C  shrink the goal      goal <span class="ok">fits 3h</span>     promise <span class="ok">fits</span>
+  recommended: A</p>
+    <p class="ans" id="ans"></p>
+  </div>
+</section>
+<section class="abs end" data-a="33" data-b="40" data-f=".8"><div><h1>One server. <i>Any agent.</i></h1><p class="k" style="margin-top:36px;font-size:30px">MCP over stdio and Streamable HTTP · ten tools · an agent skill</p><div class="wm" style="font-size:90px;margin-top:60px">am<i>·</i><b>bee</b><i>·</i>nt</div></div></section>
+<script>
+const DUR = 40;
+const ANS = 'Not both, as your calendar stands. Keeping every promise leaves the release an hour short. Protecting the release fits: ask Jordan to move the deck to next week. That is a request, so Jordan still has to agree. Want me to draft it?';
+function tick(t){
+  type($('#ask'),'can I help Jordan with the deck by Thursday? it’s about 3 hours, and I ship the release Friday',(t-4.8)/4);
+  $('#call').style.opacity=seg(t,10,10.6); $('#res').style.opacity=seg(t,12,12.8);
+  type($('#ans'),ANS,(t-15.5)/11);
+}
+</script>

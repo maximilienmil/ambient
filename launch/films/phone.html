@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><title>Ambient · iPhone</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>
+.phone{left:50%;top:560px;margin-left:-210px;transform:scale(1.5);transform-origin:50% 0}
+.top{position:absolute;left:80px;right:80px;top:150px;text-align:center}
+.top h2{font-size:82px}
+.scr img{opacity:0}
+.wash.g{background:radial-gradient(45% 30% at 30% 70%,#fadb4a77,transparent),radial-gradient(45% 30% at 70% 80%,#b9a0f277,transparent)}
+</style>
+<body class="v">
+<div class="wash g"></div>
+<section class="abs" data-a="0" data-b="40" data-f=".01">
+  <div class="top"><h2 id="cap"></h2></div>
+  <div class="phone" data-a=".3" data-b="34" data-y="80" data-f=".9"><div class="scr">
+    <img id="i0" src="../shots/phone-horizon-full.png"><img id="i1" src="../shots/phone-heard.png"><img id="i2" src="../shots/phone-fork-A.png"><img id="i3" src="../shots/phone-fork-B.png"><img id="i4" src="../shots/phone-sheet.png"><img id="i5" src="../shots/phone-running.png"><img id="i6" src="../shots/phone-compass-full.png"><img id="i7" src="../shots/phone-rec-full.png">
+  </div></div>
+</section>
+<section class="abs end" data-a="34" data-b="40" data-f=".8"><div><div class="wm" style="font-size:150px">am<i>·</i><b>bee</b><i>·</i>nt</div><p class="k" style="margin-top:30px;font-size:32px">Installs to your home screen.<br>Reads your Bee. Makes room.</p></div></section>
+<script>
+const DUR = 40;
+// [start, end, caption, scroll fraction of overflow]
+const S = [[0,5,'The hive worked overnight.',1],[5,9,'Bee heard a new promise.',0],[9,13,'Fork the week.',0],[13,17,'Every path, on your real calendar.',0],[17,21,'Review before anything moves.',0],[21,25,'One tap. The hive does it.',0],[25,29.5,'Goals you are protecting.',.6],[29.5,34,'Duplicates and doubts, cleared.',.5]];
+function tick(t){
+  let cap='';
+  S.forEach(([a,b,c,sc],i)=>{ const im=$('#i'+i), o=Math.min(seg(t,a,a+.5),1-seg(t,b,b+.5)); im.style.opacity=i===0?Math.min(1,1-seg(t,b,b+.5)):o;
+    const over=Math.max(0,im.offsetHeight-856); im.style.translate=`0 ${-over*sc*seg(t,a+.8,b-.3,inout)}px`; if(t>=a&&t<b)cap=c; });
+  const h=$('#cap'); if(h.textContent!==cap) h.textContent=cap; const k=S.find(([a,b])=>t>=a&&t<b); h.style.opacity=k?Math.min(seg(t,k[0],k[0]+.5),1-seg(t,k[1]-.4,k[1])):0;
+}
+</script>

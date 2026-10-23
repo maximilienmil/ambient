@@ -1,4 +1,4 @@
-// Bee CLI adapter for Latent's ingest layer.
+// Bee CLI adapter for Ambient's ingest layer.
 //
 // Documentation used (read before writing these calls):
 //   - https://docs.bee.computer/docs/cli            (command reference: me, conversations list/get,

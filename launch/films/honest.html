@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><title>Ambient · Honest by design</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>
+.l{position:absolute;left:150px;top:50%;translate:0 -50%;width:720px}
+.l h2{font-size:88px}.l p{font-size:30px;color:var(--mute);margin-top:24px}
+.n{font:500 24px Geist;color:var(--mute);margin-bottom:26px}
+.wash.a{background:radial-gradient(50% 50% at 80% 50%,#fadb4a88,transparent)}
+.wash.b{background:radial-gradient(50% 50% at 80% 50%,#bcd3b4aa,transparent)}
+.wash.c{background:radial-gradient(50% 50% at 80% 50%,#b7cfe6cc,transparent)}
+.wash.d{background:radial-gradient(50% 50% at 80% 50%,#b9a0f288,transparent)}
+</style>
+<body>
+<section class="abs center" data-a="0" data-b="5"><h1>An agent that acts for you<br>has to be <i>honest with you.</i></h1></section>
+<section class="abs" data-a="5" data-b="12"><div class="wash a"></div><div class="l"><div class="n">01</div><h2>Other people’s words stay theirs.</h2><p>Bystander speech is dropped before anything is stored. An “I’ll do it” from someone else never becomes your to-do.</p></div>
+  <div class="shot crop" style="right:130px;top:250px;width:860px;height:560px"><img src="../shots/desktop-rec.png" style="width:1900px;left:-185px;top:-198px"></div></section>
+<section class="abs" data-a="12" data-b="19"><div class="wash d"></div><div class="l"><div class="n">02</div><h2>Two models. If they disagree, it asks.</h2><p>Jev and Liquid d1, a System 1 model, each weigh in. Ambient acts only when both agree.</p></div>
+  <div class="shot crop" style="right:130px;top:330px;width:860px;height:420px"><img src="../shots/desktop-heard.png" style="width:2400px;left:-1520px;top:-1010px"></div></section>
+<section class="abs" data-a="19" data-b="26"><div class="wash a"></div><div class="l"><div class="n">03</div><h2>A request is not a yes.</h2><p>When the hive asks Jordan to move the deck, it says so. Jordan still has to agree.</p></div>
+  <div class="shot crop" style="right:130px;top:260px;width:860px;height:560px"><img src="../shots/desktop-sheet.png" style="width:2000px;left:-960px;top:-260px"></div></section>
+<section class="abs" data-a="26" data-b="33"><div class="wash b"></div><div class="l"><div class="n">04</div><h2>Every action has a receipt and an undo.</h2><p>Approvals are bound to a hash of exactly what will run. Sandbox by default; nothing leaves your machine until you connect an account.</p></div>
+  <div class="shot crop" style="right:130px;top:300px;width:860px;height:480px"><img src="../shots/desktop-running.png" style="width:2200px;left:-1100px;top:-760px"></div></section>
+<section class="abs" data-a="33" data-b="40"><div class="wash c"></div><div class="l"><div class="n">05</div><h2>Bee is never changed behind your back.</h2><p>Duplicates merge locally, with undo. Facts Bee isn’t sure about wait for you.</p></div>
+  <div class="shot crop" style="right:130px;top:250px;width:860px;height:560px"><img src="../shots/desktop-rec.png" style="width:1900px;left:-858px;top:-198px"></div></section>
+<section class="abs end" data-a="40" data-b="46" data-f=".8"><div><h1>Bee remembers.<br><i>Ambient makes room.</i></h1><p class="k" style="margin-top:40px">github.com/maximilienmil/ambient</p></div></section>
+<script>const DUR = 46;
+function tick(t){ for (const [i,s] of [...document.querySelectorAll('.crop img')].entries()) { const a=5+7*i; s.style.translate=`0 ${lerp(20,-20,seg(t,a,a+7,inout))}px`; } }
+</script>

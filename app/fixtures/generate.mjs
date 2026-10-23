@@ -269,6 +269,6 @@ export function generateFixtures(dbPath) {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const dbPath = process.argv[2] || 'data/latent.sqlite';
+  const dbPath = process.argv[2] || 'data/ambient.sqlite';
   generateFixtures(dbPath);
 }

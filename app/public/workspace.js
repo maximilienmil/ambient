@@ -2,7 +2,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let token,workspace,scenario,comparison,ledger,reconcile,actions=[],choiceTouched=false,selected='protect',view='horizon',scope='week',bundle=null;
 const hours=m=>`${Math.round(m/6)/10}h`;
-async function api(route,body){const r=await fetch(`/api/${route}`,{method:body===undefined?'GET':'POST',headers:{'x-latent-token':token,'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Request failed');return j;}
+async function api(route,body){const r=await fetch(`/api/${route}`,{method:body===undefined?'GET':'POST',headers:{'x-ambient-token':token,'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Request failed');return j;}
 function notify(message){$('notice').textContent=message;$('notice').style.display='block';setTimeout(()=>$('notice').style.display='none',7000);}
 function show(html){$('dialog-content').innerHTML=html;$('dialog').showModal();}
 function localDate(value){return new Date(value).toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}

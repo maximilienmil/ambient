@@ -11,7 +11,7 @@ Without attribution, the extractor cannot distinguish the wearer saying "I'll se
 
 ## Decision
 
-The product makes no claim about voice or speaker identity. The attribution gate is a **stated heuristic** over text and context (first person, not a bare imperative, not an interrogative, not immediately preceded by a second-person address), and its survival count is displayed wherever candidates are counted. The claim in the pitch becomes "Bee hears what was said; Latent keeps only what you promised, and says how much it discarded."
+The product makes no claim about voice or speaker identity. The attribution gate is a **stated heuristic** over text and context (first person, not a bare imperative, not an interrogative, not immediately preceded by a second-person address), and its survival count is displayed wherever candidates are counted. The claim in the pitch becomes "Bee hears what was said; Ambient keeps only what you promised, and says how much it discarded."
 
 If diarisation arrives later, it becomes an input to the gate, and this ADR is superseded.
 

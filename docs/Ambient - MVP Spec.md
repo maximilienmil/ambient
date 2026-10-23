@@ -1,24 +1,24 @@
-# Latent — MVP product and implementation spec
+# Ambient — MVP product and implementation spec
 
 Decision draft · 17 October 2026 · based on `Imply - Hackathon Spec.md`
 
 ## 1. Product decision
 
-**Latent helps you follow through on commitments made in conversation, with evidence and explicit control over what happens next.**
+**Ambient helps you follow through on commitments made in conversation, with evidence and explicit control over what happens next.**
 
-Build a desktop-first companion to Bee. Ship the hackathon as a local browser UI with a local service, not a browser extension or a second recording app. Package the same interface as a desktop app only after the commitment loop works. Bee supplies context; Latent supplies the decision, review, coordination, and follow-through ledger.
+Build a desktop-first companion to Bee. Ship the hackathon as a local browser UI with a local service, not a browser extension or a second recording app. Package the same interface as a desktop app only after the commitment loop works. Bee supplies context; Ambient supplies the decision, review, coordination, and follow-through ledger.
 
-Working name: Latent. Keep Imply as the previous concept name. No name/domain/trademark availability claim. Suggested line: **“Follow through on what you meant.”**
+Working name: Ambient. Keep Imply as the previous concept name. No name/domain/trademark availability claim. Suggested line: **“Follow through on what you meant.”**
 
 Initial user: a Bee owner handling several personal and work commitments each day, willing to review a small queue. First session succeeds when the user imports a conversation, verifies one commitment against its source, prepares an action, and understands why another candidate was held back.
 
 ### How this relates to Bee tasks
 
-Conceptually an extension of the task lifecycle; technically a separate companion using documented interfaces. There is no verified supported way to embed a custom Latent tab inside Bee. Do not pitch an in-app plugin as already available.
+Conceptually an extension of the task lifecycle; technically a separate companion using documented interfaces. There is no verified supported way to embed a custom Ambient tab inside Bee. Do not pitch an in-app plugin as already available.
 
-Bee remains the source for conversations and optionally linked to-dos. Latent stores additional commitment metadata: ownership, evidence, ambiguity, decision, approval, action attempts, coordination, and completion evidence. A task checkbox cannot express those distinctions.
+Bee remains the source for conversations and optionally linked to-dos. Ambient stores additional commitment metadata: ownership, evidence, ambiguity, decision, approval, action attempts, coordination, and completion evidence. A task checkbox cannot express those distinctions.
 
-Default hackathon integration: read selected Bee conversations and to-dos; keep new commitments in Latent. Optional explicit “Link Bee task” or “Add to Bee” writes through the adapter. Never duplicate every extracted commitment into Bee automatically.
+Default hackathon integration: read selected Bee conversations and to-dos; keep new commitments in Ambient. Optional explicit “Link Bee task” or “Add to Bee” writes through the adapter. Never duplicate every extracted commitment into Bee automatically.
 
 | Surface | Decision | Reason |
 |---|---|---|
@@ -35,7 +35,7 @@ A hosted web UI cannot silently reach a user's local Bee setup. Later hosted dis
 Checked 17 October 2026. These are documentation/website findings, not account-level integration tests.
 
 - Bee's site already describes suggested to-dos and email/calendar drafting. Its privacy copy says processed audio is deleted. **Implication:** differentiation must go beyond extraction, and transcript receipts must stand alone. [Bee](https://bee.computer/)
-- Bee Desktop captures meetings and syncs with the phone, including to-do completion. It is offered for Mac and Windows under Bee Pro. **Implication:** Latent should not rebuild recording or ordinary cross-device task sync. [Desktop](https://bee.computer/desktop)
+- Bee Desktop captures meetings and syncs with the phone, including to-do completion. It is offered for Mac and Windows under Bee Pro. **Implication:** Ambient should not rebuild recording or ordinary cross-device task sync. [Desktop](https://bee.computer/desktop)
 - Bee provides a CLI, MCP and export workflow; developer setup requires Developer Mode. **Implication:** a developer-focused local MVP is credible; consumer onboarding needs later work. [Getting started](https://docs.bee.computer/docs)
 - The API documents conversations, to-do CRUD, change cursors and SSE. The public endpoint is `https://api.developer.bee.amazon.dev`; local `bee proxy` is also documented. Threads are preview/test-user-only. **Implication:** use a read adapter and our own agents; no dependency on Bee's chat execution. Keep any proxy loopback-only. [API](https://docs.bee.computer/docs/api)
 - CLI conversation retrieval includes transcripts, with an utterance command and timestamp filtering. Exact response fields, speaker reliability and span resolution need an adapter spike on an authorized sample. [CLI](https://docs.bee.computer/docs/cli)
@@ -50,14 +50,14 @@ Unverified: this account's current API access, transcript field schema, rate lim
 2. Extract candidate commitments with source anchors and editable owner/deadline.
 3. Apply a deterministic policy choosing ignore, remember, ask, draft or execute-internal.
 4. Review a draft next to its receipt. Approve, edit, dismiss or snooze.
-5. Execute one **local action**: create a private calendar hold in Latent's sandbox calendar, returning a persistent ID. Offer an ICS export as the portable handoff. Neither means an external invitation was sent.
+5. Execute one **local action**: create a private calendar hold in Ambient's sandbox calendar, returning a persistent ID. Offer an ICS export as the portable handoff. Neither means an external invitation was sent.
 6. Coordinate a dinner between two isolated fixture personas; both approve the same proposal before the sandbox plan is committed.
 7. Show a ledger with open, completed and needs-check-in items, backed by event records.
 8. Run a small labeled evaluation and show measured results. Until run, show “Not evaluated”, never invented percentages.
 
 ### P1: integrate only after P0 is reliable
 
-Read real Bee data; optionally link a Bee to-do after explicit action. Add one real calendar adapter on a test calendar if credentials and time permit. Then add sent-mail evidence. Drafting text in Latent is P0; creating a Gmail draft is a separate P1 integration. These capabilities must be labeled separately.
+Read real Bee data; optionally link a Bee to-do after explicit action. Add one real calendar adapter on a test calendar if credentials and time permit. Then add sent-mail evidence. Drafting text in Ambient is P0; creating a Gmail draft is a separate P1 integration. These capabilities must be labeled separately.
 
 ### Cut
 
@@ -71,7 +71,7 @@ Navigation: **Review / Commitments / Plans / Connections**. Receipts are a detai
 
 Start with two choices: “Try sample conversation” and “Use Bee on this computer”. Show what is read and what stays local. Ask the user to choose a conversation/time window rather than ingesting their entire history. Present the model-processing disclosure before sending transcript text to a remote model. Confirm speaker identity if unknown. No extraction when the source is empty or access has expired.
 
-States: disconnected, checking, connected with last successful sync, denied, offline, rate-limited, partial import. A failed sync preserves existing commitments and clearly labels stale evidence. “Pause import” stops future reads; “Delete Latent data” removes local content and invalidates pending approvals. It does not claim to delete Bee's original records.
+States: disconnected, checking, connected with last successful sync, denied, offline, rate-limited, partial import. A failed sync preserves existing commitments and clearly labels stale evidence. “Pause import” stops future reads; “Delete Ambient data” removes local content and invalidates pending approvals. It does not claim to delete Bee's original records.
 
 ### B. Review / default home
 
@@ -146,11 +146,11 @@ Idempotent extraction key: provider + account + conversation ID + revision + ext
 Each commitment optionally maps to one `bee_todo_id`. Proposed ownership rules:
 
 - Bee owns its task text and completion checkbox; refresh these into the linked view.
-- Latent owns receipts, approvals, action state, health and coordination.
-- Latent actions do not overwrite task edits made in Bee.
+- Ambient owns receipts, approvals, action state, health and coordination.
+- Ambient actions do not overwrite task edits made in Bee.
 - User chooses “Mark linked Bee task complete” separately; persist the attempted write/result.
 - Completion in Bee is labeled “Completed in Bee”, not independent proof of the underlying event.
-- If a Bee task is deleted, remove the link and ask whether to keep the separate Latent commitment.
+- If a Bee task is deleted, remove the link and ask whether to keep the separate Ambient commitment.
 - If a source conversation is deleted, remove cached source content and stop its pending actions.
 
 Do not claim a bidirectional sync is implemented by showing a toggle. First spike must validate schema, paging, revisions, auth failure, timestamps and deletion behavior. Real data access was not performed in this specification task.
@@ -161,7 +161,7 @@ Proposed stack: React + TypeScript UI, Node/TypeScript local service, SQLite loc
 
 Data path: `selected source → normalize → extract → validate evidence → policy → review → versioned approval → outbox → action adapter → receipt → completion reconciliation`.
 
-The browser calls only Latent's local API. The service owns credentials and model calls. Bind loopback, validate Host/Origin, reject cross-origin state changes, use a session token/CSRF protection and never expose the Bee proxy to the LAN. Treat transcripts and agent messages as data, never instructions that can modify policy or run tools.
+The browser calls only Ambient's local API. The service owns credentials and model calls. Bind loopback, validate Host/Origin, reject cross-origin state changes, use a session token/CSRF protection and never expose the Bee proxy to the LAN. Treat transcripts and agent messages as data, never instructions that can modify policy or run tools.
 
 Tables (proposed):
 
@@ -216,17 +216,17 @@ Nightly summary is a view generated on demand in P0. Background schedules are P1
 
 User feedback rejected the initial paper-and-sage editorial direction. The current direction follows the actual Bee Desktop interface references in `assets/bee-reference/bee-desktop.png` and `bee-task-sync.png`.
 
-Use white surfaces, near-black system sans-serif text, a fixed white sidebar with soft gray rounded selection, and compact rounded context rows. The home screen is an agent workspace, not a checklist: a yellow-to-lilac greeting panel establishes Latent's presence and one clear “Send to Latent” action; “What I picked up” shows inferred loose ends; the adjacent Latent read shows evidence, inferred intent, a legible follow-through sequence, and the point where user approval is needed. Evidence appears on warm yellow; boundaries and explanations use pale lilac. Keep “Latent for Bee” as an independent companion identity inspired by Bee, not an official Bee app or copied Bee logo.
+Use white surfaces, near-black system sans-serif text, a fixed white sidebar with soft gray rounded selection, and compact rounded context rows. The home screen is an agent workspace, not a checklist: a yellow-to-lilac greeting panel establishes Ambient's presence and one clear “Send to Ambient” action; “What I picked up” shows inferred loose ends; the adjacent Ambient read shows evidence, inferred intent, a legible follow-through sequence, and the point where user approval is needed. Evidence appears on warm yellow; boundaries and explanations use pale lilac. Keep “Ambient for Bee” as an independent companion identity inspired by Bee, not an official Bee app or copied Bee logo.
 
-The agent should feel proactive and capable without implying that a visual prototype has acted on external accounts. In the UI concept, “Send to Latent” opens a clearly labeled preview plan; progress can show what a future agent would understand and prepare, while a persistent human-control message says that external actions return for approval. Use agent-oriented language and role cues, not a list of boxes to check. Keep existing commitment editing and receipt history in the detail surfaces, not as the home-screen focal point. Remembered items remain quiet until relevant. This describes the interaction and presentation only; the current prototype's handoff is an in-memory visual preview.
+The agent should feel proactive and capable without implying that a visual prototype has acted on external accounts. In the UI concept, “Send to Ambient” opens a clearly labeled preview plan; progress can show what a future agent would understand and prepare, while a persistent human-control message says that external actions return for approval. Use agent-oriented language and role cues, not a list of boxes to check. Keep existing commitment editing and receipt history in the detail surfaces, not as the home-screen focal point. Remembered items remain quiet until relevant. This describes the interaction and presentation only; the current prototype's handoff is an in-memory visual preview.
 
 Tokens: page `#FAFAFA`, surface `#FFFFFF`, primary ink `#171717`, muted ink `#727272`, borders `#E0E0E0`, selection `#EAEAEA`, evidence `#FFED6C`, explanation `#EEE8FB`, success `#E6F5EB`. Black primary buttons; yellow accents; no forest green, Georgia headings or correspondence-desk metaphor.
 
 Typography: system sans throughout, 32px page greeting, 20px section headings, 14px task titles, 12px metadata. Bee's website uses Antarctica, but the implementation does not assume a license for it. Sidebar 216px; main padding 36px; task rows 15px radius; detail panes 20px; pill-shaped navigation and buttons. Use the checked-in Phosphor icons consistently.
 
-At desktop sizes, pair the picked-up context list with Latent's read and follow-through panel. Below 900px, stack these panels; at 640px and below, collapse the hero art and keep the primary handoff visible above the context list. The sidebar becomes a horizontal scrollable navigation row, including Settings. Keyboard focus uses a visible lilac outline. Color never replaces status text. The previous 390px layout remains the responsive baseline; recheck after visual iterations.
+At desktop sizes, pair the picked-up context list with Ambient's read and follow-through panel. Below 900px, stack these panels; at 640px and below, collapse the hero art and keep the primary handoff visible above the context list. The sidebar becomes a horizontal scrollable navigation row, including Settings. Keyboard focus uses a visible lilac outline. Color never replaces status text. The previous 390px layout remains the responsive baseline; recheck after visual iterations.
 
-The app itself is the high-fidelity wireframe. A standalone in-memory version is generated from the same source as `Latent - Wireframe.html`. Bee's downloaded photography and screenshots stay on the design reference board, outside the shipped app UI.
+The app itself is the high-fidelity wireframe. A standalone in-memory version is generated from the same source as `Ambient - Wireframe.html`. Bee's downloaded photography and screenshots stay on the design reference board, outside the shipped app UI.
 
 ## 12. Evaluation and release gates
 
@@ -276,9 +276,9 @@ Preserved the commitment loop, restraint, receipts, coordination and evaluation.
 
 ## Deliverables in this folder
 
-- `Latent - MVP Spec.md`: this implementation brief.
-- `Latent - Wireframe.html`: interactive fixture-only design prototype; open directly in a browser.
-- `Latent - Design Board.html`: reference graphics, palette and platform recommendation.
+- `Ambient - MVP Spec.md`: this implementation brief.
+- `Ambient - Wireframe.html`: interactive fixture-only design prototype; open directly in a browser.
+- `Ambient - Design Board.html`: reference graphics, palette and platform recommendation.
 - `assets/bee-reference/`: four downloaded public Bee graphics plus source manifest. Reference use only; rights remain with their owners.
 
 The original `Imply - Hackathon Spec.md` is preserved. Prototype interactions are simulations; no Bee, email or calendar writes occur.

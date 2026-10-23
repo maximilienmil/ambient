@@ -14,7 +14,7 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 export const SERVER_INFO = { name: 'ambient', title: 'Ambient', version: '0.2.0' };
 export const PROTOCOLS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 
-export function createTools({ db, dbPath, dataDir = process.env.LATENT_DATA_DIR || path.join(root, 'data') }) {
+export function createTools({ db, dbPath, dataDir = process.env.AMBIENT_DATA_DIR || path.join(root, 'data') }) {
 growSchema(db);
 const money = (value) => (Number.isFinite(value) ? Math.round(value * 1000) / 10 : null);
 
@@ -51,12 +51,12 @@ function summary() {
 
 const TOOLS = [
   {
-    name: 'latent_goals',
-    description: 'List the goals the person set in Latent (Compass), with due dates and remaining focused minutes. Goals are what the fork protects.',
+    name: 'ambient_goals',
+    description: 'List the goals the person set in Ambient (Compass), with due dates and remaining focused minutes. Goals are what the fork protects.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
   {
-    name: 'latent_fork_week',
+    name: 'ambient_fork_week',
     description: 'Fork the week: compare three paths for a new promise against a goal (protect the goal, keep every promise, shrink the goal) using the person\'s real calendar. Returns hours that fit, shortfalls, proposed focus blocks and a recommended path. Calendar arithmetic only; nothing is written or sent.',
     inputSchema: {
       type: 'object',
@@ -69,13 +69,13 @@ const TOOLS = [
     },
   },
   {
-    name: 'latent_reconcile',
+    name: 'ambient_reconcile',
     description:
       'Read a reversible changeset proposal for exact duplicate Bee todos and unconfirmed facts. It never applies changes; unsupported facts are held with their source receipt.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
   {
-    name: 'latent_slip_risk',
+    name: 'ambient_slip_risk',
     description:
       'List older open commitments as a review queue. No completion model or calibrated slip probability is available, so this returns reasons and no risk percentages.',
     inputSchema: {
@@ -85,13 +85,13 @@ const TOOLS = [
     },
   },
   {
-    name: 'latent_record',
+    name: 'ambient_record',
     description:
       'Read the audit of the Bee record: how many conversations, how many days, how many open todos, how many duplicate rows, and the measured completion rate.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
   {
-    name: 'latent_open_items',
+    name: 'ambient_open_items',
     description:
       'List open commitments, most urgent first. A due date comes before an undated row; ties break on age. Returns the reason for each position.',
     inputSchema: {
@@ -103,19 +103,19 @@ const TOOLS = [
     },
   },
   {
-    name: 'latent_duplicates',
+    name: 'ambient_duplicates',
     description:
       'List groups of rows that say the same thing, so they can be merged. Bee writes a todo again whenever a conversation mentions it.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
   {
-    name: 'latent_should_act',
+    name: 'ambient_should_act',
     description:
       'Choose the one row to act on now, with the reason and the suggested action. This is the agent entry point: it explains itself instead of returning a bare score.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
   {
-    name: 'latent_merge',
+    name: 'ambient_merge',
     description:
       'Merge duplicate rows. Pass ids for one group, or all=true for every group. The copy carrying a due date is kept. Writes a receipt per group.',
     inputSchema: {
@@ -128,7 +128,7 @@ const TOOLS = [
     },
   },
   {
-    name: 'latent_close',
+    name: 'ambient_close',
     description:
       'Close one open todo and write a receipt. This changes the ledger the app is showing, so the open count drops immediately.',
     inputSchema: {
@@ -163,11 +163,11 @@ function whyOf(item) {
 }
 
 const HANDLERS = {
-  latent_goals() {
+  ambient_goals() {
     return listGrow(db).filter((g) => g.kind === 'goal' && g.state === 'active').map((g) => ({ id: g.id, title: g.title, dueAt: g.due_at, minutes: g.minutes }));
   },
 
-  async latent_fork_week(args = {}) {
+  async ambient_fork_week(args = {}) {
     let goal = args.goal;
     if (!goal?.title) {
       const g = listGrow(db).find((x) => x.kind === 'goal' && x.state === 'active' && x.due_at && x.minutes);
@@ -181,11 +181,11 @@ const HANDLERS = {
     const calendar = await loadCalendars(path.join(dataDir, 'calendars'));
     return { goal, ...forkWeek({ promise: args.promise, goal, events: calendar.events }) };
   },
-  async latent_reconcile() {
+  async ambient_reconcile() {
     return generateChangeset(dbPath);
   },
 
-  latent_slip_risk(args = {}) {
+  ambient_slip_risk(args = {}) {
     const limit = Math.min(20, Math.max(1, Number(args.limit) || 5));
     return {
       available: false,
@@ -201,11 +201,11 @@ const HANDLERS = {
     };
   },
 
-  latent_record() {
+  ambient_record() {
     return summary();
   },
 
-  latent_open_items(args = {}) {
+  ambient_open_items(args = {}) {
     const limit = Math.min(50, Math.max(1, Number(args.limit) || 10));
     return rank(openRows()).slice(0, limit).map((item) => ({
       id: item.id,
@@ -217,7 +217,7 @@ const HANDLERS = {
     }));
   },
 
-  latent_duplicates() {
+  ambient_duplicates() {
     const today = L.buildLedger(db).today || {};
     return {
       groups: today.duplicates || [],
@@ -225,7 +225,7 @@ const HANDLERS = {
     };
   },
 
-  latent_should_act() {
+  ambient_should_act() {
     const open = rank(openRows());
     if (!open.length) {
       return { item: null, why: 'Nothing is open. Every row has been closed or retired.' };
@@ -241,7 +241,7 @@ const HANDLERS = {
     };
   },
 
-  latent_merge(args = {}) {
+  ambient_merge(args = {}) {
     if (args.all) {
       const result = L.mergeAllDuplicates(db, { actor: 'agent' });
       return { ...result, ...summary() };
@@ -256,7 +256,7 @@ const HANDLERS = {
     return { groups: 1, ...result, ...summary() };
   },
 
-  latent_close(args = {}) {
+  ambient_close(args = {}) {
     const id = String(args.id || '');
     if (!id) {
       const error = new Error('id is required.');
@@ -280,7 +280,7 @@ async function handle(request) {
   const error = (code, message) => ({ jsonrpc: '2.0', id: id ?? null, error: { code, message } });
   if (method === 'initialize') {
     const asked = params?.protocolVersion;
-    return reply({ protocolVersion: PROTOCOLS.includes(asked) ? asked : PROTOCOLS[0], capabilities: { tools: { listChanged: false } }, serverInfo: SERVER_INFO, instructions: 'Ambient reads a Bee wearer\'s local ledger. Ask before any write (latent_merge, latent_close). Never act on someone else\'s promise.' });
+    return reply({ protocolVersion: PROTOCOLS.includes(asked) ? asked : PROTOCOLS[0], capabilities: { tools: { listChanged: false } }, serverInfo: SERVER_INFO, instructions: 'Ambient reads a Bee wearer\'s local ledger. Ask before any write (ambient_merge, ambient_close). Never act on someone else\'s promise.' });
   }
   if (typeof method === 'string' && method.startsWith('notifications/')) return null;
   if (method === 'initialized') return null;

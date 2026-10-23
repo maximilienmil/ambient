@@ -1,0 +1,32 @@
+@font-face{font-family:"Geist";src:url("../../app/public/fonts/geist-latin-400-normal.woff2");font-weight:400}
+@font-face{font-family:"Geist";src:url("../../app/public/fonts/geist-latin-500-normal.woff2");font-weight:500}
+@font-face{font-family:"Geist";src:url("../../app/public/fonts/geist-latin-600-normal.woff2");font-weight:600}
+@font-face{font-family:"Instrument Serif";src:url("../../app/public/fonts/instrument-serif-latin-400-normal.woff2")}
+@font-face{font-family:"Instrument Serif";src:url("../../app/public/fonts/instrument-serif-latin-400-italic.woff2");font-style:italic}
+:root{--ink:#17160a;--paper:#f3efe4;--gold:#fadb4a;--lilac:#b9a0f2;--sage:#bcd3b4;--sky:#b7cfe6;--mute:#6f6a58}
+*{box-sizing:border-box;margin:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--paper);color:var(--ink);font:500 28px/1.35 Geist,sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+body.v{width:1080px;height:1920px}
+.abs{position:absolute;inset:0}
+.center{display:grid;place-items:center;text-align:center}
+.serif{font-family:"Instrument Serif",serif;font-weight:400;letter-spacing:-.01em}
+h1{font:400 128px/1.02 "Instrument Serif",serif;letter-spacing:-.02em;text-wrap:balance}
+h2{font:400 84px/1.05 "Instrument Serif",serif;letter-spacing:-.015em;text-wrap:balance}
+.k{font-size:24px;color:var(--mute);letter-spacing:.01em}
+.wm{font:400 180px/1 "Instrument Serif",serif;letter-spacing:-.02em}
+.wm i{font-style:normal;color:#b9a77a}
+.wm b{font-weight:400;background:linear-gradient(100deg,#e8b923,#fadb4a 35%,#b9a0f2 75%,#8f74e0);-webkit-background-clip:text;color:transparent}
+.shot{position:absolute;border-radius:22px;box-shadow:0 40px 120px -30px rgba(40,30,0,.35),0 0 0 1px rgba(23,22,10,.08);overflow:hidden;background:#fffdf8}
+.shot img{display:block;width:100%}
+.phone{position:absolute;width:420px;height:880px;border-radius:64px;padding:12px;background:#17160a;box-shadow:0 50px 120px -30px rgba(40,30,0,.45)}
+.phone .scr{width:100%;height:100%;border-radius:52px;overflow:hidden;position:relative;background:#f3efe4}
+.phone .scr img{position:absolute;left:0;top:0;width:100%}
+.phone .island{position:absolute;top:24px;left:50%;width:120px;height:34px;margin-left:-60px;border-radius:20px;background:#000;z-index:2}
+.cap{position:absolute;left:0;right:0;bottom:70px;text-align:center;font:400 54px/1.1 "Instrument Serif",serif}
+.pill{display:inline-flex;gap:12px;align-items:center;padding:12px 24px;border-radius:999px;background:rgba(255,253,248,.8);box-shadow:0 0 0 1px rgba(23,22,10,.08);font-size:24px}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--gold)}
+.caret::after{content:"";display:inline-block;width:.06em;height:.9em;margin-left:.06em;vertical-align:-.1em;background:currentColor}
+.wash{position:absolute;inset:-20%;filter:blur(90px);opacity:.9}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.22;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.shot.crop img{position:absolute;max-width:none}
+.end{display:grid;place-items:center;text-align:center}

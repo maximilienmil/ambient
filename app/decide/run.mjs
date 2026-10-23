@@ -28,11 +28,11 @@ import { mapHandLabel } from './calibrate.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 
-const HELP = `Latent · decide
+const HELP = `Ambient · decide
 
   node decide/run.mjs [options]
 
-  --db PATH              SQLite file (default app/data/latent.sqlite)
+  --db PATH              SQLite file (default app/data/ambient.sqlite)
   --limit N              score at most N unscored commitments
   --dry-run              score but write nothing back
   --predictions PATH     also write the scored batch as an eval prediction set
@@ -46,7 +46,7 @@ Roles: JEV, D1 (and EXTRACT for decide/extract.mjs).
 
 export function parseArgs(argv) {
   const options = {
-    db: process.env.LATENT_DB || path.resolve(root, '..', 'data', 'latent.sqlite'),
+    db: process.env.AMBIENT_DB || path.resolve(root, '..', 'data', 'ambient.sqlite'),
     limit: null,
     dryRun: false,
     predictions: null,

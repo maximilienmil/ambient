@@ -1,0 +1,59 @@
+<!doctype html><meta charset="utf-8"><title>Ambient · Fork the week</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>
+.quote{font:italic 400 110px/1.08 "Instrument Serif",serif}
+svg text{font-family:Geist;font-weight:600}
+.lab{position:absolute;left:150px;top:150px}
+.lab h2{font-size:92px}.lab p{font-size:32px;color:var(--mute);margin-top:18px;max-width:640px}
+.week{position:absolute;left:150px;right:150px;bottom:80px}
+.row{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:24px;height:62px}
+.row b{font-weight:600;font-size:26px}
+.trk{position:relative;height:40px;border-radius:10px;background:rgba(23,22,10,.05)}
+.blk{position:absolute;top:0;bottom:0;border-radius:10px;font-size:19px;font-weight:600;padding:8px 12px;white-space:nowrap;overflow:hidden}
+.busy{background:#d9d3c2;color:#6f6a58}.goal{background:var(--gold)}.prom{background:#5b3fc4;color:#fffdf8}
+.axis{display:grid;grid-template-columns:110px 1fr;gap:24px;color:var(--mute);font-size:20px;margin-bottom:8px}
+.axis div{display:flex;justify-content:space-between}
+.verdict{position:absolute;right:150px;top:190px;text-align:right;font:400 52px/1.1 "Instrument Serif",serif}
+.verdict span{display:block;font:500 24px Geist;color:var(--mute);margin-top:10px}
+</style>
+<body>
+<section class="abs center" data-a="0" data-b="4.2"><h1>You just said yes to something.</h1></section>
+<section class="abs center" data-a="4.2" data-b="9.6"><div><div class="pill"><span class="dot" style="background:#e05a2b"></span>Bee heard, Monday 4:12 pm</div><p class="quote" style="margin-top:40px">“<span id="q"></span>”</p></div></section>
+<section class="abs center" data-a="9.6" data-b="13"><h1>Your week now has <i>three futures.</i></h1></section>
+<section class="abs" data-a="13" data-b="34">
+  <svg id="fk" width="1060" height="420" style="position:absolute;right:60px;top:90px" viewBox="0 0 1060 420">
+    <path id="pA" d="M80 210 C 330 210, 360 70, 600 70" fill="none" stroke-width="7" stroke-linecap="round"/>
+    <path id="pB" d="M80 210 L 600 210" fill="none" stroke-width="7" stroke-linecap="round"/>
+    <path id="pC" d="M80 210 C 330 210, 360 350, 600 350" fill="none" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="80" cy="210" r="20" fill="#17160a"/><text x="80" y="268" text-anchor="middle" font-size="26">Now</text>
+    <circle id="dA" cx="600" cy="70" r="16"/><circle id="dB" cx="600" cy="210" r="16"/><circle id="dC" cx="600" cy="350" r="16"/>
+    <text id="tA" x="630" y="80" font-size="30">A · Protect the release</text><text id="tB" x="630" y="220" font-size="30">B · Keep every promise</text><text id="tC" x="630" y="360" font-size="30">C · Shrink the release</text>
+  </svg>
+  <div class="lab"><div class="k" id="kk">Path A</div><h2 id="h"></h2><p id="p"></p></div>
+  <div class="week" data-a="14" data-b="34"><div class="axis"><span></span><div><span>9</span><span>11</span><span>1</span><span>3</span><span>5</span></div></div><div id="rows"></div></div>
+</section>
+<section class="abs end" data-a="34" data-b="40" data-f=".8"><div><h1>Calendar arithmetic.<br><i>Not a guess.</i></h1><div class="wm" style="font-size:90px;margin-top:60px">am<i>·</i><b>bee</b><i>·</i>nt</div></div></section>
+<script>
+const DUR = 40;
+// Real forkWeek output for this calendar: A fits, B leaves the release 1h short, C fits at half.
+const busy = {Mon:[[9,17]],Tue:[[11,17]],Wed:[[9,17]],Thu:[[13,17]],Fri:[[9,15]]};
+const P = {
+  A:{h:'Protect the release.',p:'Ask Jordan to move the deck to next week. The release gets all 6 hours.',v:'Release on time',s:'Deck moves a week, if Jordan agrees',c:'#1f7a4c',b:{Tue:[[9,11,'goal','Release']],Thu:[[9,13,'goal','Release']]}},
+  B:{h:'Keep every promise.',p:'Help Jordan Tuesday and Thursday. The release only gets 5 of its 6 hours.',v:'Release 1h short',s:'Deck on time',c:'#c2410c',b:{Tue:[[9,11,'prom','Deck']],Thu:[[9,10,'prom','Deck'],[10,13,'goal','Release']],Fri:[[15,17,'goal','Release']]}},
+  C:{h:'Shrink the release.',p:'Keep the deck and ship half the release on Friday. The rest waits.',v:'Both on time',s:'Release ships at half scope',c:'#1f7a4c',b:{Tue:[[9,11,'prom','Deck']],Thu:[[9,10,'prom','Deck'],[10,13,'goal','Release']]}},
+};
+const x = (h) => `${(h - 9) / 8 * 100}%`;
+function rows(k){ return Object.keys(busy).map((d)=>`<div class="row"><b>${d}</b><div class="trk">${busy[d].map(([a,b])=>`<div class="blk busy" style="left:${x(a)};width:calc(${x(b)} - ${x(a)})">Busy</div>`).join('')}${(P[k].b[d]||[]).map(([a,b,c,l])=>`<div class="blk ${c}" style="left:${x(a)};width:calc(${x(b)} - ${x(a)})">${l}</div>`).join('')}</div></div>`).join(''); }
+document.body.insertAdjacentHTML('beforeend','<div class="verdict" id="v" style="visibility:hidden"></div>');
+let cur;
+function tick(t){
+  type($('#q'),'Sure, I’ll help with the deck by Thursday.',(t-5)/2.8);
+  const k = t<20 ? 'A' : t<27 ? 'B' : 'C', since = t - (k=='A'?13:k=='B'?20:27);
+  if (cur !== k) { cur = k; $('#rows').innerHTML = rows(k); $('#h').textContent=P[k].h; $('#p').textContent=P[k].p; $('#kk').textContent='Path '+k; }
+  const draw = seg(t,13,15.2,inout);
+  for (const id of 'ABC') { const p=$('#p'+id), L=p.getTotalLength(); p.style.strokeDasharray=L; p.style.strokeDashoffset=L*(1-draw);
+    const on=id===k; p.style.stroke=on?'#5b3fc4':'#cfc9b8'; $('#d'+id).style.fill=on?P[id].c:'#cfc9b8'; $('#t'+id).style.fill=on?'#17160a':'#a8a28d'; $('#t'+id).style.opacity=seg(t,14.6,15.4); $('#d'+id).style.opacity=seg(t,14.6,15.4); }
+  const o = seg(since,0,.6); $('.lab').style.opacity = t<34?o:1; for (const b of document.querySelectorAll('.blk:not(.busy)')) b.style.clipPath=`inset(0 ${100-100*seg(since,.4,1.6)}% 0 0)`;
+  const v=$('#v'); v.style.visibility=t>15&&t<34?'visible':'hidden'; v.style.opacity=o*Math.min(1,(34-t)/.6); v.style.top="530px";v.style.right="150px"; v.innerHTML=`<span style="font:400 52px/1.1 'Instrument Serif';color:${P[k].c};margin:0">${P[k].v}</span><span>${P[k].s}</span>`;
+}
+</script>

@@ -12,7 +12,7 @@ import { horizonDemo } from '../fixtures/horizon-scenario.mjs';
 const port = 15371;
 
 function seed(dir, rows) {
-  const db = openDb(path.join(dir, 'latent.sqlite'));
+  const db = openDb(path.join(dir, 'ambient.sqlite'));
   for (const row of rows) saveCommitment(db, row);
   db.close();
 }
@@ -37,14 +37,14 @@ function commitment(id, overrides = {}) {
 }
 
 test('ledger API: security, projections, actions, plans, persistence', async () => {
-  const dir = mkdtempSync(path.join(os.tmpdir(), 'latent-ledger-'));
+  const dir = mkdtempSync(path.join(os.tmpdir(), 'ambient-ledger-'));
   seed(dir, [commitment('seed-a'), commitment('seed-b', { tier: 'ask', text: 'Make dinner plans', quote: 'We should get dinner.' })]);
   let proc;
 
   async function boot(fixture = false) {
     proc = spawn(process.execPath, ['server.mjs'], {
       cwd: new URL('..', import.meta.url),
-      env: { ...process.env, PORT: String(port), LATENT_DATA_DIR: dir, LATENT_DB: path.join(dir, 'latent.sqlite'), PREVIEW: '0', LATENT_FIXTURE: fixture ? '1' : '0', LATENT_ENV_FILE: path.join(dir, '.env') },
+      env: { ...process.env, PORT: String(port), AMBIENT_DATA_DIR: dir, AMBIENT_DB: path.join(dir, 'ambient.sqlite'), PREVIEW: '0', AMBIENT_FIXTURE: fixture ? '1' : '0', AMBIENT_ENV_FILE: path.join(dir, '.env') },
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     await new Promise((resolve, reject) => {
@@ -68,13 +68,13 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     const request = (route, method = 'GET', body, headers = {}) =>
       fetch(`http://127.0.0.1:${port}/api${route}`, {
         method,
-        headers: { 'Content-Type': 'application/json', 'X-Latent-Token': token, ...headers },
+        headers: { 'Content-Type': 'application/json', 'X-Ambient-Token': token, ...headers },
         ...(body ? { body: JSON.stringify(body) } : {}),
       });
 
     // security
     assert.equal((await request('/plans', 'POST', { consent: true }, { Origin: 'https://evil.example' })).status, 403);
-    assert.equal((await request('/ledger', 'GET', null, { 'X-Latent-Token': 'wrong' })).status, 403);
+    assert.equal((await request('/ledger', 'GET', null, { 'X-Ambient-Token': 'wrong' })).status, 403);
     assert.equal((await fetch(`http://127.0.0.1:${port}/api/ledger`)).status, 403);
     assert.equal((await request('/nope')).status, 404);
     assert.equal((await request('/horizon/demo')).status, 404, 'synthetic data cannot reach a real session');
@@ -180,7 +180,7 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal((await request(`/plans/${plan.id}.ics`)).status, 404, 'cancel revokes the export');
     const badJson = await fetch(`http://127.0.0.1:${port}/api/plans`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Latent-Token': token },
+      headers: { 'Content-Type': 'application/json', 'X-Ambient-Token': token },
       body: '{oops',
     });
     assert.equal(badJson.status, 400);
@@ -208,7 +208,7 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal(demo.preview, true);
     assert.equal(demo.comparison.variants.find((variant) => variant.id === 'keep').goal.shortfallMinutes, 180);
     assert.equal(demo.models.jev, 'not_run');
-    // fact reviews stay in Latent
+    // fact reviews stay in Ambient
     assert.equal((await request('/facts/fact-1', 'POST', { verdict: 'maybe' })).status, 400);
     assert.equal((await (await request('/facts/fact-1', 'POST', { verdict: 'confirmed' })).json()).ok, true);
 
@@ -220,7 +220,7 @@ test('ledger API: security, projections, actions, plans, persistence', async () 
     assert.equal((await init.json()).result.protocolVersion, '2025-11-25');
     assert.equal((await mcpPost({ jsonrpc: '2.0', method: 'notifications/initialized' })).status, 202);
     const listed = await (await mcpPost({ jsonrpc: '2.0', id: 2, method: 'tools/list' }, { 'MCP-Protocol-Version': '2025-11-25' })).json();
-    assert.ok(listed.result.tools.some((t) => t.name === 'latent_fork_week'));
+    assert.ok(listed.result.tools.some((t) => t.name === 'ambient_fork_week'));
     assert.equal((await mcpPost({ jsonrpc: '2.0', id: 3, method: 'ping' }, { 'MCP-Protocol-Version': '1999-01-01' })).status, 400);
     assert.equal((await fetch(`http://127.0.0.1:${port}/mcp`)).status, 405);
   } finally {

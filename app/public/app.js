@@ -394,7 +394,7 @@ function renderHorizon() {
   $('#horizon-avatar').textContent = owner.slice(0, 1).toUpperCase();
   $('#fixture-stream-btn').hidden = !state.ledger.fixtureMode;
   $('#horizon-sub').textContent = due.length
-    ? `${due.length} promise${due.length === 1 ? '' : 's'} come due. Latent traced them forward from what you said.`
+    ? `${due.length} promise${due.length === 1 ? '' : 's'} come due. Ambient traced them forward from what you said.`
     : 'No promise has a due date this week. Your past is here; the future stays open.';
   $('#horizon-score').textContent = simulation ? percent(simulation.chance) : '—';
   $('#horizon-score-note').textContent = simulation
@@ -403,7 +403,7 @@ function renderHorizon() {
   $('#horizon-sample').textContent = simulation ? '160 weeks simulated' : 'Forecast waiting';
   $('#horizon-explainer').textContent = simulation
     ? `A simple scenario from Bee’s recorded close rate (${percent(rate)}). It samples 160 possible weeks; this is a base rate, not a calibrated personal forecast.`
-    : 'Latent will draw a forecast when Bee has a dated promise in this week. An empty calendar is not treated as a clear week.';
+    : 'Ambient will draw a forecast when Bee has a dated promise in this week. An empty calendar is not treated as a clear week.';
   $('#horizon-spark').innerHTML = simulation
     ? simulation.weeks.map((week) => `<i class="${week.clear ? 'is-clear' : ''}"></i>`).join('')
     : '<span class="horizon-spark-empty">—</span>';
@@ -418,7 +418,7 @@ function renderHorizon() {
       <span class="horizon-row-copy"><b>${escapeHTML(item.title)}</b><small>${escapeHTML(item.source || 'From your record')}</small></span>
       <span class="horizon-row-arrow" aria-hidden="true">↗</span>
     </button>`;
-  }).join('') : '<div class="card empty"><p>No dated promises are coming due in the next seven days.</p><p class="note">Older and undated promises remain in your record. Latent leaves them out of this forecast.</p></div>';
+  }).join('') : '<div class="card empty"><p>No dated promises are coming due in the next seven days.</p><p class="note">Older and undated promises remain in your record. Ambient leaves them out of this forecast.</p></div>';
   if (shown) {
     $('#trade-note').textContent = `Setting aside “${shown.title}” changes the base-rate scenario to ${adjusted ? percent(adjusted.chance) : '—'}. Nothing is changed in Bee.`;
     $('#trade-btn').textContent = 'Clear trade';
@@ -433,7 +433,7 @@ function renderHorizon() {
   const question = due.find((item) => item.id !== 'scenario-promise');
   $('#horizon-question').innerHTML = question
     ? `<span class="horizon-question-mark">?</span><div><b>One thing to keep in view</b><p>“${escapeHTML(question.title)}” is due ${escapeHTML(horizonDate(question.dueAt).toLocaleDateString('en-US', { weekday: 'long' }))}. Does that still fit this week?</p><button class="text-btn" type="button" data-item="${escapeHTML(question.id)}">Open its receipt <span aria-hidden="true">↗</span></button></div>`
-    : '<div><b>One question, when there is one</b><p>Latent will bring forward a single promise when the record gives it a date. You do not need to sort the whole list.</p></div>';
+    : '<div><b>One question, when there is one</b><p>Ambient will bring forward a single promise when the record gives it a date. You do not need to sort the whole list.</p></div>';
   renderHorizonMap(due);
 }
 
@@ -537,7 +537,7 @@ function renderNudge() {
   const box = $('#nudge-actions');
 
   if (dupe) {
-    $('#nudge-label').textContent = 'Latent · duplicates';
+    $('#nudge-label').textContent = 'Ambient · duplicates';
     $('#nudge-when').textContent = `${dupe.count} copies`;
     $('#nudge-text').textContent = dupe.text;
     box.innerHTML = `
@@ -554,7 +554,7 @@ function renderNudge() {
   const item = risky ? state.ledger.items.find((entry) => entry.id === risky.id) : null;
 
   if (!item) {
-    $('#nudge-label').textContent = 'Latent';
+    $('#nudge-label').textContent = 'Ambient';
     $('#nudge-when').textContent = '';
     $('#nudge-text').textContent =
       'Nothing is waiting on you. Every open commitment already has a decision on it.';
@@ -562,7 +562,7 @@ function renderNudge() {
     return;
   }
 
-  $('#nudge-label').textContent = 'Latent · next action';
+  $('#nudge-label').textContent = 'Ambient · next action';
   $('#nudge-when').textContent = risky.openDays ? `${risky.openDays}d open` : 'today';
   $('#nudge-text').textContent = `${item.title}`;
   box.innerHTML = `
@@ -775,7 +775,7 @@ function renderReceipts() {
   $('#receipts-fact').textContent = `${receipts.length} recorded`;
   $('#receipt-list').innerHTML = receipts.length
     ? dayGroups(receipts.slice(0, 8), receiptCard, (receipt) => new Date(receipt.at))
-    : empty('Latent has not acted on anything yet. Approve a commitment and it will be receipted here.');
+    : empty('Ambient has not acted on anything yet. Approve a commitment and it will be receipted here.');
 }
 
 function renderClosed() {
@@ -1018,7 +1018,7 @@ function renderStories(record) {
   );
 
   stories.push(story('y2', 'When you promise', hoursStory(record.hours || {})));
-  stories.push(story('w', 'How well Latent knows you', calibrationStory(record.calibration || {})));
+  stories.push(story('w', 'How well Ambient knows you', calibrationStory(record.calibration || {})));
 
   $('#stories').innerHTML = stories.join('');
 
@@ -1324,7 +1324,7 @@ function openItem(id, options = {}) {
       <p class="lbl">${escapeHTML(span)}</p>
     </div>
 
-    <span class="sheet-lbl">What Latent read</span>
+    <span class="sheet-lbl">What Ambient read</span>
     <dl class="sheet-row">
       <dt>Sentence</dt><dd>${escapeHTML(item.title)}</dd>
       <dt>Owner</dt><dd>${escapeHTML(item.owner || 'You')}</dd>
@@ -1389,7 +1389,7 @@ function openEdit(item) {
       </button>
     </div>
     <h2 class="sheet-h2" id="sheet-title">Correct the reading</h2>
-    <p class="note">Change the sentence Latent read, or the due date. The quote is never changed, so the receipt keeps what you actually said.</p>
+    <p class="note">Change the sentence Ambient read, or the due date. The quote is never changed, so the receipt keeps what you actually said.</p>
     <form id="edit-form">
       <div class="field">
         <label for="edit-text">Sentence</label>
@@ -1514,7 +1514,7 @@ function go(screen) {
 async function api(route, { method = 'GET', body } = {}) {
   const response = await fetch(`/api${route}`, {
     method,
-    headers: { 'Content-Type': 'application/json', 'X-Latent-Token': state.token },
+    headers: { 'Content-Type': 'application/json', 'X-Ambient-Token': state.token },
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
   const payload = await response.json().catch(() => ({}));
@@ -1540,7 +1540,7 @@ async function act(route, body, message, options = {}) {
     state.ledger = result.ledger || state.ledger;
     closeSheet();
     render();
-    if (window.LatentTwin) window.LatentTwin.reload();
+    if (window.AmbientTwin) window.AmbientTwin.reload();
     if (!options.quiet) notify(message);
     return result;
   } catch (error) {
@@ -1550,8 +1550,8 @@ async function act(route, body, message, options = {}) {
 }
 
 const POLICY_AFTER = {
-  draft: 'Latent will prepare the draft and hold it here. Nothing is sent until you say so.',
-  execute: 'Latent will treat it as done once it finds the evidence.',
+  draft: 'Ambient will prepare the draft and hold it here. Nothing is sent until you say so.',
+  execute: 'Ambient will treat it as done once it finds the evidence.',
 };
 
 function applyLocally(route, body) {
@@ -1873,7 +1873,7 @@ async function syncFromBee() {
     state.ledger = result.ledger;
     log.textContent = result.log.join('\n');
     render();
-    if (window.LatentTwin) window.LatentTwin.reload();
+    if (window.AmbientTwin) window.AmbientTwin.reload();
     notify('Bee sync finished');
   } catch (error) {
     log.textContent = error.message;
@@ -1930,6 +1930,6 @@ async function boot() {
   }
 }
 
-window.Latent = { openReceipt: (id) => openItem(id) };
+window.Ambient = { openReceipt: (id) => openItem(id) };
 
 boot();

@@ -66,7 +66,7 @@ function shuffleArray(array) {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const dbPath = process.argv[2] || 'data/latent.sqlite';
+  const dbPath = process.argv[2] || 'data/ambient.sqlite';
   const outputPath = process.argv[3] || 'audit-sample.json';
   writeAuditSample(dbPath, outputPath)
     .then((audit) => {

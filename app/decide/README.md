@@ -52,7 +52,7 @@ are all present; otherwise it is "not configured" and the adapter throws
 | `JEV_MODEL` / `D1_MODEL` / `EXTRACT_MODEL` | Model id sent in the request body. |
 | `JEV_PRICE_IN` / `JEV_PRICE_OUT` (and `D1_*`, `EXTRACT_*`) | USD per **million** tokens. If either is unset, `cost` is reported as `null`. |
 | `JEV_TIMEOUT_MS` / `D1_TIMEOUT_MS` / `EXTRACT_TIMEOUT_MS`, or `DECIDE_TIMEOUT_MS` | Request timeout in ms (default 30000). |
-| `LATENT_DB` | SQLite file for `run.mjs` (default `app/data/latent.sqlite`). |
+| `AMBIENT_DB` | SQLite file for `run.mjs` (default `app/data/ambient.sqlite`). |
 
 Prices are only ever read from these variables. No price table is hard-coded.
 

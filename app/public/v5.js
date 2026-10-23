@@ -192,7 +192,7 @@ const L = { filter: 'need', focus: null, fMin: 120, fDue: null, goalId: null, gT
 const GEAR = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>';
 
 async function api(path, body) {
-  const res = await fetch(path, { method: body === undefined ? 'GET' : 'POST', headers: { 'Content-Type': 'application/json', 'X-Latent-Token': D.token || '' }, body: body === undefined ? undefined : JSON.stringify(body) });
+  const res = await fetch(path, { method: body === undefined ? 'GET' : 'POST', headers: { 'Content-Type': 'application/json', 'X-Ambient-Token': D.token || '' }, body: body === undefined ? undefined : JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || `Request failed (${res.status}).`);
   return data;
@@ -215,7 +215,7 @@ async function boot() {
     D.error = e.message;
   }
   D.ready = true;
-  const want = new URLSearchParams(location.search).get('mode') || localStorage.getItem('latent-mode');
+  const want = new URLSearchParams(location.search).get('mode') || localStorage.getItem('ambient-mode');
   S.mode = !D.synthetic && want === 'live' ? 'live' : 'demo';
   render();
   setInterval(poll, 8000);
@@ -649,7 +649,7 @@ function settings() {
    <div class="sec">DECISION MODELS</div><p class="small muted">Keys are written to the git-ignored .env on this machine and never sent back to the browser.</p>
    ${role('jev', 'Jev', 'decision model')}${role('d1', 'Liquid d1', 'System 1 model')}
    <div class="sec">BEE</div><p class="small">${D.ledger ? `${D.ledger.totals?.conversations || 0} conversations · last sync ${D.ledger.lastRun ? new Date(D.ledger.lastRun).toLocaleString() : 'never'}` : 'No ledger loaded.'}</p>
-   <div class="sec">ACTIONS</div><p class="small">${conn.configured && conn.enabled ? `Google demo account connected: ${esc(conn.account)}.` : 'Google demo account not connected. Actions run in the sandbox. To connect: gog auth add &lt;demo-email&gt; --services gmail,calendar --gmail-scope send, then set LATENT_DEMO_ACCOUNT, LATENT_DEMO_CALENDAR and LATENT_EXTERNAL_ACTIONS=1 in .env and restart.'}</p></div></div>`;
+   <div class="sec">ACTIONS</div><p class="small">${conn.configured && conn.enabled ? `Google demo account connected: ${esc(conn.account)}.` : 'Google demo account not connected. Actions run in the sandbox. To connect: gog auth add &lt;demo-email&gt; --services gmail,calendar --gmail-scope send, then set AMBIENT_DEMO_ACCOUNT, AMBIENT_DEMO_CALENDAR and AMBIENT_EXTERNAL_ACTIONS=1 in .env and restart.'}</p></div></div>`;
 }
 
 /* ---------- live actions ---------- */
@@ -806,14 +806,14 @@ document.addEventListener('click', async (e) => {
   if ('close' in d) { if (e.target.closest('.rc') && !e.target.closest('button')) return; S.receipt = null; S.settings = false; return render(); }
   if (d.mode) {
     if (d.mode === 'live' && D.synthetic) { toast('Start the app with npm start to read your Bee'); return; }
-    S.mode = d.mode; S.receipt = null; localStorage.setItem('latent-mode', d.mode);
+    S.mode = d.mode; S.receipt = null; localStorage.setItem('ambient-mode', d.mode);
     if (S.mode === 'live' && !D.ledger) { try { await loadLedger(); D.known = new Set(litems().map((i) => i.id)); } catch (err) { D.error = err.message; } }
     return render();
   }
   if ('settings' in d) { S.settings = true; S.receipt = null; try { D.models = await api('/api/models'); } catch {} return render(); }
   if (d.tab) { S.tab = d.tab; S.sheet = false; return render(); }
   if (d.range) { S.range = d.range; return render(); }
-  if (d.mood !== undefined) { S.mood = +d.mood; localStorage.setItem('latent-mood', `${new Date().toDateString()}|${d.mood}`); return render(); }
+  if (d.mood !== undefined) { S.mood = +d.mood; localStorage.setItem('ambient-mood', `${new Date().toDateString()}|${d.mood}`); return render(); }
   if (S.settings) { if (await settingsClick(d)) render(); return; }
   if (S.mode === 'live') { if (await liveClick(d)) render(); return; }
   demoClick(d);

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffda00">
-<title>Latent — Ambient intelligence, in action</title>
+<title>Ambient — Ambient intelligence, in action</title>
 <style>
 :root {
   --yellow: #ffda00;
@@ -789,7 +789,7 @@ svg { display: block; }
         <div class="hero-top">
           <div class="brand">
             <span class="brand-mark">✳</span>
-            Latent
+            Ambient
           </div>
           <span class="bee-label">Built for Bee</span>
         </div>
@@ -797,7 +797,7 @@ svg { display: block; }
         <div class="eyebrow">Saturday, October 17</div>
         <h1>Your words.<br>Your follow-through.</h1>
         <p>
-          Latent notices what you've committed to and knows
+          Ambient notices what you've committed to and knows
           when to act, draft, or leave things alone.
         </p>
 
@@ -819,7 +819,7 @@ svg { display: block; }
 
       <div class="page-pad">
         <div class="section-head">
-          <h2>What Latent noticed</h2>
+          <h2>What Ambient noticed</h2>
           <button class="text-btn" onclick="go('commitments')">
             See all →
           </button>
@@ -847,7 +847,7 @@ svg { display: block; }
         <div class="demo-trigger">
           <h3>What happens when Bee hears something new?</h3>
           <p>
-            Add a simulated conversation and watch Latent
+            Add a simulated conversation and watch Ambient
             infer a commitment and choose how far to act.
           </p>
           <button class="yellow-btn" onclick="hearConversation()">
@@ -872,17 +872,17 @@ svg { display: block; }
         <h1>Things said.<br>Things done.</h1>
         <p>
           A living record of promises, plans, and decisions.
-          Including the things Latent deliberately didn't do.
+          Including the things Ambient deliberately didn't do.
         </p>
       </div>
 
       <div class="page-pad">
         <div class="model-card">
-          <div class="eyebrow">THE LATENT DECISION MODEL</div>
+          <div class="eyebrow">THE AMBIENT DECISION MODEL</div>
           <h3>Knowing when not to act is the point.</h3>
           <p>
             Two model judgments, contextual evidence, and
-            an action policy determine whether Latent executes,
+            an action policy determine whether Ambient executes,
             drafts, asks, remembers, or ignores.
           </p>
           <div class="model-flow">
@@ -940,7 +940,7 @@ svg { display: block; }
         <h1>Less prompting.<br>More progress.</h1>
         <p>
           Agents get the context behind a commitment.
-          Latent controls what they're allowed to do.
+          Ambient controls what they're allowed to do.
         </p>
       </div>
 
@@ -1057,10 +1057,10 @@ svg { display: block; }
           </div>
 
           <div class="policy">
-            <strong>Why Latent paused</strong>
+            <strong>Why Ambient paused</strong>
             <p>
               “We should” is not a firm commitment.
-              Latent won't contact Sam or share availability
+              Ambient won't contact Sam or share availability
               without your approval.
             </p>
           </div>
@@ -1088,7 +1088,7 @@ svg { display: block; }
         <div class="eyebrow">TRUST, BY DESIGN</div>
         <h1>Every action.<br>Every reason.</h1>
         <p>
-          What Latent noticed, what it decided, and
+          What Ambient noticed, what it decided, and
           exactly how far it went.
         </p>
       </div>
@@ -1176,7 +1176,7 @@ svg { display: block; }
 (() => {
   "use strict";
 
-  const KEY = "latent-bee-prototype-v1";
+  const KEY = "ambient-bee-prototype-v1";
 
   const seed = [
     {
@@ -1189,7 +1189,7 @@ svg { display: block; }
       jev: { decision: "draft", score: 91 },
       d1: { decision: "draft", score: 88 },
       why: "A first-person promise with a clear deadline. No matching sent message was found in the simulated context.",
-      policy: "External communication requires approval. Latent can prepare the email but cannot send it.",
+      policy: "External communication requires approval. Ambient can prepare the email but cannot send it.",
       result: "Draft prepared. Nothing sent.",
       status: "open",
       age: 0,
@@ -1359,7 +1359,7 @@ svg { display: block; }
       time: "9:41"
     },
     {
-      title: "Latent chose not to contact Sam",
+      title: "Ambient chose not to contact Sam",
       detail: "58% confidence · Vague intent and model disagreement.",
       decision: "ask",
       time: "9:38"
@@ -1744,7 +1744,7 @@ svg { display: block; }
       ${modelRow("Jev", item.jev)}
       ${modelRow("d1", item.d1)}
 
-      <div class="sheet-label">Why Latent chose this</div>
+      <div class="sheet-label">Why Ambient chose this</div>
       <p class="desc" style="color:#333;font-size:13px">
         ${escapeHTML(item.why)}
       </p>

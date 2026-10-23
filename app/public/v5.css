@@ -38,7 +38,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .hero[data-bg="city"] .bg{background-image:url(assets/urban-vintage.jpg)}
 .hero[data-bg="fog"] .bg{background-image:url(assets/fog-calm.jpg)}
 .hero canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.hero .ph{position:absolute;right:30px;top:24px;width:150px;height:190px;border-radius:80px 80px 24px 24px;background:url(assets/bee-macro.jpg) 60% 60%/cover;box-shadow:0 14px 34px #4a380a40;border:3px solid #ffffffb0}
+.hero .ph{position:absolute;right:30px;top:24px;width:150px;height:190px;border-radius:80px 80px 24px 24px;background:linear-gradient(#fbe27c,#d3c6fa);box-shadow:0 14px 34px #4a380a40;border:3px solid #ffffffb0}
 .hero h1{position:relative;font:400 64px/.98 var(--serif);letter-spacing:-.015em;margin:6px 0 12px;max-width:620px}
 .hero p{position:relative;margin:0 0 18px;max-width:470px;font-size:17px;color:#3b3818}
 .chips{position:relative;display:flex;gap:8px;flex-wrap:wrap}

@@ -250,7 +250,7 @@ test('extraction sends only the span, warns that it is untrusted, and validates 
   assert.ok(body.messages[0].content.includes(UNTRUSTED_WARNING));
   // The request carries the span and nothing else about the app.
   const serialised = JSON.stringify(body);
-  assert.doesNotMatch(serialised, /labels\.json|latent\.sqlite|decide\/|package\.json/);
+  assert.doesNotMatch(serialised, /labels\.json|ambient\.sqlite|decide\/|package\.json/);
   assert.equal(JSON.parse(body.messages[1].content).span.text, TEST_SPAN.text);
 });
 
