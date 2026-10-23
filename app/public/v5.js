@@ -51,7 +51,7 @@ function feedDemo(){
  const all=items().filter(i=>i.k==S.filter),list=S.feedAll?all:all.slice(0,3);
  return `<div class="blk w" id="feed">${lbl(S.filter,{done:"The hive did",need:"Needs you",wait:"Waiting on others",later:"Remembered"}[S.filter])}<h2>${S.filter=='done'?'While you slept':LBL[S.filter]}</h2><p class="sub">${{done:'Small, safe things handled overnight. Tap any one for its receipt.',need:'Only what really needs your judgment.',wait:'Promises other people made. Ambient remembers and waits.',later:'Kept, not scheduled.'}[S.filter]}</p>
  ${list.map(i=>`<button class="item" data-receipt="${i.id}"><span class="sd" style="background:${COL[i.k]}"></span><div style="min-width:0"><div class="t">${i.t}</div><div class="s"><span class="who ${i.who[0]}">${i.who[1]}</span>${i.src}</div>${i.k=='done'?`<div class="via">via ${i.via}</div>`:''}</div><span class="go2">Receipt ›</span></button>`).join('')}
- ${all.length>list.length?`<div class="act"><button class="chip" data-feedall>Show ${all.length-list.length} more</button></div>`:''}${S.filter=='done'?`<p class="more">and 18 more like these: duplicates merged, done items closed.</p>`:''}</div>`}
+ ${all.length>list.length?`<div class="act"><button class="chip" data-feedall>Show ${all.length-list.length} more</button></div>`:''}${S.filter=='done'?`<p class="more">and ${counts().done-all.length} more like these: duplicates merged, done items closed.</p>`:''}</div>`}
 const P={
  A:{n:'Protect the launch',s:'Ask Jordan to move the favor to Monday. Release ships Friday.',tag:'Release stays Friday',
   d:{Mon:[['mtg','Standup']],Tue:[['rel','Release 9 to 12']],Wed:[['mtg','Client call']],Thu:[['rel','Release 9 to 12']],Fri:[['due','Ships']],N:[['jor','Jordan deck 9 to 12']]},
