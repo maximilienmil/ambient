@@ -31,7 +31,7 @@ export async function recorder({ url, out, viewport = { width: 1920, height: 108
   const state = { cam: { x: viewport.width / 2, y: viewport.height / 2, s: 1 }, cur: { x: viewport.width * .7, y: viewport.height * .8, o: 0 }, scroll: 0, ring: 0, drift: 0, f: 0 };
   const tweens = [];
   let frame = 0;
-  const tween = (obj, to, dur, f = ease) => { const from = {}; for (const k in to) from[k] = obj[k]; tweens.push({ obj, from, to, a: frame, n: Math.max(1, Math.round(dur * fps)), f }); };
+  const tween = (obj, to, dur, f = ease, done) => { const from = {}; for (const k in to) from[k] = obj[k]; tweens.push({ obj, from, to, a: frame, n: Math.max(1, Math.round(dur * fps)), f, done }); };
   const apply = () => page.evaluate((st) => {
     const { W, H } = window.__rc, s = st.cam.s, hw = W / 2 / s, hh = H / 2 / s;
     const x = Math.min(W - hw, Math.max(hw, st.cam.x + st.drift * Math.sin(st.f / 70) * 6)), y = Math.min(H - hh, Math.max(hh, st.cam.y + st.drift * Math.cos(st.f / 90) * 4));
@@ -39,6 +39,7 @@ export async function recorder({ url, out, viewport = { width: 1920, height: 108
     if (window.__rc.redact) {
       const keep = '.hero,.nav,.brand,.mdl,.sync,.tabbar,svg,.stat b,[class*=lbl]';
       const ok = /^(sync from bee|merge into one|keep both|confirm|not true|done|undo|receipt|show \d+ more|add .{0,24}|review .{0,40}|jev|liquid d1|week|month|year|settings|demo|your bee|\d[\d.]*\s?\w{0,3})$/i;
+      document.querySelectorAll('.blk').forEach((b) => { if (/\d+ of \d+\s*hours/.test(b.textContent) && b.textContent.length < 220) b.style.display = 'none'; });
       document.querySelectorAll('input,textarea').forEach((e) => { e.style.filter = 'blur(7px)'; });
       const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       for (let n; (n = w.nextNode());) {
@@ -53,7 +54,7 @@ export async function recorder({ url, out, viewport = { width: 1920, height: 108
   }, state);
   const step = async () => {
     for (const t of tweens) { const p = Math.min(1, (frame - t.a) / t.n); for (const k in t.to) t.obj[k] = t.from[k] + (t.to[k] - t.from[k]) * t.f(Math.max(0, p)); }
-    for (let i = tweens.length - 1; i >= 0; i--) if (frame - tweens[i].a >= tweens[i].n) tweens.splice(i, 1);
+    for (let i = tweens.length - 1; i >= 0; i--) if (frame - tweens[i].a >= tweens[i].n) { const t = tweens.splice(i, 1)[0]; t.done?.(); }
     state.f = frame; state.drift = Math.min(1, Math.max(0, state.cam.s - 1) * 4);
     await apply();
     ff.stdin.write(await page.screenshot({ type: 'jpeg', quality: 93, animations: 'disabled' }));
@@ -74,8 +75,8 @@ export async function recorder({ url, out, viewport = { width: 1920, height: 108
     /** Frame an element: zoom so it fills `fill` of the viewport height or width. */
     frame: async (sel, { fill = .8, dur = 1, max = 2.2, dx = 0, dy = 0 } = {}) => { const r = await rect(sel); const s = Math.min(max, fill * Math.min(viewport.width / r.w, viewport.height / r.h)); tween(state.cam, { x: r.cx + dx, y: r.cy + dy, s }, dur); },
     wide: (dur = 1) => tween(state.cam, { x: viewport.width / 2, y: viewport.height / 2, s: 1 }, dur),
-    scrollTo: async (sel, { dur = 1, offset = 120 } = {}) => { const top = await page.evaluate(({ sel, offset }) => { const m = document.querySelector('.main'), el = document.querySelector(sel); return Math.max(0, Math.min(m.scrollHeight - m.clientHeight, m.scrollTop + el.getBoundingClientRect().top - offset)); }, { sel, offset }); state.scroll = await page.evaluate(() => document.querySelector('.main').scrollTop); state.scrollSet = true; tween(state, { scroll: top }, dur); },
-    scrollTop: (dur = 1) => { state.scrollSet = true; tween(state, { scroll: 0 }, dur); },
+    scrollTo: async (sel, { dur = 1, offset = 120 } = {}) => { const top = await page.evaluate(({ sel, offset }) => { const m = document.querySelector('.main'), el = document.querySelector(sel); return Math.max(0, Math.min(m.scrollHeight - m.clientHeight, m.scrollTop + el.getBoundingClientRect().top - offset)); }, { sel, offset }); state.scroll = await page.evaluate(() => document.querySelector('.main').scrollTop); state.scrollSet = true; tween(state, { scroll: top }, dur, ease, () => { state.scrollSet = false; }); },
+    scrollTop: async (dur = 1) => { state.scroll = await page.evaluate(() => document.querySelector('.main').scrollTop); if (state.scroll < 1) return; state.scrollSet = true; tween(state, { scroll: 0 }, dur, ease, () => { state.scrollSet = false; }); },
     point: async (sel, dur = .7, ox = .5, oy = .5) => { const r = await rect(sel); tween(state.cur, { x: r.x + r.w * ox, y: r.y + r.h * oy, o: 1 }, dur); },
     hideCursor: (dur = .3) => tween(state.cur, { o: 0 }, dur, (x) => x),
     click: async (sel) => { state.ring = 1; tween(state, { ring: 0 }, .45, (x) => x); await page.evaluate((sel) => { const el = [...document.querySelectorAll(sel)].find((e) => e.getClientRects().length); el.click(); }, sel); },

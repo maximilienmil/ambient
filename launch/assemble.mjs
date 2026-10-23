@@ -7,7 +7,7 @@ const marks = { models: 15.67, act: 17.47 };
 const X = 0.5; // transition length: one beat at 120 bpm
 // [file, in, out, transition into the NEXT part]
 const parts = [
-  ['ambient-hook.mp4', 0, 12, 'fade'],
+  ['ambient-hook.mp4', 0, 9, 'fade'],
   ['ambient-turn.mp4', 0, 5, 'fade'],
   ['seg/desktop.mp4', 0, marks.act, 'circleopen'],
   ['ambient-hive.mp4', 0, 6.5, 'wipeleft'],

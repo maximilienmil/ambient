@@ -17,17 +17,17 @@
 <div class="abs" id="wipe" style="background:#f3efe4;clip-path:circle(0% at 50% 50%)"></div>
 <div class="abs center" id="wm" style="opacity:0;color:#17160a"><div><div class="wm" style="font-size:230px">am<i>·</i><b>bee</b><i>·</i>nt</div><div class="k" style="font-size:36px;margin-top:30px">Ambient intelligence on top of Bee.</div></div></div>
 <script>
-const DUR = 12;
+const DUR = 9;
 const N = 26, bees = [];
 for (let i = 0; i < N; i++) { const e = document.createElement('div'); e.className = 'bee'; e.textContent = '\\(◉)/'; document.getElementById('bees').append(e); bees.push({ e, a: i / N * Math.PI * 2 + (i % 3) * .4, r: 180 + (i * 53) % 600, s: .8 + (i % 5) * .25 }); }
 function tick(t){
-  const rows = [['r1','c1',169,.3],['r2','c2',162,1.5],['r3','c3',421,2.7]];
-  for (const [r,c,v,a] of rows) { const e=$('#'+r); const o=seg(t,a,a+.5); const out=seg(t,6.1,6.7,inout); e.style.opacity=o*(1-out); e.style.transform=`translateY(${(1-o)*60 - out*40}px) scale(${1+out*.12})`; e.style.filter=`blur(${out*18}px)`; count($('#'+c),v,seg(t,a,a+2.1)); }
-  const q=seg(t,6.5,7.3), qo=1-seg(t,8.1,8.7);
-  $('#q').style.opacity=q*qo; $('#q').style.transform=`scale(${.92+q*.08+seg(t,6.5,8.7,x=>x)*.05})`; $('#q').style.filter=`blur(${seg(t,8.1,8.7)*14}px)`;
-  const sw=seg(t,7.9,10.2,inout);
-  for (const b of bees) { const rr=b.r*sw*1.3, a=b.a+t*.35*b.s; b.e.style.opacity=sw<.02?0:Math.min(1,sw*3)*(1-seg(t,10.3,11.4)); b.e.style.left=`${960+Math.cos(a)*rr*1.5}px`; b.e.style.top=`${540+Math.sin(a)*rr*.8}px`; b.e.style.color=t>9?'#8a7a3a':'#fadb4a'; b.e.style.transform=`scale(${.6+sw*b.s})`; }
-  $('#wipe').style.clipPath=`circle(${seg(t,8.4,9.6,inout)*85}% at 50% 50%)`;
-  const w=seg(t,9.3,10.4); $('#wm').style.opacity=w; $('#wm').style.transform=`scale(${.94+w*.06})`; $('#wm').style.filter=`blur(${(1-w)*12}px)`;
+  const rows = [['r1','c1',169,.25],['r2','c2',162,.9],['r3','c3',421,1.55]];
+  for (const [r,c,v,a] of rows) { const e=$('#'+r); const o=seg(t,a,a+.5); const out=seg(t,3.5,4.0,inout); e.style.opacity=o*(1-out); e.style.transform=`translateY(${(1-o)*60 - out*40}px) scale(${1+out*.12})`; e.style.filter=`blur(${out*18}px)`; count($('#'+c),v,seg(t,a,a+1.3)); }
+  const q=seg(t,4.0,4.6), qo=1-seg(t,5.4,5.9);
+  $('#q').style.opacity=q*qo; $('#q').style.transform=`scale(${.92+q*.08+seg(t,4.0,5.9,x=>x)*.05})`; $('#q').style.filter=`blur(${seg(t,5.4,5.9)*14}px)`;
+  const sw=seg(t,5.3,7.3,inout);
+  for (const b of bees) { const rr=b.r*sw*1.3, a=b.a+t*.35*b.s; b.e.style.opacity=sw<.02?0:Math.min(1,sw*3)*(1-seg(t,7.9,8.8)); b.e.style.left=`${960+Math.cos(a)*rr*1.5}px`; b.e.style.top=`${540+Math.sin(a)*rr*.8}px`; b.e.style.color=t>6.4?'#8a7a3a':'#fadb4a'; b.e.style.transform=`scale(${.6+sw*b.s})`; }
+  $('#wipe').style.clipPath=`circle(${seg(t,5.7,6.7,inout)*85}% at 50% 50%)`;
+  const w=seg(t,6.4,7.3); $('#wm').style.opacity=w; $('#wm').style.transform=`scale(${.94+w*.06})`; $('#wm').style.filter=`blur(${(1-w)*12}px)`;
 }
 </script>
