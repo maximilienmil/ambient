@@ -640,7 +640,7 @@ function settings() {
    <div class="form"><label>Base URL (OpenAI-compatible)</label><input class="fld" data-mf="${r}-baseUrl" value="${esc(m[r]?.baseUrl || '')}" placeholder="https://api.example.com/v1">
    <label>Model</label><input class="fld" data-mf="${r}-model" value="${esc(m[r]?.model || '')}" placeholder="model-name">
    <label>API key</label><input class="fld" type="password" data-mf="${r}-apiKey" placeholder="${m[r]?.hasKey ? 'Saved. Leave blank to keep it.' : 'Paste the key'}" autocomplete="off"></div>
-   <div class="act"><button class="chip" data-bedrock="${r}">Use Amazon Bedrock</button></div>
+   ${r === 'jev' ? '<div class="act"><button class="chip" data-bedrock="jev">Use Amazon Bedrock</button></div>' : ''}
    <div class="act"><button class="chip on" data-savemodel="${r}">Save</button><button class="chip" data-testmodel="${r}">Test connection</button></div>
    ${D.saveMsg[r] ? `<div class="${D.saveMsg[r].ok ? 'okmsg' : 'err'}">${esc(D.saveMsg[r].text)}</div>` : ''}
    ${D.test[r] ? `<div class="${D.test[r].ok ? 'okmsg' : 'err'}">${D.test[r].busy ? '<span class="spin"></span>Testing' : esc(D.test[r].ok ? `Answered in ${D.test[r].latencyMs ?? '?'} ms: ${D.test[r].reply}` : D.test[r].message)}</div>` : ''}</div>`;
@@ -721,10 +721,10 @@ async function liveClick(d) {
   return false;
 }
 async function settingsClick(d) {
-  if (d.bedrock) {
+  if (d.bedrock === 'jev') {
     const r = d.bedrock, set = (f, v) => { const el = document.querySelector(`[data-mf="${r}-${f}"]`); if (el) el.value = v; };
-    set('baseUrl', 'https://bedrock-runtime.us-west-2.amazonaws.com/openai/v1');
-    set('model', r === 'jev' ? 'openai.gpt-oss-120b-1:0' : 'openai.gpt-oss-20b-1:0');
+    set('baseUrl', 'https://bedrock-runtime.us-east-2.amazonaws.com/openai/v1');
+    set('model', 'openai.gpt-oss-120b-1:0');
     D.saveMsg[r] = { ok: true, text: 'Bedrock endpoint filled in. Paste a Bedrock API key (AWS console, Bedrock, API keys), then Save and Test.' };
     return false;
   }

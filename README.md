@@ -20,7 +20,7 @@ A year of conversations becomes a pile. Bee turns what you said into to-dos and 
 
 Ambient does three things.
 
-1. **Handles what's low effort.** Merges duplicates, closes what's demonstrably done, holds time for what you already decided. Every action has a receipt, an owner, and an undo.
+1. **Handles what's low effort.** Merges duplicates, closes what's demonstrably done, holds time for what you already decided. Actions have an owner and a receipt. Local duplicate merges can be undone.
 2. **Shows the choice, not the data.** When two things you said collide, Ambient shows the real tradeoff in hours and lets you fork the week. You see each path before you take one.
 3. **Checks Bee's record against the world.** Old to-dos and unconfirmed facts get compared with your calendar and later conversations. Resolved work is cleared. What's left is what actually needs you.
 
@@ -61,8 +61,6 @@ This demo tells a story on synthetic data. The local app reads a real account.
 | The app (Horizon, Compass, Reconcile) | **Working.** One interface, two modes. **Demo** plays the scripted story on synthetic data. **Your Bee** reads your local ledger and calendar: real to-dos, duplicates, facts, conversation history, a fork computed on your calendar, and sandbox or Google actions with receipts. |
 | Jev and Liquid d1 | **Wired.** Add an OpenAI-compatible base URL, model and key for each in Settings (stored in the git-ignored `.env`), test the connection, score rows, or ask both about a promise. Verdicts in Demo mode are illustrative; no evaluation results are claimed. |
 | Outcome prediction and forecasts | **Best guess, not certainty.** Estimates are drawn from your own history, how often promises like yours get closed, and the hive sharpens them as it grows. No number here is a probability. |
-
-Open items before submission are tracked in [docs/OPEN-ITEMS.md](docs/OPEN-ITEMS.md).
 
 ## Try it
 
@@ -127,7 +125,7 @@ Ambient owns the context, the tradeoff, the recommendation, the approval and the
 - **A draft is not a send. A request is not an agreement. A hold is not attendance.** Each state is named exactly.
 - **Unknown stays unknown.** Missing evidence, missing models and missing attribution are shown, not smoothed over.
 - **Local first.** The ledger lives on your machine. Real data never goes in this repository.
-- **Nothing happens without your approval,** and everything can be undone.
+- **External actions require your approval.** Local duplicate merges can be undone; sent messages cannot be recalled.
 
 ## Repository
 
@@ -142,4 +140,4 @@ Ambient owns the context, the tradeoff, the recommendation, the approval and the
 
 ## License
 
-[MIT](LICENSE). Third-party assets and fonts keep their own licenses; see [docs/OPEN-ITEMS.md](docs/OPEN-ITEMS.md) for what still needs to be cleared before this repository goes public.
+[MIT](LICENSE). Third-party assets and fonts retain their own licenses.
