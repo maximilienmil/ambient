@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>turn</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>.l{position:absolute;left:0;right:0;text-align:center;font:400 150px/1.05 "Instrument Serif",serif;letter-spacing:-.02em;overflow:hidden;padding:10px 0}
+.l span{display:inline-block}.wash.g{background:radial-gradient(40% 50% at 25% 40%,#fadb4a99,transparent),radial-gradient(40% 50% at 75% 60%,#b9a0f299,transparent)}</style>
+<body><div class="wash g" id="w"></div>
+<div class="l" id="l1" style="top:230px"><span>Bee remembers everything.</span></div>
+<div class="l" id="l2" style="top:420px"><span>Ambient handles the rest.</span></div>
+<div class="l" id="l3" style="top:610px;font-style:italic"><span>You focus on what matters.</span></div>
+<script>const DUR=5;
+function tick(t){ [['l1',.1],['l2',1.4],['l3',2.6]].forEach(([id,a])=>{ const p=seg(t,a,a+.7),o=1-seg(t,4.4,4.9); const s=$('#'+id+' span'); s.style.transform=`translateY(${(1-p)*120}%)`; s.style.opacity=o; });
+ $('#l1').style.color=t>1.4?'#a8a28d':'#17160a'; $('#l2').style.color=t>2.6?'#a8a28d':'#17160a'; $('#w').style.transform=`translateX(${Math.sin(t)*40}px) scale(${1+t*.02})`; }</script>

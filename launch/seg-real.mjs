@@ -1,0 +1,17 @@
+// The real account, redacted: every line of personal text is blurred in the page itself before it is captured.
+import { recorder } from './recorder.mjs';
+const base = process.argv[2] || 'http://127.0.0.1:4320';
+const out = process.argv[3] || new URL('./out/seg/real.mp4', import.meta.url).pathname;
+const label = `<div style="position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:2147483647;padding:12px 24px;border-radius:99px;background:#17160a;color:#fffdf8;font:600 22px Geist,sans-serif;display:flex;gap:12px;align-items:center"><span style="width:12px;height:12px;border-radius:50%;background:#fadb4a"></span>Real Bee account · personal text blurred</div>`;
+const r = await recorder({ url: `${base}/?mode=live`, out, redact: true, overlay: label, init: () => localStorage.setItem('ambient-mode', 'live') });
+r.state.cam = { x: 700, y: 250, s: 1.7 };
+r.cam({ x: 780, y: 300, s: 1.5 }, 2); await r.point('.ring', 1.4); await r.hold(2.2);
+r.wide(.8); await r.hold(.4);
+await r.scrollTo('button[data-lpath="A"]', { dur: .9, offset: 400 }); await r.hold(.9);
+for (const p of ['B', 'C', 'A']) { await r.point(`button[data-lpath="${p}"]`, .45, .25); await r.hold(.35); await r.click(`button[data-lpath="${p}"]`); await r.hold(.9); }
+r.scrollTop(.8); await r.hold(.9);
+await r.point('.nav[data-tab="rec"]', .6); await r.click('.nav[data-tab="rec"]'); await r.hold(1);
+r.cam({ x: 700, y: 300, s: 1.6 }, 1); await r.hold(1.6);
+await r.point('[data-lmerge]', .7); await r.hold(.4); await r.click('[data-lmerge]'); await r.hold(.9);
+await r.point('.nav[data-tab="compass"]', .6); await r.click('.nav[data-tab="compass"]'); r.wide(.8); await r.hold(2);
+await r.done();

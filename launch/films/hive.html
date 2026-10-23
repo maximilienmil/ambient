@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>hive</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>.t{position:absolute;left:150px;top:50%;translate:0 -50%;z-index:3}
+.t h1{font-size:150px;text-shadow:0 0 40px #f3efe4,0 0 20px #f3efe4}.t p{font-size:34px;color:#4b4825;margin-top:28px;max-width:760px;text-shadow:0 0 18px #f3efe4}
+.chips{display:flex;gap:16px;margin-top:34px}.chips span{padding:14px 26px;border-radius:99px;background:#fffdf8;box-shadow:0 0 0 1px rgba(23,22,10,.1),0 10px 30px -10px rgba(0,0,0,.2);font-size:28px;font-weight:600}.chips .ok{background:#bfe6c8}</style>
+<body><div id="grid"></div><div id="bees"></div>
+<div class="t"><h1 data-a=".3" data-b="6.5" data-y="40">The hive does<br><i>the rest.</i></h1>
+ <p data-a="1.2" data-b="6.5" data-y="30">Two System 1 models weigh in on every decision. The hive acts only when they agree.</p>
+ <div class="chips"><span data-a="2.2" data-b="6.5" data-y="30">Jev · A</span><span data-a="2.6" data-b="6.5" data-y="30">Liquid d1 · A</span><span class="ok" data-a="3.2" data-b="6.5" data-y="30">Both agree</span></div></div>
+<script>const DUR=6.5;
+const cells=[];const W=92*.75;for(let r=-1;r<15;r++)for(let c=-1;c<26;c++){const e=document.createElement('div');e.className='hx';const x=c*W*1.0+ (r%2?W*.5:0)*0 ;const px=c*69,py=r*80+(c%2?40:0)-30;e.style.left=px+'px';e.style.top=py+'px';document.getElementById('grid').append(e);cells.push({e,px,py});}
+const bees=[];for(let i=0;i<9;i++){const e=document.createElement('div');e.className='bee';e.style.zIndex=2;e.textContent='\\(◉)/ · ·';document.getElementById('bees').append(e);bees.push({e,y:90+i*105,s:.6+(i%4)*.35,p:i*1.7});}
+function tick(t){
+ for(const c of cells){const d=Math.hypot(c.px-1500,c.py-540)/1900; const p=seg(t,.2+d*2.6,.9+d*2.6); const live=(Math.sin(t*1.6+c.px*.013+c.py*.01)+1)/2; const fill=Math.max(0,Math.min(1,(live-.35)*1.8));
+  c.e.style.opacity=p*(.28+.5*fill); c.e.style.transform=`scale(${.4+p*.6})`; c.e.style.background=fill>.55?'#fadb4a':fill>.25?'#d9c8f7':'#e8e0c6'; }
+ for(const b of bees){const x=((t*140*b.s+b.p*300)%2400)-300; b.e.style.left=x+'px'; b.e.style.top=b.y+Math.sin(t*2+b.p)*26+'px'; b.e.style.opacity=seg(t,.4,1.2)*(1-seg(t,5.8,6.4));}
+}</script>

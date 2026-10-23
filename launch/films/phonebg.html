@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>phonebg</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>.wash.g{background:radial-gradient(40% 50% at 78% 40%,#fadb4a88,transparent),radial-gradient(40% 50% at 30% 80%,#b9a0f277,transparent)}
+.c{position:absolute;left:150px;top:50%;translate:0 -50%;width:900px}.c h2{font-size:120px}.c p{font-size:34px;color:#6f6a58;margin-top:26px;max-width:700px}</style>
+<body><div class="wash g" id="w"></div><div id="bees"></div>
+<div class="c" data-a=".3" data-b="4.6" data-y="50"><h2>Ambient,<br><i>in your pocket.</i></h2><p>Installs to your home screen. Same ledger, same hive.</p></div>
+<div class="c" data-a="4.6" data-b="9.6" data-y="50"><h2>Hears it.<br><i>Forks it.</i></h2><p>A promise comes in. Three futures, one tap each.</p></div>
+<div class="c" data-a="9.6" data-b="13.2" data-y="50"><h2>Goals,<br><i>and a hive that grows.</i></h2><p>Every conversation fills another cell.</p></div>
+<div class="c" data-a="13.2" data-b="17.1" data-y="50"><h2>Cleared<br><i>in a tap.</i></h2><p>Duplicates merge, with undo. Facts wait for you.</p></div>
+<script>const DUR=17.1;const bees=[];for(let i=0;i<8;i++){const e=document.createElement('div');e.className='bee';e.textContent='\\(◉)/ · ·';document.getElementById('bees').append(e);bees.push({e,y:80+i*130,s:.5+(i%3)*.3,p:i*1.9});}
+function tick(t){$('#w').style.transform=`translateX(${Math.sin(t*.6)*60}px) scale(${1.05+Math.sin(t*.4)*.04})`;for(const b of bees){b.e.style.left=((t*120*b.s+b.p*260)%2300)-250+'px';b.e.style.top=b.y+Math.sin(t*1.8+b.p)*24+'px';}}</script>

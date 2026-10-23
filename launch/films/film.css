@@ -30,3 +30,6 @@ h2{font:400 84px/1.05 "Instrument Serif",serif;letter-spacing:-.015em;text-wrap:
 .grain{position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.22;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
 .shot.crop img{position:absolute;max-width:none}
 .end{display:grid;place-items:center;text-align:center}
+.bee{position:absolute;font:500 26px/1 ui-monospace,Menlo,monospace;color:#8a7a3a;white-space:pre}
+.hx{position:absolute;width:88px;height:77px;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.dark{background:#17160a;color:#f3efe4}

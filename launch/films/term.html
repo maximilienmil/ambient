@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>term</title>
+<link rel="stylesheet" href="film.css"><script src="engine.js"></script>
+<style>.h{position:absolute;left:0;right:0;top:70px;text-align:center}.h h2{font-size:100px}
+.term{position:absolute;left:210px;right:210px;top:250px;bottom:110px;border-radius:26px;background:#17160a;color:#ebe5d3;padding:46px 56px;font:400 28px/1.55 ui-monospace,"SF Mono",Menlo,monospace;box-shadow:0 50px 120px -30px rgba(40,30,0,.5);overflow:hidden}
+.u{color:#fadb4a}.m{color:#8d8670}.t{color:#b9a0f2}.ok{color:#9fd3a5}.bad{color:#f0a070}.term p{margin:0 0 16px;white-space:pre-wrap}.ans{font-family:Geist;font-size:33px;line-height:1.45;color:#f3efe4}
+.bar{position:absolute;left:30px;top:22px;display:flex;gap:10px}.bar i{width:14px;height:14px;border-radius:50%;background:#3b392b}
+.wash.g{background:radial-gradient(40% 50% at 85% 20%,#b9a0f255,transparent)}</style>
+<body><div class="wash g"></div>
+<div class="h" data-a=".1" data-b="10.6" data-y="30"><h2>Any agent. <i>Same hive.</i></h2></div>
+<div class="term" data-a=".3" data-b="10.6" data-y="50"><div class="bar"><i></i><i></i><i></i></div><div style="height:26px"></div>
+<p><span class="u">›</span> <span id="ask"></span></p>
+<p id="call" class="m" style="opacity:0"><span class="t">● ambient_fork_week</span>  promise: “Help Jordan with the deck”, 3h, due Thu
+                       goal: “Ship the release”, 6h, due Fri</p>
+<p id="res" class="m" style="opacity:0">  A  protect the goal     goal <span class="ok">fits 6h</span>        promise <span class="ok">fits</span> (moved a week)
+  B  keep every promise   goal <span class="bad">at_risk, 1h short</span>  promise <span class="ok">fits</span>
+  C  shrink the goal      goal <span class="ok">fits 3h</span>        promise <span class="ok">fits</span>
+  models: Jev <span class="ok">A</span> · Liquid d1 <span class="ok">A</span> · <span class="ok">both agree</span>   recommended: A</p>
+<p class="ans" id="ans"></p></div>
+<script>const DUR=10.6;
+const ANS='Not both, as your calendar stands. Keeping every promise leaves the release an hour short. Protect the release: ask Jordan to move the deck a week. Want me to draft it?';
+function tick(t){type($('#ask'),'can I help Jordan with the deck by Thursday? about 3 hours, and I ship Friday',(t-.8)/1.6);$('#call').style.opacity=seg(t,2.7,3.1);$('#res').style.opacity=seg(t,3.6,4);type($('#ans'),ANS,(t-4.6)/4.6);}</script>
