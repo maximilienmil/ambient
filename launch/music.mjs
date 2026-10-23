@@ -20,21 +20,19 @@ for (let i = 0; i < N; i++) {
   const t = i / SR, c = chords[Math.floor(t / 2) % 4], x = (t % 2) / 2, e = energyAt(t);
   const env = Math.min(1, x * 8) * Math.min(1, (1 - x) * 8 + .5);
   let s = 0; for (const m of c) { const f = hz(m + 12); s += Math.sin(2 * Math.PI * f * t) * .6 + Math.sin(2 * Math.PI * f * 1.004 * t) * .4 + .15 * Math.sin(2 * Math.PI * f * 2 * t); }
-  add(i, s * .02 * env * (e >= 2 ? duck(t) : 1) * (e === 0.5 ? 1.4 : 1) * tail(t), Math.sin(t * .3) * .2);
+  add(i, s * .03 * env * (e >= 2 ? duck(t) : 1) * (e === 0.5 ? 1.4 : 1) * tail(t), Math.sin(t * .3) * .2);
 }
 const hit = (t0, len, fn, p = 0) => { const i0 = Math.floor(t0 * SR); for (let k = 0; k < len * SR; k++) add(i0 + k, fn(k / SR), p); };
 let n = 0;
 for (let t = 0; t < total + .5; t += STEP, n++) {
   const e = energyAt(t), idx = Math.floor(t / 2) % 4, chord = chords[idx], q = n % 4, bar16 = n % 16, g = tail(t);
-  if (e >= 1 && e !== 0.5 && q === 0) hit(t, .28, (x) => Math.sin(2 * Math.PI * (46 + 110 * Math.exp(-x * 34)) * x) * Math.exp(-x * 10) * .6 * g);
-  if (e >= 2 && (bar16 === 4 || bar16 === 12)) hit(t, .2, (x) => (rnd() * .6 + Math.sin(2 * Math.PI * 230 * x) * .3) * Math.exp(-x * 26) * .28 * g, .05); // clap
-  if (e >= 2 && q === 2) hit(t, .06, (x) => rnd() * Math.exp(-x * 80) * .13 * g, .35); // open-ish hat on the offbeat
-  if (e >= 3 && q === 3 && n % 8 === 7) hit(t, .05, (x) => rnd() * Math.exp(-x * 120) * .1 * g, -.3);
-  if (e >= 2 && (bar16 === 0 || bar16 === 6 || bar16 === 10)) hit(t, .3, (x) => Math.sin(2 * Math.PI * hz(roots[idx]) * x) * Math.exp(-x * 5) * .34 * g); // sub bass
+  if (e >= 2 && q === 0) hit(t, .3, (x) => Math.sin(2 * Math.PI * (44 + 70 * Math.exp(-x * 26)) * x) * Math.exp(-x * 9) * .32 * g);
+    if (e >= 3 && q === 2) hit(t, .04, (x) => rnd() * Math.exp(-x * 110) * .05 * g, .35); // open-ish hat on the offbeat
+    if (e >= 2 && bar16 === 0) hit(t, .9, (x) => Math.sin(2 * Math.PI * hz(roots[idx]) * x) * Math.exp(-x * 2.2) * .22 * g); // sub bass
   const arp = [0, 2, 1, 3, 2, 1, 3, 2, 0, 3, 1, 2, 3, 1, 2, 0][bar16];
-  if (e >= 1 && e !== 0.5 && (e >= 3 || q % 2 === 0)) {
+  if (e >= 3 && (bar16 === 0 || bar16 === 10)) {
     const m = chord[arp] + 12 + (bar16 === 14 ? 12 : 0);
-    hit(t, .42, (x) => (Math.sin(2 * Math.PI * hz(m) * x) + .45 * Math.sin(2 * Math.PI * hz(m) * 2.76 * x) * Math.exp(-x * 30) + .2 * Math.sin(2 * Math.PI * hz(m) * 4 * x)) * Math.exp(-x * 8) * (e >= 3 ? .085 : .06) * g, ((q - 1.5) / 6));
+    hit(t, .9, (x) => (Math.sin(2 * Math.PI * hz(m) * x) + .45 * Math.sin(2 * Math.PI * hz(m) * 2.76 * x) * Math.exp(-x * 30) + .2 * Math.sin(2 * Math.PI * hz(m) * 4 * x)) * Math.exp(-x * 3.5) * .05 * g, ((q - 1.5) / 6));
   }
 }
 // risers into each hard cut: the circle-open, the hive, the slide to the phone

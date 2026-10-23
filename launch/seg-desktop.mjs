@@ -12,10 +12,9 @@ r.wide(.9); await r.hold(.5);
 await r.point('[data-replay]', .7); await r.frame('[data-replay]', { fill: .22, dur: .8, max: 2 }); await r.hold(.8);
 await r.click('[data-replay]'); r.hideCursor(.5); await r.hold(.25);
 await r.frame('.blk.live', { fill: 1, max: 2.3, dur: .8 }); await r.hold(2.6);
-r.wide(.8); await r.hold(1.5);
-await r.frame('.blk.y.pop', { fill: .95, max: 2, dur: .8 }); await r.hold(1.6);
-// Fork the week
-r.wide(.6); await r.scrollTo('button[data-path="A"]', { dur: .8, offset: 430 }); await r.hold(.8);
+await r.frame('.blk.y.pop', { fill: .95, max: 1.9, dur: .9 }); await r.hold(1.5);
+// one continuous move from the promise down to the fork: scroll while easing the zoom, never back out
+r.cam({ x: 700, y: 520, s: 1.3 }, 1.1); await r.scrollTo('button[data-path="A"]', { dur: 1.1, offset: 470 }); await r.hold(1.2);
 await r.frame('button[data-path="A"]', { fill: .5, max: 1.7, dur: .8, dy: -60 });
 for (const p of ['B', 'C', 'A']) { await r.point(`button[data-path="${p}"]`, .45, .25); await r.hold(.5); await r.click(`button[data-path="${p}"]`); await r.hold(1.1); }
 r.mark('models');

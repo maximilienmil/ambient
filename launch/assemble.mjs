@@ -3,7 +3,7 @@ import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import fs from 'node:fs';
 const dir = path.dirname(new URL(import.meta.url).pathname), out = `${dir}/out`, FF = process.env.FFMPEG || 'ffmpeg';
-const marks = { models: 15.67, act: 17.47 };
+const marks = { models: 14.47, act: 16.27 };
 const X = 0.5; // transition length: one beat at 120 bpm
 // [file, in, out, transition into the NEXT part]
 const parts = [
