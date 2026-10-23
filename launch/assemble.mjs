@@ -17,6 +17,9 @@ const parts = [
   ['ambient-term.mp4', 0, 10.6, 'fade'],
   ['ambient-close.mp4', 0, 6.5, null],
 ];
+// Use each clip's real length so a shorter re-recording never desyncs the transitions.
+const dur = (f) => { const r = spawnSync(FF, ['-i', `${out}/${f}`], { encoding: 'utf8' }); const m = /Duration: (\d+):(\d+):([\d.]+)/.exec(r.stderr); return m ? +m[1] * 3600 + +m[2] * 60 + +m[3] : Infinity; };
+for (const p of parts) p[2] = Math.min(p[2], +(dur(p[0]) - 0.05).toFixed(2));
 const inputs = parts.flatMap(([f, a, b]) => ['-ss', String(a), '-t', String(+(b - a).toFixed(3)), '-i', `${out}/${f}`]);
 let g = parts.map((_, i) => `[${i}:v]fps=30,scale=1920:1080,format=yuv420p,setsar=1,setpts=PTS-STARTPTS[v${i}]`).join(';');
 let acc = 'v0', t = parts[0][2] - parts[0][1]; const starts = [0];
